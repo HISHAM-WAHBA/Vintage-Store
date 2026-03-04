@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --color-vintage-brown: #3e2723; /* Deeper, richer brown */
+  --color-vintage-gold: #d4af37; /* Classic Gold */
+  --color-vintage-cream: #fff8e7; /* Cosmic Latte - softer cream */
+  --color-vintage-text: #2d1b16; /* Almost black brown */
+  --color-vintage-light-brown: #8d6e63;
+  --color-vintage-accent: #5d4037; /* Secondary accent */
+
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Lato", sans-serif;
+}
+
+:root {
+  font-family: var(--font-sans);
+  background-color: var(--color-vintage-cream);
+  color: var(--color-vintage-text);
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-serif);
+  }
+
+  .text-vintage-shadow {
+    text-shadow: 1px 1px 2px rgba(93, 64, 55, 0.3);
+  }
+
+  .vintage-border {
+    border: 2px solid var(--color-vintage-gold);
+    border-radius: 4px;
+  }
+}
+
+/* Scrollbar styling for that detailed feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-vintage-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-vintage-brown);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-vintage-gold);
+}
