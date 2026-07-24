@@ -38,7 +38,6 @@ const ContactPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
       toast.success(

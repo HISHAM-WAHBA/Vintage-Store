@@ -66,7 +66,7 @@ const Navbar = () => {
         activeText: "text-vintage-gold",
       };
     } else {
-      // Home page, at top
+      // Home page
       return {
         bg: "bg-transparent",
         text: "text-vintage-cream/80",
@@ -106,10 +106,7 @@ const Navbar = () => {
               </button>
             </div>
 
-            <Link
-              to="/"
-              className="flex-shrink-0 flex items-center justify-center flex-1 md:flex-none relative z-50"
-            >
+            <div className="flex-shrink-0 flex items-center justify-center flex-1 md:flex-none relative z-50">
               <div
                 stroke={theme.logoColor}
                 className="h-12 flex justify-center w-full fill-current transition-colors duration-500"
@@ -118,7 +115,7 @@ const Navbar = () => {
                   className={`w-40 md:w-48 transform transition-all duration-500`}
                 />
               </div>
-            </Link>
+            </div>
 
             <div className="hidden md:flex flex-1 justify-center space-x-12">
               {navLinks.map((link) => (

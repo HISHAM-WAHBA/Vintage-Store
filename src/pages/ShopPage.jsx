@@ -42,7 +42,7 @@ const ShopPage = () => {
           );
         }
 
-        // Apply Sorting
+        // Sort
         if (sortBy === "Price: Low to High") {
           filteredProds.sort((a, b) => a.price - b.price);
         } else if (sortBy === "Price: High to Low") {
@@ -107,13 +107,29 @@ const ShopPage = () => {
                 }`}
               >
                 <FiFilter className={isFilterOpen ? "animate-pulse" : ""} />
-                <span>{currentCategory === "All" ? "Filter By Category" : `Category: ${currentCategory}`}</span>
+                <span>
+                  {currentCategory === "All"
+                    ? "Filter By Category"
+                    : `Category: ${currentCategory}`}
+                </span>
                 <motion.span
                   animate={{ rotate: isFilterOpen ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <svg
+                    width="10"
+                    height="6"
+                    viewBox="0 0 10 6"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M1 1L5 5L9 1"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </motion.span>
               </button>
@@ -129,7 +145,9 @@ const ShopPage = () => {
             </div>
 
             <div className="flex items-center gap-4 text-vintage-brown">
-              <span className="font-sans text-xs uppercase tracking-widest opacity-60">Sort By</span>
+              <span className="font-sans text-xs uppercase tracking-widest opacity-60">
+                Sort By
+              </span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
@@ -158,7 +176,8 @@ const ShopPage = () => {
                       key={cat.id}
                       onClick={() => handleCategoryChange(cat.id)}
                       className={`px-4 py-3 text-center transition-all duration-300 font-sans text-xs uppercase tracking-widest border border-vintage-gold/10 ${
-                        currentCategory.toLowerCase() === cat.id.toLowerCase() ||
+                        currentCategory.toLowerCase() ===
+                          cat.id.toLowerCase() ||
                         (currentCategory === "All" && cat.id === "all")
                           ? "bg-vintage-gold text-white border-vintage-gold shadow-lg transform -translate-y-1"
                           : "bg-white/50 text-vintage-brown hover:border-vintage-gold/40 hover:bg-white"
@@ -182,14 +201,17 @@ const ShopPage = () => {
                   <div className="h-8 w-8 rounded-full bg-vintage-brown/10"></div>
                 </div>
               </div>
-              <p className="mt-6 font-serif italic text-vintage-light-brown animate-pulse">Uncovering treasures...</p>
+              <p className="mt-6 font-serif italic text-vintage-light-brown animate-pulse">
+                Uncovering treasures...
+              </p>
             </div>
           ) : (
             <>
               <div className="mb-10 flex items-center gap-4">
                 <span className="h-[1px] flex-1 bg-vintage-gold/20"></span>
                 <span className="font-serif italic text-vintage-light-brown">
-                  Showing {products.length} {products.length === 1 ? "Artifact" : "Artifacts"}
+                  Showing {products.length}{" "}
+                  {products.length === 1 ? "Artifact" : "Artifacts"}
                 </span>
                 <span className="h-[1px] flex-1 bg-vintage-gold/20"></span>
               </div>
@@ -202,7 +224,7 @@ const ShopPage = () => {
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: index % 3 * 0.1 }}
+                      transition={{ delay: (index % 3) * 0.1 }}
                     >
                       <ProductCard product={product} />
                     </motion.div>
@@ -218,7 +240,9 @@ const ShopPage = () => {
                       ? `No treasures found matching "${searchQuery}".`
                       : "The vaults are empty in this category."}
                   </p>
-                  <p className="text-vintage-light-brown font-sans text-sm mb-8">Try adjusting your search or category filters.</p>
+                  <p className="text-vintage-light-brown font-sans text-sm mb-8">
+                    Try adjusting your search or category filters.
+                  </p>
                   <button
                     onClick={() => setSearchParams({})}
                     className="px-8 py-3 bg-vintage-brown text-white font-sans uppercase tracking-[0.2em] text-xs hover:bg-vintage-gold transition-colors duration-500 shadow-xl"
@@ -232,7 +256,6 @@ const ShopPage = () => {
         </main>
       </div>
     </div>
-
   );
 };
 

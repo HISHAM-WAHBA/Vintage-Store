@@ -40,7 +40,6 @@ const AuthPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate Authentication API call
     setTimeout(() => {
       setIsSubmitting(false);
       toast.success(
@@ -49,7 +48,6 @@ const AuthPage = () => {
           : "Your account has been successfully created.",
       );
       setFormData({ name: "", email: "", password: "" });
-      // Redirect to home or account dashboard
       navigate("/");
     }, 1500);
   };

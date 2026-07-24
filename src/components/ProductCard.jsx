@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { ShoppingBag, Eye } from "lucide-react";
+import { useCart } from "../context/CartContext";
 
 const ProductCard = ({ product }) => {
+  const { addToCart } = useCart();
+
   return (
     <div className="group relative transition-all duration-500 rounded-sm flex flex-col h-full bg-transparent">
       <div className="relative aspect-[4/5] overflow-hidden bg-vintage-cream/30 shadow-md group-hover:shadow-2xl transition-shadow duration-500">
@@ -15,10 +18,13 @@ const ProductCard = ({ product }) => {
 
         <div className="absolute inset-x-0 bottom-0 p-6 opacity-0 group-hover:opacity-100 transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 ease-out flex justify-center space-x-4 bg-gradient-to-t from-vintage-brown/80 to-transparent">
           <button
+            type="button"
             className="w-14 h-14 flex items-center justify-center bg-white/95 backdrop-blur-md text-vintage-brown rounded-full hover:bg-vintage-gold hover:text-white shadow-xl transition-all duration-300 hover:scale-110"
             title="Add to Cart"
             onClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
+              addToCart(product);
             }}
           >
             <ShoppingBag size={22} strokeWidth={1.5} />

@@ -10,7 +10,7 @@ const LayoutMain = () => {
   return (
     <div className="flex flex-col min-h-screen bg-vintage-cream text-vintage-text font-sans selection:bg-vintage-gold selection:text-vintage-brown">
       <Navbar />
-      <main className={`flex-grow ${!isHomePage ? "pt-28" : ""}`}>
+      <main className={`flex-grow ${!isHomePage ? "pt-20" : ""}`}>
         <Outlet />
       </main>
       <Footer />
