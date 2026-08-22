@@ -48,10 +48,9 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="bg-vintage-cream min-h-screen">
-      <section className="pt-40 pb-20 md:pt-48 md:pb-24 px-4 bg-vintage-brown relative overflow-hidden">
+    <div className="min-h-screen bg-vintage-cream">
+      <section className="relative overflow-hidden bg-vintage-brown px-5 pb-20 pt-32 sm:px-8 md:pb-24 md:pt-44">
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none"></div>
-        <motion.div className="absolute -top-[20%] -right-[10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-br from-vintage-gold/10 to-transparent blur-3xl mix-blend-screen pointer-events-none" />
 
         <motion.div
           className="max-w-4xl mx-auto text-center relative z-10"
@@ -81,10 +80,10 @@ const ContactPage = () => {
         </motion.div>
       </section>
 
-      <section className="py-24 px-4 max-w-[90rem] mx-auto -mt-16 relative z-20">
+      <section className="relative z-20 mx-auto -mt-10 max-w-[90rem] px-5 py-16 sm:-mt-16 sm:px-8 md:py-24 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
           <motion.div
-            className="lg:col-span-5 bg-white p-10 md:p-14 shadow-2xl rounded-sm border-t-4 border-vintage-gold"
+            className="border-t-4 border-vintage-gold bg-white p-7 shadow-xl sm:p-10 md:p-14 lg:col-span-5"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}

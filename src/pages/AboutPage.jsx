@@ -23,22 +23,22 @@ const AboutPage = () => {
   const yImage = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
-    <div className="bg-vintage-cream overflow-hidden">
-      <section className="relative pt-40 pb-24 md:pt-52 md:pb-32 px-4 max-w-[90rem] mx-auto overflow-hidden">
+    <div className="overflow-hidden bg-vintage-cream">
+      <section className="relative mx-auto max-w-[90rem] overflow-hidden px-5 pb-20 pt-32 sm:px-8 md:pb-28 md:pt-44 lg:px-12">
         <motion.div
           className="text-center relative z-10"
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
         >
-          <motion.div variants={fadeInUp} className="flex justify-center mb-6">
+          <motion.div variants={fadeInUp} className="mb-6 flex justify-center">
             <span className="inline-block py-1.5 px-6 border border-vintage-gold/40 rounded-full font-sans text-xs md:text-sm tracking-[0.3em] uppercase text-vintage-brown/80">
               Our Legacy
             </span>
           </motion.div>
           <motion.h1
             variants={fadeInUp}
-            className="font-serif text-5xl md:text-7xl lg:text-8xl text-vintage-brown mb-8 leading-tight tracking-tight"
+            className="mb-8 font-serif text-5xl leading-[0.98] tracking-tight text-vintage-brown sm:text-7xl lg:text-8xl"
           >
             Preserving History,
             <br className="hidden md:block" />
@@ -56,8 +56,8 @@ const AboutPage = () => {
         </motion.div>
       </section>
 
-      <section className="px-4 md:px-8 max-w-[100rem] mx-auto mb-32 h-[50vh] md:h-[70vh] relative">
-        <div className="w-full h-full overflow-hidden rounded-sm relative">
+      <section className="relative mx-auto mb-20 h-[52svh] max-w-[100rem] px-4 sm:px-8 md:mb-32 md:h-[70vh]">
+        <div className="relative h-full w-full overflow-hidden">
           <motion.div
             style={{ y: yImage, height: "130%" }}
             className="w-full relative -top-[15%]"
@@ -72,7 +72,7 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <section className="py-20 px-4 max-w-[90rem] mx-auto bg-white border-y border-vintage-gold/20 relative z-10">
+      <section className="relative z-10 mx-auto max-w-[90rem] border-y border-vintage-gold/20 bg-white px-5 py-16 sm:px-8 md:py-20 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-32">
           <motion.div
             initial="hidden"

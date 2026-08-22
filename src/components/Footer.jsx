@@ -8,9 +8,9 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-vintage-brown text-vintage-cream mt-auto border-t-8 border-vintage-gold">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="mt-auto border-t-8 border-vintage-gold bg-vintage-brown text-vintage-cream">
+      <div className="mx-auto max-w-7xl px-5 py-12 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:px-8 sm:py-14 sm:pb-14 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4 md:gap-8">
           <div className="col-span-1 md:col-span-1">
             <h3 className="font-serif text-2xl mb-4 text-vintage-gold">
               Vintage
@@ -134,9 +134,12 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-vintage-cream/20 mt-12 pt-8 text-center font-sans text-xs opacity-60">
-          &copy; {new Date().getFullYear()} Vintage Store. All rights reserved.
-          Designed with React & Tailwind.
+        <div className="mt-12 border-t border-vintage-cream/20 pt-6 text-center font-sans text-[10px] leading-relaxed tracking-[0.04em] opacity-60 sm:pt-8 sm:text-xs">
+          <p>
+            &copy; {new Date().getFullYear()} Vintage Store. All rights
+            reserved.
+          </p>
+          <p className="mt-1">Designed with React &amp; Tailwind.</p>
         </div>
       </div>
     </footer>

@@ -46,18 +46,18 @@ const ProductPage = () => {
   }
 
   return (
-    <div className="bg-vintage-cream min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-vintage-cream px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <Link
           to="/shop"
-          className="inline-flex items-center text-vintage-light-brown hover:text-vintage-gold mb-8 transition-colors"
+          className="mb-8 inline-flex items-center text-sm text-vintage-light-brown transition-colors hover:text-vintage-gold"
         >
           <FiArrowLeft className="mr-2" /> Back to Collection
         </Link>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
-          <div className="relative aspect-[4/5] bg-white p-4 shadow-xl rotate-1">
-            <div className="absolute inset-0 border-4 border-vintage-gold/20 m-4 pointer-events-none"></div>
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12 lg:gap-20">
+          <div className="relative aspect-[4/5] overflow-hidden border border-vintage-brown/10 bg-white p-3 sm:p-5">
+            <div className="pointer-events-none absolute inset-0 m-4 border border-vintage-gold/30"></div>
             <img
               src={product.image}
               alt={product.name}
@@ -66,29 +66,30 @@ const ProductPage = () => {
           </div>
 
           <div className="flex flex-col justify-center">
-            <span className="text-vintage-gold tracking-[0.2em] uppercase text-sm font-bold mb-2">
+            <span className="mb-3 font-sans text-xs font-bold uppercase tracking-[0.2em] text-vintage-gold">
               {product.category}
             </span>
-            <h1 className="font-serif text-4xl md:text-5xl text-vintage-brown mb-6 leading-tight">
+            <h1 className="mb-5 font-serif text-4xl leading-tight text-vintage-brown sm:text-5xl">
               {product.name}
             </h1>
 
-            <div className="flex items-center mb-8">
-              <span className="text-3xl font-sans text-vintage-text font-bold">
+            <div className="mb-7 flex items-center">
+              <span className="font-sans text-3xl font-bold text-vintage-text">
                 ${product.price.toFixed(2)}
               </span>
             </div>
 
-            <p className="font-sans text-lg text-vintage-text/80 leading-relaxed mb-8">
+            <p className="mb-8 font-sans text-base leading-relaxed text-vintage-text/80 sm:text-lg">
               {product.description}
             </p>
 
-            <div className="border-t border-b border-vintage-gold/20 py-8 mb-8">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center border border-vintage-brown rounded-sm">
+            <div className="mb-8 border-y border-vintage-brown/10 py-7">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                <div className="flex w-fit items-center border border-vintage-brown">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-4 py-2 text-xl hover:bg-vintage-gold hover:text-white transition-colors"
+                    aria-label="Decrease quantity"
+                    className="px-4 py-2 text-xl transition-colors hover:bg-vintage-gold hover:text-white"
                   >
                     -
                   </button>
@@ -97,7 +98,8 @@ const ProductPage = () => {
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="px-4 py-2 text-xl hover:bg-vintage-gold hover:text-white transition-colors"
+                    aria-label="Increase quantity"
+                    className="px-4 py-2 text-xl transition-colors hover:bg-vintage-gold hover:text-white"
                   >
                     +
                   </button>
@@ -105,7 +107,7 @@ const ProductPage = () => {
 
                 <button
                   onClick={() => addToCart(product, quantity)}
-                  className="flex-1 bg-vintage-brown text-vintage-cream px-8 py-3 uppercase tracking-widest font-bold hover:bg-vintage-gold transition-colors duration-300 flex items-center justify-center gap-2 shadow-lg"
+                  className="flex min-h-12 flex-1 items-center justify-center gap-2 bg-vintage-brown px-8 py-3 font-sans font-bold uppercase tracking-widest text-vintage-cream transition-colors duration-300 hover:bg-vintage-gold"
                 >
                   <FiShoppingBag /> Add to Cart
                 </button>
@@ -115,6 +117,11 @@ const ProductPage = () => {
             <div className="flex items-center gap-2 text-sm text-vintage-light-brown">
               <FiCheck className="text-green-600" />
               <span>In Stock - Ready to ship</span>
+            </div>
+            <div className="mt-7 grid grid-cols-1 gap-3 border-t border-vintage-brown/10 pt-6 text-xs uppercase tracking-[0.14em] text-vintage-light-brown sm:grid-cols-3">
+              <span>Carefully packed</span>
+              <span>Easy returns</span>
+              <span>Tracked delivery</span>
             </div>
           </div>
         </div>

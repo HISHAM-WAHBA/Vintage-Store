@@ -294,35 +294,124 @@ const MOCK_PRODUCTS = [
 ];
 
 const MOCK_CATEGORIES = [
-  { id: "all", name: "All Treasures" },
-  { id: "accessories", name: "Accessories" },
-  { id: "prints", name: "Prints" },
-  { id: "home decor", name: "Home Decor" },
+  { id: "back-to-school", name: "Back to School" },
+  { id: "birthday-giveaways", name: "Birthday Giveaways" },
+  { id: "baby-giveaways", name: "Baby Giveaways" },
+  { id: "bridal-giveaways", name: "Bridal Giveaways" },
+  { id: "photo-prints", name: "Photo Prints" },
+  { id: "party-supplies", name: "Party Supplies" },
+  { id: "gift-box", name: "Create your Gift Box" },
+  { id: "custom-gifts", name: "Custom Gifts" },
+  { id: "outlet", name: "Outlet" },
+  { id: "stickers", name: "Stickers" },
+  { id: "mugs-bottles", name: "Mugs & Bottles" },
+  { id: "mask-hat-crown", name: "Mask, Hat & Crown" },
+  { id: "mystery-box", name: "Mystery Box" },
 ];
 
+const PRODUCT_CATEGORY_IDS = [
+  "back-to-school",
+  "birthday-giveaways",
+  "baby-giveaways",
+  "bridal-giveaways",
+  "photo-prints",
+  "party-supplies",
+  "gift-box",
+  "custom-gifts",
+  "outlet",
+  "stickers",
+  "mugs-bottles",
+  "mask-hat-crown",
+  "mystery-box",
+  "back-to-school",
+  "birthday-giveaways",
+  "baby-giveaways",
+  "bridal-giveaways",
+  "photo-prints",
+  "party-supplies",
+  "gift-box",
+  "custom-gifts",
+  "outlet",
+  "stickers",
+  "mugs-bottles",
+  "mask-hat-crown",
+  "mystery-box",
+  "back-to-school",
+  "birthday-giveaways",
+  "custom-gifts",
+  "gift-box",
+];
+
+const getCatalogProducts = () =>
+  MOCK_PRODUCTS.map((product, index) => {
+    const category = MOCK_CATEGORIES.find(
+      (item) => item.id === PRODUCT_CATEGORY_IDS[index],
+    );
+
+    return { ...product, category: category.name };
+  });
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const PRODUCTS_STORAGE_KEY = "vintage_admin_products";
+const CATEGORIES_STORAGE_KEY = "vintage_admin_categories";
+
+const readStorage = (key, fallback) => {
+  try {
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+const getStoredProducts = () =>
+  readStorage(PRODUCTS_STORAGE_KEY, getCatalogProducts());
+
+const getStoredCategories = () =>
+  readStorage(CATEGORIES_STORAGE_KEY, MOCK_CATEGORIES);
 
 export const api = {
   getProducts: async () => {
     await delay(500);
-    return MOCK_PRODUCTS;
+    return getStoredProducts();
   },
 
   getProductById: async (id) => {
     await delay(300);
-    return MOCK_PRODUCTS.find((p) => p.id === parseInt(id));
+    return getStoredProducts().find((p) => p.id === parseInt(id));
   },
 
   getProductsByCategory: async (category) => {
     await delay(400);
-    if (category.toLowerCase() === "all") return MOCK_PRODUCTS;
-    return MOCK_PRODUCTS.filter(
-      (p) => p.category.toLowerCase() === category.toLowerCase(),
+    const categories = getStoredCategories();
+    const products = getStoredProducts();
+    if (category.toLowerCase() === "all") return products;
+
+    const selectedCategory = categories.find(
+      (item) =>
+        item.id.toLowerCase() === category.toLowerCase() ||
+        item.name.toLowerCase() === category.toLowerCase(),
+    );
+
+    if (!selectedCategory) return [];
+
+    return products.filter(
+      (product) => product.category === selectedCategory.name,
     );
   },
 
   getCategories: async () => {
     await delay(300);
-    return MOCK_CATEGORIES;
+    return getStoredCategories();
+  },
+
+  saveProducts: async (products) => {
+    localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+    return products;
+  },
+
+  saveCategories: async (categories) => {
+    localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(categories));
+    return categories;
   },
 };

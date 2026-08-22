@@ -8,7 +8,7 @@ const CartPage = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center bg-vintage-cream px-4">
+      <div className="flex min-h-[60vh] flex-col items-center justify-center bg-vintage-cream px-5 text-center">
         <h2 className="font-serif text-3xl text-vintage-brown mb-4">
           Your Cart is Empty
         </h2>
@@ -26,19 +26,19 @@ const CartPage = () => {
   }
 
   return (
-    <div className="bg-vintage-cream min-h-screen py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="font-serif text-4xl text-vintage-brown mb-8 text-center">
+    <div className="min-h-screen bg-vintage-cream px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <h1 className="mb-10 text-center font-serif text-4xl text-vintage-brown sm:text-5xl">
           Your Cart
         </h1>
 
-        <div className="flex flex-col lg:flex-row gap-12">
+        <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
           <div className="flex-1">
             <div className="space-y-6">
               {cart.map((item) => (
                 <div
                   key={item.id}
-                  className="flex gap-6 p-6 bg-white shadow-sm border border-transparent hover:border-vintage-gold/30 transition-colors"
+                  className="flex gap-4 border border-vintage-brown/10 bg-white p-4 transition-colors hover:border-vintage-gold/40 sm:gap-6 sm:p-6"
                 >
                   <div className="w-24 h-32 flex-shrink-0 bg-gray-100 overflow-hidden">
                     <img
@@ -50,8 +50,8 @@ const CartPage = () => {
 
                   <div className="flex-1 flex flex-col justify-between">
                     <div>
-                      <div className="flex justify-between items-start">
-                        <h3 className="font-serif text-xl text-vintage-brown">
+                      <div className="flex items-start justify-between gap-3">
+                        <h3 className="font-serif text-lg text-vintage-brown sm:text-xl">
                           <Link
                             to={`/product/${item.id}`}
                             className="hover:text-vintage-gold transition-colors"
@@ -61,7 +61,8 @@ const CartPage = () => {
                         </h3>
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="text-vintage-light-brown hover:text-red-600 transition-colors p-1"
+                          aria-label={`Remove ${item.name}`}
+                          className="p-1 text-vintage-light-brown transition-colors hover:text-red-600"
                         >
                           <FiTrash2 />
                         </button>
@@ -71,8 +72,8 @@ const CartPage = () => {
                       </p>
                     </div>
 
-                    <div className="flex justify-between items-center mt-4">
-                      <div className="flex items-center border border-vintage-brown/30 rounded-sm">
+                    <div className="mt-4 flex items-center justify-between gap-3">
+                      <div className="flex items-center border border-vintage-brown/30">
                         <button
                           onClick={() =>
                             updateQuantity(item.id, item.quantity - 1)
@@ -119,7 +120,7 @@ const CartPage = () => {
           </div>
 
           <div className="w-full lg:w-96 flex-shrink-0">
-            <div className="bg-white p-8 shadow-md border-t-4 border-vintage-gold sticky top-28">
+            <div className="sticky top-28 border-t-4 border-vintage-gold bg-white p-6 shadow-sm sm:p-8">
               <h3 className="font-serif text-2xl text-vintage-brown mb-6 pb-4 border-b border-vintage-cream">
                 Order Summary
               </h3>
@@ -146,9 +147,12 @@ const CartPage = () => {
                 </div>
               </div>
 
-              <button className="w-full bg-vintage-brown text-vintage-cream py-4 uppercase tracking-widest font-bold hover:bg-vintage-gold transition-colors duration-300 shadow-lg">
+              <Link
+                to="/checkout"
+                className="block w-full bg-vintage-brown py-4 text-center font-sans font-bold uppercase tracking-widest text-vintage-cream transition-colors duration-300 hover:bg-vintage-gold"
+              >
                 Proceed to Checkout
-              </button>
+              </Link>
 
               <p className="text-center text-xs mt-4 text-vintage-light-brown">
                 Secure Checkout powered by MockPay

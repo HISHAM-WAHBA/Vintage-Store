@@ -74,12 +74,13 @@ const ShopPage = () => {
 
   return (
     <div className="bg-vintage-cream min-h-screen">
-      <div className="bg-vintage-brown text-vintage-cream py-20 text-center relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/aged-paper.png')]"></div>
+      <div className="relative overflow-hidden bg-vintage-brown px-5 pb-16 pt-20 text-center text-vintage-cream sm:px-8 sm:pb-20 sm:pt-24">
+        <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full border-[24px] border-vintage-gold/20" />
+        <div className="absolute -bottom-28 -left-20 h-72 w-72 rounded-full border-[32px] border-vintage-accent/30" />
         <motion.h1
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="font-serif text-5xl md:text-7xl mb-4 relative z-10"
+          className="relative z-10 mb-4 font-serif text-5xl leading-none sm:text-7xl"
         >
           {searchQuery ? `"${searchQuery}"` : "The Collection"}
         </motion.h1>
@@ -87,20 +88,36 @@ const ShopPage = () => {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="font-sans text-vintage-gold tracking-[0.3em] uppercase text-xs md:text-sm relative z-10"
+          className="relative z-10 font-sans text-xs uppercase tracking-[0.3em] text-vintage-gold sm:text-sm"
         >
           Curated artifacts & timeless goods
         </motion.p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+        <div className="mb-10 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none]">
+          {[{ id: "all", name: "All pieces" }, ...categories].map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => handleCategoryChange(cat.id)}
+              className={`shrink-0 border px-4 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.16em] transition-colors ${
+                (cat.id === "all" && currentCategory === "All") ||
+                currentCategory.toLowerCase() === cat.id.toLowerCase()
+                  ? "border-vintage-brown bg-vintage-brown text-vintage-cream"
+                  : "border-vintage-brown/15 text-vintage-light-brown hover:border-vintage-gold hover:text-vintage-brown"
+              }`}
+            >
+              {cat.name}
+            </button>
+          ))}
+        </div>
         {/* Filter & Sort Controls */}
-        <div className="mb-12 border-b border-vintage-gold/20 pb-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="mb-12 border-b border-vintage-brown/10 pb-8">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className={`flex items-center gap-3 px-6 py-3 border border-vintage-brown transition-all duration-300 font-sans uppercase tracking-widest text-xs font-bold ${
+                className={`flex items-center gap-3 border border-vintage-brown px-5 py-3 font-sans text-xs font-bold uppercase tracking-widest transition-all duration-300 ${
                   isFilterOpen || currentCategory !== "All"
                     ? "bg-vintage-brown text-vintage-cream"
                     : "text-vintage-brown hover:bg-vintage-brown hover:text-white"
@@ -144,7 +161,7 @@ const ShopPage = () => {
               )}
             </div>
 
-            <div className="flex items-center gap-4 text-vintage-brown">
+            <div className="flex items-center gap-3 text-vintage-brown">
               <span className="font-sans text-xs uppercase tracking-widest opacity-60">
                 Sort By
               </span>

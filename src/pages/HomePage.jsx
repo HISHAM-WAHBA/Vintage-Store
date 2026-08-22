@@ -1,8 +1,132 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, ShoppingBag } from "lucide-react";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  ShoppingBag,
+} from "lucide-react";
 import { api } from "../services/api";
+
+const heroSlides = [
+  {
+    eyebrow: "New arrivals",
+    title: "Find your story.",
+    description:
+      "Curated accessories, art prints, and little treasures for spaces and people with a point of view.",
+    image:
+      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=85&w=2200",
+    alt: "Curated vintage accessories",
+  },
+  {
+    eyebrow: "The print edit",
+    title: "Walls with a past.",
+    description:
+      "Bring character home with artwork and paper goods chosen to live beautifully for years.",
+    image:
+      "https://images.unsplash.com/photo-1581447109200-bf2769116351?auto=format&fit=crop&q=85&w=2200",
+    alt: "Vintage-inspired art prints",
+  },
+  {
+    eyebrow: "Thoughtful gifts",
+    title: "Give them a keepsake.",
+    description:
+      "Small objects, lasting impressions, and gift-ready finds for the people who notice the details.",
+    image:
+      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=85&w=2200",
+    alt: "A vintage keepsake ready for gifting",
+  },
+];
+
+const categoryCards = [
+  {
+    name: "Back to School",
+    slug: "back-to-school",
+    image:
+      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Birthday Giveaways",
+    slug: "birthday-giveaways",
+    image:
+      "https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Baby Giveaways",
+    slug: "baby-giveaways",
+    image:
+      "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Bridal Giveaways",
+    slug: "bridal-giveaways",
+    image:
+      "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Photo Prints",
+    slug: "photo-prints",
+    image:
+      "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Party Supplies",
+    slug: "party-supplies",
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Create your Gift Box",
+    slug: "gift-box",
+    image:
+      "https://images.unsplash.com/photo-1607344645866-009c320b63e0?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Custom Gifts",
+    slug: "custom-gifts",
+    image:
+      "https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Outlet",
+    slug: "outlet",
+    badge: "Sale",
+    image:
+      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Stickers",
+    slug: "stickers",
+    badge: "New",
+    image:
+      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Mugs & Bottles",
+    slug: "mugs-bottles",
+    image:
+      "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Mask, Hat & Crown",
+    slug: "mask-hat-crown",
+    image:
+      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=85&w=900",
+  },
+  {
+    name: "Mystery Box",
+    slug: "mystery-box",
+    badge: "New",
+    image:
+      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=85&w=900",
+  },
+];
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50 },
@@ -23,10 +147,31 @@ const staggerContainer = {
 
 const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [activeSlide, setActiveSlide] = useState(0);
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
-  const y2 = useTransform(scrollY, [0, 1000], [0, -150]);
   const opacityHero = useTransform(scrollY, [0, 500], [1, 0]);
+
+  const showSlide = (index) => {
+    setActiveSlide((index + heroSlides.length) % heroSlides.length);
+  };
+
+  useEffect(() => {
+    const rotateSlides = window.setInterval(() => {
+      setActiveSlide((currentSlide) => (currentSlide + 1) % heroSlides.length);
+    }, 6000);
+
+    const handleKeyDown = (event) => {
+      if (event.key === "ArrowRight") showSlide(activeSlide + 1);
+      if (event.key === "ArrowLeft") showSlide(activeSlide - 1);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.clearInterval(rotateSlides);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeSlide]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -38,172 +183,187 @@ const HomePage = () => {
 
   return (
     <div className="bg-vintage-cream overflow-hidden">
-      <section className="relative h-[90vh] md:h-[100vh] bg-vintage-brown flex items-center justify-center overflow-hidden">
-        <motion.div
-          style={{ y: y1 }}
-          className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-30 select-none pointer-events-none"
-        >
-          <motion.div
-            initial={{ scale: 1.2, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 3, ease: "easeOut" }}
-            className="absolute -top-[20%] -left-[10%] w-[80vw] h-[80vw] md:w-[60vw] md:h-[60vw] rounded-full bg-gradient-to-br from-vintage-gold/25 to-transparent blur-3xl mix-blend-screen"
+      <section className="relative flex min-h-[calc(100svh-4.75rem)] items-end overflow-hidden bg-vintage-brown sm:min-h-[calc(100svh-5.5rem)] lg:min-h-[min(54rem,calc(100svh-7.25rem))]">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={heroSlides[activeSlide].image}
+            style={{ y: y1 }}
+            initial={{ opacity: 0, scale: 1.06 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            src={heroSlides[activeSlide].image}
+            alt={heroSlides[activeSlide].alt}
+            className="absolute inset-0 h-[115%] w-full object-cover object-center"
           />
-          <motion.div
-            initial={{ scale: 1.2, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 3, delay: 0.5, ease: "easeOut" }}
-            className="absolute bottom-[-20%] right-[-10%] w-[70vw] h-[70vw] md:w-[50vw] md:h-[50vw] rounded-full bg-gradient-to-tl from-vintage-gold/15 to-transparent blur-3xl mix-blend-screen"
-          />
-        </motion.div>
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-vintage-brown/45" />
+        <div className="absolute inset-0 bg-gradient-to-t from-vintage-brown/95 via-vintage-brown/20 to-transparent" />
 
         <motion.div
+          key={heroSlides[activeSlide].title}
           style={{ opacity: opacityHero }}
-          className="relative z-10 text-center px-4 max-w-5xl mx-auto w-full"
+          className="relative z-10 mx-auto flex w-full max-w-[90rem] flex-col justify-end px-5 pb-12 pt-32 text-left sm:px-8 sm:pb-16 md:pb-20 lg:px-12"
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
         >
+          <motion.p
+            variants={fadeInUp}
+            className="mb-5 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.3em] text-vintage-gold"
+          >
+            <span className="h-px w-10 bg-vintage-gold" />
+            {heroSlides[activeSlide].eyebrow}
+          </motion.p>
           <motion.h1
             variants={fadeInUp}
-            className="font-serif text-6xl md:text-8xl lg:text-9xl font-bold mb-6 pt-24 text-vintage-cream drop-shadow-2xl leading-[1.1] tracking-tight"
+            className="max-w-4xl font-serif text-5xl font-medium leading-[0.95] tracking-tight text-vintage-cream drop-shadow-2xl sm:text-8xl lg:text-[9rem]"
           >
-            Timeless <br className="hidden md:block" />{" "}
-            <span className="text-vintage-gold italic font-light font-serif pr-4">
-              Elegance
-            </span>
+            {heroSlides[activeSlide].title}
           </motion.h1>
 
           <motion.p
             variants={fadeInUp}
-            className="font-sans text-lg md:text-2xl mb-12 max-w-2xl mx-auto text-vintage-cream/80 leading-relaxed font-light"
+            className="mb-9 mt-6 max-w-xl font-sans text-base leading-relaxed text-vintage-cream/85 md:text-lg"
           >
-            Discover a curated collection of classic accessories, art prints,
-            and unique treasures that whisper elegant stories of the past.
+            {heroSlides[activeSlide].description}
           </motion.p>
-
-          <motion.div variants={fadeInUp} className="flex justify-center">
-            <Link
-              to="/shop"
-              className="group relative inline-flex items-center gap-4 bg-transparent text-vintage-gold border-2 border-vintage-gold px-10 py-4 font-sans font-medium text-sm tracking-[0.2em] uppercase overflow-hidden transition-all duration-500 rounded-sm"
-            >
-              <span className="absolute inset-0 bg-vintage-gold translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-in-out"></span>
-              <span className="relative z-10 group-hover:text-vintage-brown transition-colors duration-500 flex items-center gap-3">
-                Explore Collection
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-              </span>
-            </Link>
-          </motion.div>
         </motion.div>
+
+        <div className="absolute bottom-6 right-5 z-20 flex items-center gap-2 sm:bottom-8 sm:right-8 lg:right-12">
+          <button
+            type="button"
+            onClick={() => showSlide(activeSlide - 1)}
+            aria-label="Previous offer"
+            className="flex h-10 w-10 items-center justify-center border border-vintage-cream/50 text-vintage-cream transition-colors hover:border-vintage-gold hover:bg-vintage-gold hover:text-vintage-brown"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => showSlide(activeSlide + 1)}
+            aria-label="Next offer"
+            className="flex h-10 w-10 items-center justify-center border border-vintage-cream/50 text-vintage-cream transition-colors hover:border-vintage-gold hover:bg-vintage-gold hover:text-vintage-brown"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+          <div
+            className="ml-2 flex items-center gap-2"
+            aria-label="Offer slides"
+          >
+            {heroSlides.map((slide, index) => (
+              <button
+                key={slide.title}
+                type="button"
+                onClick={() => showSlide(index)}
+                aria-label={`Show offer ${index + 1}`}
+                className={`h-1.5 transition-all ${
+                  index === activeSlide
+                    ? "w-8 bg-vintage-gold"
+                    : "w-1.5 bg-vintage-cream/60"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
       </section>
 
-      <section className="py-32 px-4 sm:px-6 lg:px-8 max-w-[90rem] mx-auto bg-vintage-cream relative">
+      <section className="border-b border-vintage-brown/10 bg-vintage-cream px-5 py-5 sm:px-8 lg:px-12">
+        <div className="mx-auto grid max-w-[90rem] gap-3 text-center font-sans text-[10px] font-bold uppercase tracking-[0.16em] text-vintage-light-brown sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-vintage-brown/15 sm:text-[11px] sm:tracking-[0.2em]">
+          <span>Curated pieces, always changing</span>
+          <span>Gift-ready packaging</span>
+          <span>Clear delivery updates</span>
+        </div>
+      </section>
+
+      <section className="relative mx-auto max-w-[90rem] bg-vintage-cream px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeInUp}
-          className="flex flex-col items-center mb-20"
+          className="mb-12 flex flex-col items-center sm:mb-16"
         >
-          <h2 className="font-serif text-4xl md:text-6xl text-vintage-brown mb-6 text-center">
-            Curated Categories
+          <h2 className="mb-4 text-center font-serif text-4xl text-vintage-brown md:text-6xl">
+            Our Categories
           </h2>
-          <div className="h-[2px] w-32 bg-gradient-to-r from-transparent via-vintage-gold to-transparent"></div>
+          <p className="max-w-xl text-center font-sans text-sm leading-relaxed text-vintage-light-brown sm:text-base">
+            Browse thoughtful gifts, playful party details, and printed pieces
+            made for every kind of celebration.
+          </p>
+          <div className="mt-6 h-0.5 w-20 bg-vintage-gold"></div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 h-auto lg:h-[700px]">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeInUp}
-            className="lg:col-span-7 h-[400px] lg:h-full"
-          >
-            <Link
-              to="/shop?category=accessories"
-              className="group relative w-full h-full block overflow-hidden rounded-sm shadow-xl"
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5 lg:gap-5">
+          {categoryCards.map((category, index) => (
+            <motion.div
+              key={category.slug}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={fadeInUp}
+              transition={{ delay: (index % 5) * 0.06 }}
+              className={index === 0 ? "sm:col-span-2 lg:col-span-2" : ""}
             >
-              <motion.img
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
-                src="https://images.unsplash.com/photo-1576053139778-7e32f2ae3cfd?auto=format&fit=crop&q=80&w=1400"
-                alt="Accessories"
-                className="w-full h-full object-cover filter brightness-[0.8] sepia-[.15]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-vintage-brown/90 via-vintage-brown/20 to-transparent flex flex-col justify-end p-10 lg:p-14">
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  viewport={{ once: true }}
-                >
-                  <p className="text-vintage-gold text-xs font-sans tracking-[0.4em] uppercase mb-4 flex items-center gap-4">
-                    <span className="h-[1px] w-8 bg-vintage-gold inline-block"></span>{" "}
-                    Featured
-                  </p>
-                  <h3 className="font-serif text-5xl lg:text-7xl text-white mb-2 group-hover:text-vintage-gold transition-colors duration-500">
-                    Accessories
+              <Link
+                to={`/shop?category=${category.slug}`}
+                className={`group relative block overflow-hidden border border-vintage-brown/10 bg-white ${
+                  index === 0 ? "aspect-[2/1] sm:aspect-[2/1]" : "aspect-square"
+                }`}
+              >
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  className="h-full w-full object-cover brightness-[0.84] saturate-[0.85] transition duration-700 group-hover:scale-105 group-hover:brightness-100"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-vintage-brown/85 via-vintage-brown/10 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4">
+                  {category.badge && (
+                    <span className="mb-2 inline-block bg-vintage-gold px-2 py-1 font-sans text-[9px] font-bold uppercase tracking-[0.16em] text-vintage-brown">
+                      {category.badge}
+                    </span>
+                  )}
+                  <h3 className="font-serif text-lg leading-tight text-white transition-colors group-hover:text-vintage-gold sm:text-xl">
+                    {category.name}
                   </h3>
-                  <span className="inline-flex mt-4 items-center gap-2 text-white/80 text-sm font-sans tracking-widest uppercase opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                    Shop Now <ArrowRight className="w-4 h-4" />
+                  <span className="mt-2 hidden items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[0.16em] text-white/80 sm:inline-flex">
+                    Explore{" "}
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </span>
-                </motion.div>
-              </div>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-vintage-gold">
+        <div className="mx-auto grid min-h-[25rem] max-w-[90rem] lg:grid-cols-2">
+          <div className="relative min-h-[18rem] overflow-hidden lg:min-h-0">
+            <img
+              src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=85&w=1400"
+              alt="A close look at a vintage keepsake"
+              className="h-full w-full object-cover object-center grayscale-[.1] transition-transform duration-700 hover:scale-105"
+            />
+          </div>
+          <div className="flex flex-col justify-center px-6 py-14 text-vintage-brown sm:px-12 lg:px-20">
+            <p className="mb-5 font-sans text-xs font-bold uppercase tracking-[0.28em]">
+              The little things matter
+            </p>
+            <h2 className="max-w-lg font-serif text-4xl leading-none sm:text-6xl">
+              Make room for something memorable.
+            </h2>
+            <p className="mt-6 max-w-md font-sans text-base leading-relaxed text-vintage-brown/75">
+              From desk-side treasures to art for empty walls, find pieces that
+              make ordinary corners feel like your own.
+            </p>
+            <Link
+              to="/shop"
+              className="group mt-8 inline-flex w-fit items-center gap-3 border-b border-vintage-brown pb-2 font-sans text-xs font-bold uppercase tracking-[0.2em]"
+            >
+              Shop the edit
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-          </motion.div>
-
-          <div className="lg:col-span-5 flex flex-col gap-6 lg:gap-8 h-full">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={fadeInUp}
-              className="flex-1 h-[300px] lg:h-1/2"
-            >
-              <Link
-                to="/shop?category=prints"
-                className="group relative w-full h-full block overflow-hidden rounded-sm shadow-xl"
-              >
-                <motion.img
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 1.2, ease: "easeOut" }}
-                  src="https://images.unsplash.com/photo-1581447109200-bf2769116351?auto=format&fit=crop&q=80&w=1000"
-                  alt="Prints"
-                  className="w-full h-full object-cover filter brightness-[0.85] sepia-[.1]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-vintage-brown/80 via-transparent to-transparent flex flex-col justify-end p-8">
-                  <h3 className="font-serif text-3xl lg:text-4xl text-white group-hover:text-vintage-gold transition-colors duration-500">
-                    Fine Prints
-                  </h3>
-                </div>
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={fadeInUp}
-              className="flex-1 h-[300px] lg:h-1/2"
-            >
-              <Link
-                to="/shop?category=home decor"
-                className="group relative w-full h-full block overflow-hidden rounded-sm shadow-xl"
-              >
-                <motion.img
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 1.2, ease: "easeOut" }}
-                  src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=1000"
-                  alt="Home Decor"
-                  className="w-full h-full object-cover filter brightness-[0.85] sepia-[.1]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-vintage-brown/80 via-transparent to-transparent flex flex-col justify-end p-8">
-                  <h3 className="font-serif text-3xl lg:text-4xl text-white group-hover:text-vintage-gold transition-colors duration-500">
-                    Home Decor
-                  </h3>
-                </div>
-              </Link>
-            </motion.div>
           </div>
         </div>
       </section>
@@ -251,7 +411,7 @@ const HomePage = () => {
                 variants={fadeInUp}
                 className="group flex flex-col"
               >
-                <div className="relative overflow-hidden aspect-[4/5] mb-8 bg-vintage-cream/30 shadow-lg rounded-sm cursor-pointer">
+                <div className="relative mb-8 aspect-[4/5] cursor-pointer overflow-hidden border border-vintage-brown/10 bg-vintage-cream/30">
                   <motion.img
                     whileHover={{ scale: 1.08 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
@@ -286,6 +446,37 @@ const HomePage = () => {
               </motion.div>
             ))}
           </motion.div>
+        </div>
+      </section>
+
+      <section className="border-t border-vintage-brown/10 bg-vintage-cream px-5 py-16 sm:px-8 lg:px-12">
+        <div className="mx-auto grid max-w-[90rem] gap-10 md:grid-cols-3 md:gap-0 md:divide-x md:divide-vintage-brown/15">
+          {[
+            {
+              title: "Curated slowly",
+              text: "Thoughtful objects chosen for character, not clutter.",
+            },
+            {
+              title: "Gift-ready",
+              text: "Beautiful finds, packed with care for someone special.",
+            },
+            {
+              title: "Delivered simply",
+              text: "Clear shipping updates from our door to yours.",
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="px-0 md:px-10 first:md:pl-0 last:md:pr-0"
+            >
+              <h3 className="font-serif text-2xl text-vintage-brown">
+                {item.title}
+              </h3>
+              <p className="mt-3 max-w-xs font-sans text-sm leading-relaxed text-vintage-light-brown">
+                {item.text}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
     </div>

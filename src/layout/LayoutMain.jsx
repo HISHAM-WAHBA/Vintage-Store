@@ -6,14 +6,19 @@ import { Outlet, useLocation } from "react-router-dom";
 const LayoutMain = () => {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  const isAdminPage = location.pathname === "/admin";
 
   return (
     <div className="flex flex-col min-h-screen bg-vintage-cream text-vintage-text font-sans selection:bg-vintage-gold selection:text-vintage-brown">
-      <Navbar />
-      <main className={`flex-grow ${!isHomePage ? "pt-20" : ""}`}>
+      {!isAdminPage && <Navbar />}
+      <main
+        className={`grow ${
+          isAdminPage ? "" : `pb-20 lg:pb-0 ${!isHomePage ? "pt-28" : ""}`
+        }`}
+      >
         <Outlet />
       </main>
-      <Footer />
+      {!isAdminPage && <Footer />}
       <Toaster
         position="bottom-right"
         toastOptions={{

@@ -58,12 +58,9 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="bg-vintage-cream min-h-screen flex items-center justify-center p-4 pt-24 pb-20 relative overflow-hidden">
-      <motion.div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-br from-vintage-gold/5 to-transparent blur-3xl mix-blend-multiply pointer-events-none" />
-      <motion.div className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tl from-vintage-brown/5 to-transparent blur-3xl mix-blend-multiply pointer-events-none" />
-
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-vintage-cream px-5 pb-24 pt-24 sm:px-8">
       <motion.div
-        className="w-full max-w-lg bg-white p-10 md:p-14 shadow-2xl rounded-sm border-t-4 border-vintage-gold relative z-10"
+        className="relative z-10 w-full max-w-lg border-t-4 border-vintage-gold bg-white p-7 shadow-xl sm:p-10 md:p-14"
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
