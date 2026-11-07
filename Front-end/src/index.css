@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-vintage-brown: #1e1b18;
+  --color-vintage-gold: #a72961;
+  --color-vintage-cream: #fff8f5;
+  --color-vintage-text: #1e1b18;
+  --color-vintage-light-brown: #564147;
+  --color-vintage-accent: #236756;
+  --color-vintage-mustard: #fdbf2e;
+  --color-vintage-pink: #f5ece7;
+  --color-vintage-border: #dcbfc6;
+
+  --font-serif: "Libre Caslon Text", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+}
+
+:root {
+  font-family: var(--font-sans);
+  background-color: var(--color-vintage-cream);
+  color: var(--color-vintage-text);
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-serif);
+  }
+
+  .text-vintage-shadow {
+    text-shadow: 1px 1px 2px rgba(93, 64, 55, 0.3);
+  }
+
+  .vintage-border {
+    border: 1px solid var(--color-vintage-gold);
+    border-radius: 12px;
+  }
+
+  /* ─── Neo-Vintage Button Hover System ─────────────────────────────────── */
+  .btn-vintage-primary {
+    background-color: var(--color-vintage-gold);
+    color: #ffffff;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-vintage-primary:hover {
+    background-color: #8a0e4c;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(167, 41, 97, 0.3);
+  }
+  .btn-vintage-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(167, 41, 97, 0.15);
+  }
+
+  .btn-vintage-secondary {
+    background-color: var(--color-vintage-mustard);
+    color: #6d4f00;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-vintage-secondary:hover {
+    background-color: #fabd2b;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(253, 191, 46, 0.35);
+  }
+  .btn-vintage-secondary:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(253, 191, 46, 0.15);
+  }
+
+  .btn-vintage-accent {
+    background-color: var(--color-vintage-accent);
+    color: #ffffff;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-vintage-accent:hover {
+    background-color: #1b5244;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(35, 103, 86, 0.25);
+  }
+  .btn-vintage-accent:active {
+    transform: translateY(0);
+  }
+
+  .btn-vintage-icon {
+    transition: all 0.2s ease-out;
+  }
+  .btn-vintage-icon:hover {
+    background-color: var(--color-vintage-pink);
+    color: var(--color-vintage-gold);
+    transform: scale(1.08);
+  }
+  .btn-vintage-icon:active {
+    transform: scale(0.95);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-vintage-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-vintage-gold);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8a0e4c;
+}

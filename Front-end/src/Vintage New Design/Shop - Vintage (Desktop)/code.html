@@ -1,0 +1,504 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Vintage | Shop</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#ffd9e3",
+                      "on-error": "#ffffff",
+                      "on-primary-container": "#fffbff",
+                      "outline-variant": "#dcbfc6",
+                      "tertiary-container": "#3f806e",
+                      "surface": "#fff8f5",
+                      "error": "#ba1a1a",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary": "#236756",
+                      "inverse-on-surface": "#f8efea",
+                      "error-container": "#ffdad6",
+                      "tertiary-fixed": "#adf0db",
+                      "primary": "#a72961",
+                      "secondary-fixed-dim": "#fabd2b",
+                      "on-secondary-fixed-variant": "#5c4200",
+                      "on-tertiary-container": "#f4fff9",
+                      "surface-container-low": "#fbf2ed",
+                      "on-primary-fixed": "#3e001e",
+                      "on-primary-fixed-variant": "#8a0e4c",
+                      "tertiary-fixed-dim": "#91d4bf",
+                      "on-secondary-fixed": "#261900",
+                      "primary-container": "#c7437a",
+                      "surface-dim": "#e1d8d4",
+                      "on-background": "#1e1b18",
+                      "surface-container-highest": "#e9e1dc",
+                      "on-surface-variant": "#564147",
+                      "on-primary": "#ffffff",
+                      "background": "#fff8f5",
+                      "on-surface": "#1e1b18",
+                      "secondary-container": "#fdbf2e",
+                      "on-tertiary": "#ffffff",
+                      "surface-variant": "#e9e1dc",
+                      "primary-fixed-dim": "#ffb0c9",
+                      "on-tertiary-fixed": "#002019",
+                      "surface-bright": "#fff8f5",
+                      "surface-container-high": "#efe6e2",
+                      "on-error-container": "#93000a",
+                      "secondary": "#7a5900",
+                      "on-tertiary-fixed-variant": "#005141",
+                      "inverse-primary": "#ffb0c9",
+                      "surface-container": "#f5ece7",
+                      "secondary-fixed": "#ffdea2",
+                      "on-secondary-container": "#6d4f00",
+                      "inverse-surface": "#34302c",
+                      "on-secondary": "#ffffff",
+                      "outline": "#897177",
+                      "surface-tint": "#aa2c64"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "8px",
+                      "stack-md": "24px",
+                      "container-max": "1280px",
+                      "gutter": "24px",
+                      "stack-lg": "48px",
+                      "margin-desktop": "48px",
+                      "stack-sm": "12px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Libre Caslon Text"
+                      ],
+                      "body-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-sm": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg": [
+                              "Libre Caslon Text"
+                      ],
+                      "headline-lg-mobile": [
+                              "Libre Caslon Text"
+                      ],
+                      "label-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "display-lg": [
+                              "Libre Caslon Text"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom Checkbox Styling */
+        .filter-checkbox {
+            appearance: none;
+            background-color: transparent;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.25em;
+            height: 1.25em;
+            border: 1px solid theme('colors.outline');
+            border-radius: theme('borderRadius.DEFAULT');
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .filter-checkbox::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em white;
+            background-color: white;
+            transform-origin: center;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+        
+        .filter-checkbox:checked {
+            background-color: theme('colors.tertiary');
+            border-color: theme('colors.tertiary');
+        }
+        
+        .filter-checkbox:checked::before {
+            transform: scale(1);
+        }
+        
+        .card-hover-effect {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(45, 41, 38, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="w-full top-0 sticky z-50 bg-surface shadow-[0_10px_30px_rgba(45,41,38,0.05)] dark:bg-surface-container-lowest transition-all duration-300 ease-in-out hidden md:block">
+<div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-stack-md">
+<a class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed" href="#"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7Cc1IiivuHWAjb5WHJ0IicJBvJc63F6OgD5WWVonsDZFbGO4d09FJRd06juNikirmL6Mt_SHsQCTuTPGXKcasBeENrKt8ybhm91NyzkGjJx5PYFNgoWjI1gdEE1hmsab40QN55I6BeG51GCCYZ9oIQdHEfvDNypkXWdS3roEm720LyO6kCUHCdm7sL3Md4CkB5AEuI6KlVHOVXhBOZjwdWrt5GF02rD5QSdkxWhUUnpZxzo0AzpBgYAwx6o3wTqZzy4E" alt="Vintage Logo" class="h-10 w-auto object-contain"></a>
+</div>
+<div class="flex items-center gap-stack-md flex-1 justify-center"><a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-200" href="#">Shop</a><a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-200" href="#">Birthday</a><a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-200" href="#">Bridal</a><a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-200" href="#">Baby</a><a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-200" href="#">Back to School</a><a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-200" href="#">Gift Boxes</a><a class="text-on-surface-variant font-medium font-body-md text-body-md hover:text-primary transition-colors duration-200" href="#">Photo Prints</a></div>
+<div class="flex items-center gap-stack-sm text-primary dark:text-primary-fixed">
+<button aria-label="favorite" class="hover:text-primary-container transition-colors p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<button aria-label="shopping_cart" class="hover:text-primary-container transition-colors p-2 rounded-full hover:bg-surface-container-low flex items-center gap-1">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-label-md text-label-md hidden lg:inline">Cart</span>
+</button>
+<button aria-label="person" class="hover:text-primary-container transition-colors p-2 rounded-full hover:bg-surface-container-low flex items-center gap-1">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md hidden lg:inline">Account</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="max-w-container-max mx-auto px-margin-desktop py-stack-lg flex gap-gutter min-h-screen">
+<!-- Sidebar Filters -->
+<aside class="w-64 flex-shrink-0 hidden lg:block h-fit sticky top-32">
+<div class="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_10px_30px_rgba(45,41,38,0.05)] border border-outline-variant/30">
+<div class="mb-stack-md flex justify-between items-center border-b border-outline-variant/30 pb-4">
+<h2 class="font-headline-md text-headline-md text-on-background text-2xl">Filters</h2>
+<button class="text-tertiary font-label-md text-label-md hover:underline">Clear All</button>
+</div>
+<!-- Filter Category -->
+<div class="mb-stack-md border-b border-outline-variant/30 pb-4">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase mb-4 tracking-widest">Category</h3>
+<div class="flex flex-col gap-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="filter-checkbox" type="checkbox">
+<span class="text-on-background group-hover:text-primary transition-colors">Art Kits</span>
+<span class="ml-auto text-on-surface-variant text-sm text-label-sm">(12)</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="filter-checkbox" type="checkbox">
+<span class="text-on-background group-hover:text-primary transition-colors">Drinkware</span>
+<span class="ml-auto text-on-surface-variant text-sm text-label-sm">(8)</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="filter-checkbox" type="checkbox">
+<span class="text-on-background group-hover:text-primary transition-colors">Gift Boxes</span>
+<span class="ml-auto text-on-surface-variant text-sm text-label-sm">(24)</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="filter-checkbox" type="checkbox">
+<span class="text-on-background group-hover:text-primary transition-colors">Stationery</span>
+<span class="ml-auto text-on-surface-variant text-sm text-label-sm">(15)</span>
+</label>
+</div>
+</div>
+<!-- Price Filter -->
+<div class="mb-stack-md border-b border-outline-variant/30 pb-4">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase mb-4 tracking-widest">Price Range</h3>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex-1 relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">$</span>
+<input class="w-full bg-surface border border-outline-variant rounded-lg pl-6 pr-2 py-2 text-sm focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors" placeholder="Min" type="number">
+</div>
+<span class="text-on-surface-variant">-</span>
+<div class="flex-1 relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">$</span>
+<input class="w-full bg-surface border border-outline-variant rounded-lg pl-6 pr-2 py-2 text-sm focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors" placeholder="Max" type="number">
+</div>
+</div>
+</div>
+<!-- Availability Filter -->
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase mb-4 tracking-widest">Availability</h3>
+<div class="flex flex-col gap-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="filter-checkbox" type="checkbox">
+<span class="text-on-background group-hover:text-primary transition-colors">In Stock</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="filter-checkbox" type="checkbox">
+<span class="text-on-background group-hover:text-primary transition-colors">Custom Order</span>
+</label>
+</div>
+</div>
+</div>
+</aside>
+<!-- Product Grid Area -->
+<div class="flex-1">
+<!-- Header/Sorting -->
+<div class="flex justify-between items-end mb-stack-lg">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-primary mb-2">Curated Collection</h1>
+<p class="text-on-surface-variant font-body-lg text-body-lg">Discover bespoke, handcrafted items customized just for you.</p>
+</div>
+<div class="hidden sm:flex items-center gap-4 bg-surface-container-lowest px-4 py-2 rounded-lg border border-outline-variant/30">
+<span class="text-on-surface-variant font-label-md text-label-md">Sort by:</span>
+<select class="bg-transparent border-none text-on-background font-body-md focus:ring-0 cursor-pointer outline-none">
+<option>Featured</option>
+<option>Newest Arrivals</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+</select>
+</div>
+</div>
+<!-- Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
+<!-- Product 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_10px_30px_rgba(45,41,38,0.05)] border border-outline-variant/20 card-hover-effect flex flex-col h-full relative group cursor-pointer">
+<div class="absolute top-6 left-6 z-10">
+<span class="bg-tertiary/10 text-tertiary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 backdrop-blur-sm border border-tertiary/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="edit">edit</span>
+                            Customizable
+                        </span>
+</div>
+<button class="absolute top-6 right-6 z-10 bg-surface-container-lowest/80 backdrop-blur-md p-2 rounded-full hover:text-primary transition-colors shadow-sm opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-200">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<div class="w-full aspect-[4/5] rounded-lg overflow-hidden mb-4 bg-surface-container-low relative">
+<img class="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A beautifully arranged premium safari-themed art kit laid out on a clean white studio table. The kit includes high-quality watercolor paints, bespoke wooden brushes, and thick artisanal paper featuring delicate illustrations of savanna animals. The lighting is bright, soft, and natural, casting subtle shadows that highlight the tactile textures of the materials. The overall aesthetic is Neo-Vintage, blending 1970s nostalgia with a clean, high-end modern SaaS look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR4Dgcil9F_bysYx9GE3S-N5Iwr7me5xjB2owX-fimsN5edf7Vfo6zCSmG2vTRMaUyVsKo6b5zJW-lSz0ZEnVuXxLl-gRqgS8Kqh5ZCaniN7bXNMuHJhofhbcMxP3Yd7pUmwK-vzEbIOBdulObumpdA37qYuNTh9_qJ6ZgFVh7JwdTEXP_EAgf07W85n9gZgYuLnFTKTp_Pp1sGiBCYadPAvCtNpnrvkUiO9l6PJh7vIUVgdTGqgduyw">
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-[20px] leading-tight text-on-background group-hover:text-primary transition-colors">Personalized Safari Art Kit</h3>
+<span class="font-label-md text-label-md text-on-surface-variant font-bold">$45.00</span>
+</div>
+<div class="flex items-center gap-1 mb-3">
+<div class="flex text-secondary-container">
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star_half">star_half</span>
+</div>
+<span class="text-label-sm text-on-surface-variant">(128)</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 duration-300">
+<span class="material-symbols-outlined text-[18px]" data-icon="shopping_bag">shopping_bag</span>
+                            Customize &amp; Add
+                        </button>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_10px_30px_rgba(45,41,38,0.05)] border border-outline-variant/20 card-hover-effect flex flex-col h-full relative group cursor-pointer">
+<div class="absolute top-6 left-6 z-10">
+<span class="bg-tertiary/10 text-tertiary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 backdrop-blur-sm border border-tertiary/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="edit">edit</span>
+                            Customizable
+                        </span>
+</div>
+<button class="absolute top-6 right-6 z-10 bg-surface-container-lowest/80 backdrop-blur-md p-2 rounded-full hover:text-primary transition-colors shadow-sm opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-200">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<div class="w-full aspect-[4/5] rounded-lg overflow-hidden mb-4 bg-surface-container-low relative">
+<img class="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A custom ceramic mug with delicate, hand-painted floral whimsy patterns in subtle creamy pink and mint tones, resting on a textured linen cloth. The scene is bathed in soft, diffused morning sunlight, creating gentle ambient shadows typical of a premium editorial style. The background is a minimalist, airy studio space with a warm, neo-vintage atmosphere, emphasizing the bespoke quality of the product." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDACWxDd9wObnPS9IL9HGbFzCBLTl-JktZ_9DzWA8-DF8PwmGT2mjCYw7J1jTzIcxiwJCoIaBqeamebm6ETVvTLcshjmNJqJI1ua8250S0zZCwBjxjlqX_bfCjPekSJy8nuDCJN-ATRmAumz4wSkqBJ9ADmnkUO5JJxP4QwcBM_CfRnrMpL0nL14N02WFHc7F4uPhXtlNRXqZVL-l7tRBq6F5w2FCJpyXQpnthAgOpSdHQ3Wf7Os-1YHw">
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-[20px] leading-tight text-on-background group-hover:text-primary transition-colors">Floral Whimsy Custom Mug</h3>
+<span class="font-label-md text-label-md text-on-surface-variant font-bold">$28.00</span>
+</div>
+<div class="flex items-center gap-1 mb-3">
+<div class="flex text-secondary-container">
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+</div>
+<span class="text-label-sm text-on-surface-variant">(84)</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 duration-300">
+<span class="material-symbols-outlined text-[18px]" data-icon="shopping_bag">shopping_bag</span>
+                            Customize &amp; Add
+                        </button>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-[0_10px_30px_rgba(45,41,38,0.05)] border border-outline-variant/20 card-hover-effect flex flex-col h-full relative group cursor-pointer">
+<div class="absolute top-6 left-6 z-10">
+<span class="bg-tertiary/10 text-tertiary px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 backdrop-blur-sm border border-tertiary/20">
+<span class="material-symbols-outlined text-[14px]" data-icon="edit">edit</span>
+                            Customizable
+                        </span>
+</div>
+<button class="absolute top-6 right-6 z-10 bg-surface-container-lowest/80 backdrop-blur-md p-2 rounded-full hover:text-primary transition-colors shadow-sm opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-200">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<div class="w-full aspect-[4/5] rounded-lg overflow-hidden mb-4 bg-surface-container-low relative">
+<img class="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="An elegantly arranged bespoke celebration gift box opened to reveal meticulously packed items: artisanal chocolates, a small custom journal, and a vintage-style fountain pen. The composition is set on a pure white surface with generous white space, accented by subtle hints of raspberry and mustard in the packaging. The high-key lighting creates a soft, luminous glow, embodying a sophisticated, curated modern-vintage aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0yn1_KvBQ8HSzGjcqKiByu2lwY9_WA4bY707WSLE0zGT0y-rbWKNZbQ5i2NlAquGXyHLGcpyqquK7ROILTqfbA-JtWZ1jkQtAorSTRDeAdj0H2v35v93oQuC_sjny9YpekXb58azWVFpXldohqzoyS9tiBH-hqQ5YROH08YWqiNQUDSyuANdl55egSvLlK0tGZMZjT5iuSiLfOtSjkGxIJ7KAzs1Kn-uIdAbtRAHIA-mi4sqP71Dblg">
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-[20px] leading-tight text-on-background group-hover:text-primary transition-colors">Bespoke Celebration Box</h3>
+<span class="font-label-md text-label-md text-on-surface-variant font-bold">$120.00</span>
+</div>
+<div class="flex items-center gap-1 mb-3">
+<div class="flex text-secondary-container">
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star">star</span>
+<span class="material-symbols-outlined fill text-[16px]" data-icon="star_half">star_half</span>
+</div>
+<span class="text-label-sm text-on-surface-variant">(215)</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 duration-300">
+<span class="material-symbols-outlined text-[18px]" data-icon="shopping_bag">shopping_bag</span>
+                            Customize &amp; Add
+                        </button>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-stack-lg flex justify-center items-center gap-2">
+<button class="p-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center">1</button>
+<button class="w-10 h-10 rounded-lg hover:bg-surface-variant text-on-surface-variant font-label-md text-label-md flex items-center justify-center transition-colors">2</button>
+<button class="w-10 h-10 rounded-lg hover:bg-surface-variant text-on-surface-variant font-label-md text-label-md flex items-center justify-center transition-colors">3</button>
+<span class="text-on-surface-variant mx-1">...</span>
+<button class="p-2 rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-lg bg-surface-container-low border-t border-outline-variant dark:bg-surface-container-highest mt-stack-lg">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1 mb-8 md:mb-0">
+<div class="mb-4"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-uHgKAv6_ybUCL3OKKdO2E4ZhjM9qQ5dFWuJEZxG_k0PuHwGrrx5xT6CRLL4p6CaP_tNLFYfFL-lJ7ne7yApqfkSYOBdBtyWV8mAuH6H7jkLjaBkNR5HMgV3iw2LYFF8LZy-Po662VS3OaLLtcRJ5Mm48_UBsFC5qCo_oPV22fWs8EgSpgR-khPnhbKpfQyrjY7Zo_I7jk1fg3JOadcLB9WtuC4fprHVvJkUS8gmFXRdtFY78xcE_FocgdhJkQx9JyGw" alt="Vintage Logo" class="h-10 w-auto object-contain"></div>
+<p class="text-on-surface-variant font-body-md text-body-md mb-4">Crafting nostalgic, bespoke experiences for the modern creative soul.</p>
+<div class="flex gap-4 text-primary">
+<a class="hover:text-primary-container transition-colors" href="#"><span class="material-symbols-outlined" data-icon="camera">camera</span></a>
+<a class="hover:text-primary-container transition-colors" href="#"><span class="material-symbols-outlined" data-icon="mail">mail</span></a>
+</div>
+</div>
+<div class="col-span-1">
+<h4 class="font-label-md text-label-md text-on-background uppercase tracking-widest mb-4">Explore</h4>
+<ul class="flex flex-col gap-3">
+<li class=""><a class="text-on-surface-variant hover:text-primary underline transition-all font-body-md text-body-md" href="#">Shop</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary underline transition-all font-body-md text-body-md" href="#">Categories</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary underline transition-all font-body-md text-body-md" href="#">Customized</a></li>
+</ul>
+</div>
+<div class="col-span-1">
+<h4 class="font-label-md text-label-md text-on-background uppercase tracking-widest mb-4">Support</h4>
+<ul class="flex flex-col gap-3">
+<li class=""><a class="text-on-surface-variant hover:text-primary underline transition-all font-body-md text-body-md" href="#">Our Story</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary underline transition-all font-body-md text-body-md" href="#">Contact Us</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary underline transition-all font-body-md text-body-md" href="#">Shipping &amp; Returns</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary underline transition-all font-body-md text-body-md" href="#">Privacy Policy</a></li>
+<li class=""><a class="text-on-surface-variant hover:text-primary underline transition-all font-body-md text-body-md" href="#">Custom Orders</a></li>
+</ul>
+</div>
+<div class="col-span-1">
+<h4 class="font-label-md text-label-md text-on-background uppercase tracking-widest mb-4">Newsletter</h4>
+<p class="text-on-surface-variant font-body-md text-body-md mb-4">Join our studio for updates and exclusive artisanal drops.</p>
+<div class="flex gap-2">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-2 font-body-md text-sm focus:border-tertiary focus:ring-1 focus:ring-tertiary outline-none" placeholder="Your email" type="email">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors">Subscribe</button>
+</div>
+</div>
+<div class="col-span-1 md:col-span-4 mt-stack-md pt-stack-md border-t border-outline-variant/30 text-center">
+<p class="text-on-surface-variant font-body-md text-body-md text-sm">© 2024 Vintage Artisanal Studio. All rights reserved.</p>
+</div>
+</div>
+</footer>
+
+
+</body></html>

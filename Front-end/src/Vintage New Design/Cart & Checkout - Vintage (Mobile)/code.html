@@ -1,0 +1,404 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+<title>Vintage - Cart &amp; Checkout</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#ffd9e3",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#fffbff",
+                        "outline-variant": "#dcbfc6",
+                        "tertiary-container": "#3f806e",
+                        "surface": "#fff8f5",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#236756",
+                        "inverse-on-surface": "#f8efea",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#adf0db",
+                        "primary": "#a72961",
+                        "secondary-fixed-dim": "#fabd2b",
+                        "on-secondary-fixed-variant": "#5c4200",
+                        "on-tertiary-container": "#f4fff9",
+                        "surface-container-low": "#fbf2ed",
+                        "on-primary-fixed": "#3e001e",
+                        "on-primary-fixed-variant": "#8a0e4c",
+                        "tertiary-fixed-dim": "#91d4bf",
+                        "on-secondary-fixed": "#261900",
+                        "primary-container": "#c7437a",
+                        "surface-dim": "#e1d8d4",
+                        "on-background": "#1e1b18",
+                        "surface-container-highest": "#e9e1dc",
+                        "on-surface-variant": "#564147",
+                        "on-primary": "#ffffff",
+                        "background": "#fff8f5",
+                        "on-surface": "#1e1b18",
+                        "secondary-container": "#fdbf2e",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e9e1dc",
+                        "primary-fixed-dim": "#ffb0c9",
+                        "on-tertiary-fixed": "#002019",
+                        "surface-bright": "#fff8f5",
+                        "surface-container-high": "#efe6e2",
+                        "on-error-container": "#93000a",
+                        "secondary": "#7a5900",
+                        "on-tertiary-fixed-variant": "#005141",
+                        "inverse-primary": "#ffb0c9",
+                        "surface-container": "#f5ece7",
+                        "secondary-fixed": "#ffdea2",
+                        "on-secondary-container": "#6d4f00",
+                        "inverse-surface": "#34302c",
+                        "on-secondary": "#ffffff",
+                        "outline": "#897177",
+                        "surface-tint": "#aa2c64"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "card": "24px",
+                        "pill": "100px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "stack-md": "24px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "stack-lg": "48px",
+                        "margin-desktop": "48px",
+                        "stack-sm": "12px",
+                        "margin-mobile": "16px",
+                        "safe": "env(safe-area-inset-bottom)"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Libre Caslon Text"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Libre Caslon Text"],
+                        "headline-lg-mobile": ["Libre Caslon Text"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Libre Caslon Text"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    },
+                    "boxShadow": {
+                        "ambient": "0 10px 30px rgba(45, 41, 38, 0.05)",
+                        "ambient-hover": "0 15px 40px rgba(45, 41, 38, 0.08)"
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .step-indicator.active .step-line {
+            background-color: theme('colors.primary');
+        }
+        .step-indicator.completed .step-circle {
+            background-color: theme('colors.tertiary');
+            color: theme('colors.on-tertiary');
+            border-color: theme('colors.tertiary');
+        }
+        .step-indicator.active .step-circle {
+            background-color: theme('colors.primary');
+            color: theme('colors.on-primary');
+            border-color: theme('colors.primary');
+        }
+        /* Custom Input Styling */
+        input[type="text"], input[type="email"], input[type="tel"] {
+            @apply border-outline rounded-lg bg-transparent px-4 py-3 w-full font-body-md text-on-surface focus:ring-0 focus:border-tertiary focus:border-2 transition-colors duration-200 outline-none;
+        }
+        label {
+            @apply font-label-md text-on-surface-variant mb-1 block;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-md antialiased md:hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top Navigation (Mobile App Bar style for transactional view - suppressing main nav) -->
+<header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-surface-variant">
+<div class="flex items-center justify-between px-margin-mobile py-4">
+<button aria-label="Go back" class="text-on-surface-variant hover:text-primary transition-colors p-2 -ml-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<div class="h-8 w-auto flex items-center"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfx5cadsRJebxXK7wEAPIMLkBfyuLvJEJns9oM6tlcsmKKbkAUCAe1jk5bEXM-PeVKZ0uMNJdlGIOlxgEElbselhzh413ZnMplF74Ly_XKAWIyjHqIXPEVw13G-4dY-gkY0w7OLSiKblE68AIsVXyV171TORjVnllCsZMhLFTOzicdsOnWxwrwZAcW6AMKgf4w2VD9sT8cPWyYzPlNkCcg6SSyFaAZI9IUzhOz84x7uKM0TpJ9ls1JeVdVdAgVr7DyV-A" alt="Vintage Logo" class="h-full w-auto object-contain"></div>
+<div class="w-10"></div> <!-- Spacer for balance -->
+</div>
+<!-- Progress Indicator -->
+<div class="px-margin-mobile pb-4 pt-2">
+<div class="flex items-center justify-between relative">
+<!-- Track -->
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-primary-fixed rounded-full z-0"></div>
+<!-- Active Track -->
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-1/2 h-1 bg-primary rounded-full z-0 transition-all duration-300" id="progress-bar"></div>
+<!-- Steps -->
+<div class="step-indicator active flex flex-col items-center z-10 w-1/2" id="step-1">
+<div class="step-circle w-8 h-8 rounded-full border-2 bg-primary border-primary text-on-primary flex items-center justify-center font-headline-md text-[14px] font-bold shadow-sm transition-colors duration-300">
+                        1
+                    </div>
+<span class="font-label-sm text-label-sm mt-2 text-primary font-bold">Cart</span>
+</div>
+<div class="step-indicator flex flex-col items-center z-10 w-1/2" id="step-2">
+<div class="step-circle w-8 h-8 rounded-full border-2 bg-surface border-primary-fixed text-primary-fixed flex items-center justify-center font-headline-md text-[14px] font-bold shadow-sm transition-colors duration-300 bg-white">
+                        2
+                    </div>
+<span class="font-label-sm text-label-sm mt-2 text-on-surface-variant">Checkout</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow px-margin-mobile py-stack-md overflow-x-hidden relative" id="main-content">
+<!-- View 1: Cart View -->
+<div class="transition-transform duration-500 ease-in-out block w-full absolute left-0 px-margin-mobile" id="view-cart">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-stack-md">Your Cart</h2>
+<!-- Cart Items Stack -->
+<div class="flex flex-col gap-stack-sm mb-stack-lg">
+<!-- Item 1 -->
+<div class="bg-surface-container-lowest rounded-card p-4 shadow-ambient flex gap-4 border border-surface-variant relative overflow-hidden group">
+<div class="w-24 h-24 rounded-lg bg-surface-container-low overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A beautifully crafted vintage-style leather journal lying flat on a wooden desk. Warm, moody lighting highlights the rich texture of the brown leather and the embossed gold monogram. The aesthetic is artisanal, 1970s neo-vintage with a premium, tactile quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxU2k3Q6UXWljJ-RB6eL9Mkm5KKuwGr3JNZ8wgH2n45hq0eMMXRaa29tfzKwZxum2qdFsT3djLEsQumfoFAYLN8-Ha5Er__9EVTi2joUafC95MjMOgrRZkpIiO-nGL-xL64fuaaHOPnepL_nWG-t9ONY17VQMOMYGz7lYyg40DnaQ8UCtz9rIS88f-SpvjjIeTu3UxqizxXqPfzBA4LKRDmVTvPu_3ACdmGR04lnBl5Qo410hI9hGqDA">
+</div>
+<div class="flex flex-col flex-grow justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface line-clamp-1">Custom Leather Journal</h3>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 -mt-1 -mr-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0; font-size: 20px;">close</span>
+</button>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Embossed: "S.P", Color: Rust</p>
+</div>
+<div class="flex justify-between items-center mt-2">
+<!-- Quantity Control -->
+<div class="flex items-center bg-surface-container-low rounded-full px-2 py-1">
+<button class="text-on-surface-variant p-1 active:text-primary"><span class="material-symbols-outlined" style="font-size: 16px;">remove</span></button>
+<span class="font-label-md text-label-md mx-2 w-4 text-center">1</span>
+<button class="text-on-surface-variant p-1 active:text-primary"><span class="material-symbols-outlined" style="font-size: 16px;">add</span></button>
+</div>
+<span class="font-body-lg text-body-lg font-bold text-primary">$85.00</span>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="bg-surface-container-lowest rounded-card p-4 shadow-ambient flex gap-4 border border-surface-variant relative overflow-hidden group">
+<div class="w-24 h-24 rounded-lg bg-surface-container-low overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A delicate, handcrafted ceramic mug with a speckled cream glaze and a rustic, asymmetrical handle. It sits on a linen cloth under soft, natural daylight. The mood is artisanal, minimalist, and high-end neo-vintage craft." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCICOBVEfxtpQQtx5X0onB8AK1dsLt91R6_hNR3WFrAXHtnDQagcxVLtCDFUnxGQABqTVsQZOMRCLEHKnGp91YjdlkdGGu2hgdMMe-PkH1HHibsUvqnYVFnJv6bmaTZdrHnsCAHel6sPEM8wzJ4sXdrgJykbJe7Bod_I7pDv58IRNQFU4XtFgR6UTZV3n5kJKURwIdduL4v9MXpFXUNfopRTvA4QMoEEwNqZ3bWw1mEgr-4HGcwZuL32w">
+</div>
+<div class="flex flex-col flex-grow justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface line-clamp-1">Speckled Ceramic Mug</h3>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1 -mt-1 -mr-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0; font-size: 20px;">close</span>
+</button>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Finish: Matte Cream</p>
+</div>
+<div class="flex justify-between items-center mt-2">
+<!-- Quantity Control -->
+<div class="flex items-center bg-surface-container-low rounded-full px-2 py-1">
+<button class="text-on-surface-variant p-1 active:text-primary"><span class="material-symbols-outlined" style="font-size: 16px;">remove</span></button>
+<span class="font-label-md text-label-md mx-2 w-4 text-center">2</span>
+<button class="text-on-surface-variant p-1 active:text-primary"><span class="material-symbols-outlined" style="font-size: 16px;">add</span></button>
+</div>
+<span class="font-body-lg text-body-lg font-bold text-primary">$48.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacing for fixed bottom bar -->
+<div class="h-32"></div>
+</div>
+<!-- View 2: Checkout View (Hidden initially) -->
+<div class="transition-transform duration-500 ease-in-out translate-x-full w-full absolute left-0 px-margin-mobile hidden" id="view-checkout">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-stack-md">Checkout</h2>
+<form class="flex flex-col gap-stack-md pb-32" onsubmit="event.preventDefault();">
+<!-- Express Checkout -->
+<div class="bg-surface-container-lowest rounded-card p-6 shadow-ambient border border-primary-fixed">
+<h3 class="font-label-md text-label-md text-on-surface text-center mb-4 uppercase tracking-widest text-primary">Express Checkout</h3>
+<button class="w-full bg-secondary-container text-on-secondary-container font-label-md text-label-md py-4 px-6 rounded-full flex items-center justify-center gap-2 hover:bg-secondary-fixed transition-colors" type="button">
+<span class="material-symbols-outlined">payment</span>
+                        Pay with VintagePass
+                    </button>
+<div class="flex items-center justify-center mt-4 mb-2">
+<div class="h-px bg-outline-variant flex-grow"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant px-4">OR</span>
+<div class="h-px bg-outline-variant flex-grow"></div>
+</div>
+</div>
+<!-- Shipping Details -->
+<section>
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+                        Shipping Information
+                    </h3>
+<div class="bg-surface-container-lowest rounded-card p-6 shadow-ambient border border-surface-variant flex flex-col gap-4">
+<div>
+<label for="email" class="">Email Address</label>
+<input id="email" placeholder="you@example.com" required="" type="email">
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label for="fname" class="">First Name</label>
+<input id="fname" placeholder="Jane" required="" type="text">
+</div>
+<div>
+<label for="lname" class="">Last Name</label>
+<input id="lname" placeholder="Doe" required="" type="text">
+</div>
+</div>
+<div>
+<label for="address" class="">Street Address</label>
+<input id="address" placeholder="123 Vintage Lane" required="" type="text">
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label for="city" class="">City</label>
+<input id="city" placeholder="Artisanville" required="" type="text">
+</div>
+<div>
+<label for="zip" class="">Zip Code</label>
+<input id="zip" placeholder="90210" required="" type="text">
+</div>
+</div>
+</div>
+</section>
+<!-- Payment Details -->
+<section>
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">credit_card</span>
+                        Payment Details
+                    </h3>
+<div class="bg-surface-container-lowest rounded-card p-6 shadow-ambient border border-surface-variant flex flex-col gap-4">
+<div>
+<label for="cc" class="">Card Number</label>
+<div class="relative">
+<input class="pl-10" id="cc" placeholder="0000 0000 0000 0000" required="" type="tel">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">credit_card</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label for="exp" class="">Expiry Date</label>
+<input id="exp" placeholder="MM/YY" required="" type="text">
+</div>
+<div>
+<label for="cvv" class="">CVV</label>
+<input id="cvv" placeholder="123" required="" type="tel">
+</div>
+</div>
+</div>
+</section>
+</form>
+</div>
+</main>
+<!-- Fixed Bottom Summary & Action Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-surface-variant shadow-[0_-10px_30px_rgba(45,41,38,0.05)] pb-safe z-50">
+<div class="px-margin-mobile py-4">
+<!-- Summary Row -->
+<div class="flex justify-between items-end mb-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant mb-1">Total (Tax incl.)</span>
+<span class="font-headline-md text-headline-md font-bold text-on-surface" id="total-price">$133.00</span>
+</div>
+<div class="text-right">
+<button class="font-label-sm text-label-sm text-primary underline hover:text-primary-container transition-colors" id="view-details-btn">View Details</button>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md py-4 px-6 rounded-full shadow-md hover:bg-primary-container transition-colors duration-300 flex items-center justify-center gap-2 transform active:scale-[0.98]" id="main-action-btn">
+<span class="">Continue to Checkout</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('main-action-btn');
+            const viewCart = document.getElementById('view-cart');
+            const viewCheckout = document.getElementById('view-checkout');
+            const step1 = document.getElementById('step-1');
+            const step2 = document.getElementById('step-2');
+            const progressBar = document.getElementById('progress-bar');
+            
+            let isCheckout = false;
+
+            btn.addEventListener('click', () => {
+                if (!isCheckout) {
+                    // Transition to Checkout
+                    viewCart.classList.add('-translate-x-full');
+                    viewCart.classList.remove('block');
+                    setTimeout(() => {
+                        viewCart.classList.add('hidden');
+                        viewCheckout.classList.remove('hidden');
+                        // Small delay to allow display:block to apply before transition
+                        setTimeout(() => {
+                            viewCheckout.classList.remove('translate-x-full');
+                        }, 50);
+                    }, 500);
+
+                    // Update Progress Indicator
+                    step1.classList.remove('active');
+                    step1.classList.add('completed');
+                    
+                    // Update Step 1 styling to completed state
+                    const s1Circle = step1.querySelector('.step-circle');
+                    s1Circle.innerHTML = '<span class="material-symbols-outlined" style="font-size: 16px;">check</span>';
+                    s1Circle.classList.remove('bg-primary', 'border-primary', 'text-on-primary');
+                    s1Circle.classList.add('bg-tertiary', 'border-tertiary', 'text-on-tertiary');
+
+                    step2.classList.add('active');
+                    
+                    // Update Step 2 styling to active state
+                    const s2Circle = step2.querySelector('.step-circle');
+                    s2Circle.classList.remove('bg-surface', 'border-primary-fixed', 'text-primary-fixed', 'bg-white');
+                    s2Circle.classList.add('bg-primary', 'border-primary', 'text-on-primary');
+                    
+                    const s2Text = step2.querySelector('span');
+                    s2Text.classList.remove('text-on-surface-variant');
+                    s2Text.classList.add('text-primary', 'font-bold');
+
+                    progressBar.style.width = '100%';
+
+                    // Update Button
+                    btn.innerHTML = '<span>Place Order</span><span class="material-symbols-outlined">check_circle</span>';
+                    btn.classList.remove('bg-primary');
+                    btn.classList.add('bg-tertiary');
+                    
+                    isCheckout = true;
+                } else {
+                    // Place Order Action (Demo)
+                    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span><span>Processing...</span>';
+                    btn.classList.add('opacity-80');
+                    setTimeout(() => {
+                        btn.innerHTML = '<span>Order Confirmed</span><span class="material-symbols-outlined">celebration</span>';
+                        btn.classList.remove('bg-tertiary', 'opacity-80');
+                        btn.classList.add('bg-secondary-container', 'text-on-secondary-container');
+                    }, 1500);
+                }
+            });
+        });
+    </script>
+
+
+</body></html>

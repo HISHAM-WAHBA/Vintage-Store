@@ -1,0 +1,302 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Vintage | About &amp; Contact</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#ffd9e3",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#fffbff",
+                        "outline-variant": "#dcbfc6",
+                        "tertiary-container": "#3f806e",
+                        "surface": "#fff8f5",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#236756",
+                        "inverse-on-surface": "#f8efea",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#adf0db",
+                        "primary": "#a72961",
+                        "secondary-fixed-dim": "#fabd2b",
+                        "on-secondary-fixed-variant": "#5c4200",
+                        "on-tertiary-container": "#f4fff9",
+                        "surface-container-low": "#fbf2ed",
+                        "on-primary-fixed": "#3e001e",
+                        "on-primary-fixed-variant": "#8a0e4c",
+                        "tertiary-fixed-dim": "#91d4bf",
+                        "on-secondary-fixed": "#261900",
+                        "primary-container": "#c7437a",
+                        "surface-dim": "#e1d8d4",
+                        "on-background": "#1e1b18",
+                        "surface-container-highest": "#e9e1dc",
+                        "on-surface-variant": "#564147",
+                        "on-primary": "#ffffff",
+                        "background": "#fff8f5",
+                        "on-surface": "#1e1b18",
+                        "secondary-container": "#fdbf2e",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e9e1dc",
+                        "primary-fixed-dim": "#ffb0c9",
+                        "on-tertiary-fixed": "#002019",
+                        "surface-bright": "#fff8f5",
+                        "surface-container-high": "#efe6e2",
+                        "on-error-container": "#93000a",
+                        "secondary": "#7a5900",
+                        "on-tertiary-fixed-variant": "#005141",
+                        "inverse-primary": "#ffb0c9",
+                        "surface-container": "#f5ece7",
+                        "secondary-fixed": "#ffdea2",
+                        "on-secondary-container": "#6d4f00",
+                        "inverse-surface": "#34302c",
+                        "on-secondary": "#ffffff",
+                        "outline": "#897177",
+                        "surface-tint": "#aa2c64"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "stack-md": "24px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "stack-lg": "48px",
+                        "margin-desktop": "48px",
+                        "stack-sm": "12px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Libre Caslon Text"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Libre Caslon Text"],
+                        "headline-lg-mobile": ["Libre Caslon Text"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Libre Caslon Text"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0; }
+        .glass-panel { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(16px); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex flex-col min-h-screen">
+<!-- Top Navigation -->
+<nav class="hidden md:flex flex-col w-full top-0 sticky z-50 bg-surface shadow-[0_10px_30px_rgba(45,41,38,0.05)] transition-all duration-300 ease-in-out">
+<div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-2xl">search</span>
+</div>
+<a class="font-headline-md text-headline-md font-bold text-primary" href="#"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuASwSGk56rajswjKP2jhB5ekCj7UjwfzMaQFAnTFmf0qEyira2AzrgvuFK7ECwy9TklpJr5xTsFX1-WszjExyb68pPdx6wPgkytjyqQyaC-LWf93jkWgX9mdjoQ7WLOUGFAXsZ9v52c4tQ3IyW9fHY2qTim2RVDlmL4KBj92wDvE29n5rZUp1VQCQxteYav9Bk3OqFeqFpK_vzKNgb_86LFnUyS0qweMXZQfC50wJY1_1LWG4225XY6OysHMDppcMl9Ja8" alt="Vintage Logo" class="h-10 w-auto object-contain"></a>
+<div class="flex items-center gap-6">
+<a class="hover:text-primary transition-colors duration-200" href="#"><span class="material-symbols-outlined text-on-surface-variant">favorite</span></a>
+<a class="hover:text-primary transition-colors duration-200" href="#"><span class="material-symbols-outlined text-on-surface-variant">shopping_cart</span></a>
+<a class="hover:text-primary transition-colors duration-200" href="#"><span class="material-symbols-outlined text-on-surface-variant">person</span></a>
+</div>
+</div>
+<div class="flex justify-center gap-8 py-3 border-t border-outline-variant/30">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">Shop</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">Categories</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">Offers</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">Customized</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">Parties</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md hover:text-primary transition-colors duration-200" href="#">Journal</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col md:flex-row w-full max-w-container-max mx-auto">
+<!-- Side Navigation (Desktop Only) - Intentionally hidden for contact page focus, prioritizing main canvas as per guidelines -->
+<!-- Content Area -->
+<div class="flex-grow w-full px-margin-mobile md:px-margin-desktop py-stack-lg">
+<!-- Hero Section -->
+<section class="mb-stack-lg text-center max-w-3xl mx-auto">
+<h1 class="font-display-lg text-display-lg text-primary mb-stack-md">Crafting Memories</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">We believe in the power of handmade artistry to transform everyday moments into cherished, neo-vintage experiences.</p>
+</section>
+<!-- Bento Grid: Story & Mission -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-stack-lg">
+<!-- Our Story -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl p-8 shadow-[0_10px_30px_rgba(45,41,38,0.05)] flex flex-col justify-between relative overflow-hidden border border-outline-variant/20">
+<div class="relative z-10">
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Our Story</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Born from a passion for the tactile and the timeless, Vintage began as a small studio dedicated to reviving lost artisanal techniques. Today, we blend 1970s creative freedom with modern precision.</p>
+</div>
+<div class="h-64 rounded-xl overflow-hidden mt-6">
+<img class="w-full h-full object-cover" data-alt="A vintage-inspired artist studio bathed in warm, golden afternoon sunlight. The space is filled with wooden workbenches, scattered artisanal tools, and rolls of textured canvas. The aesthetic is neo-vintage with a modern, clean execution, featuring deep mahogany wood tones, soft cream walls, and accents of mustard yellow and mint green. The mood is creative, tactile, and premium." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMXEIuMlyTxX3khM8Ecmll8-bzaKKuo0VXJqXA0LzfM43Znb9Imhi2FWsFl5132OSHFWFTwppiCYfxIkf-TbUIoE9UuTanwCCzhRIoF49oggALRijJ3YW_l2FTTfgHTx_R-8jqIrxnYsajnU8P8KFNCSnhpgzRLXXUUNhigFI03al70RSAiU79RNdclao3D9HmhtoZH8viSO1oYfSV0kd1pThzyfh0YTKNK-898uNcZ7Lrl-5ew-a_wg">
+</div>
+</div>
+<!-- Mission -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<div class="bg-surface-container-low rounded-xl p-8 shadow-[0_10px_30px_rgba(45,41,38,0.05)] border border-outline-variant/20 flex-grow">
+<div class="w-12 h-12 bg-primary-container rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-on-primary-container">lightbulb</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2" style="font-size: 24px; line-height: 32px;">The Mission</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">To design high-end, bespoke creations that feel inherently human.</p>
+</div>
+<div class="bg-secondary-container rounded-xl p-8 shadow-[0_10px_30px_rgba(45,41,38,0.05)] border border-outline-variant/20 flex-grow flex items-center justify-center text-center">
+<span class="font-headline-md text-headline-md text-on-secondary-container">Handmade<br>with Care</span>
+</div>
+</div>
+</section>
+<!-- Creative Process -->
+<section class="mb-stack-lg">
+<h2 class="font-headline-lg text-headline-lg text-center text-primary mb-stack-md">Our Process</h2>
+<div class="flex flex-col md:flex-row justify-between items-start gap-gutter relative">
+<!-- Progress Track -->
+<div class="hidden md:block absolute top-6 left-[10%] right-[10%] h-2 bg-primary-fixed-dim rounded-full z-0">
+<div class="h-full w-1/3 bg-primary rounded-full"></div>
+</div>
+<!-- Steps -->
+<div class="flex flex-col items-center text-center w-full md:w-1/3 relative z-10">
+<div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center border-4 border-surface shadow-sm mb-4">
+<span class="font-headline-md text-headline-md text-on-primary">1</span>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface mb-2">Conception</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Sketching the vision.</p>
+</div>
+<div class="flex flex-col items-center text-center w-full md:w-1/3 relative z-10">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center border-4 border-surface shadow-sm mb-4">
+<span class="font-headline-md text-headline-md text-on-surface">2</span>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface mb-2">Sourcing</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Finding premium materials.</p>
+</div>
+<div class="flex flex-col items-center text-center w-full md:w-1/3 relative z-10">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center border-4 border-surface shadow-sm mb-4">
+<span class="font-headline-md text-headline-md text-on-surface">3</span>
+</div>
+<h4 class="font-label-md text-label-md text-on-surface mb-2">Creation</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Crafting the final piece.</p>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-stack-lg items-start">
+<!-- Form -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_10px_30px_rgba(45,41,38,0.05)] border border-outline-variant/20">
+<h2 class="font-headline-md text-headline-md text-primary mb-6">Get in Touch</h2>
+<form class="flex flex-col gap-4">
+<div class="flex flex-col">
+<label class="font-label-md text-label-md text-on-surface-variant mb-1" for="name">Name</label>
+<input class="rounded-lg border border-outline bg-surface px-4 py-2 focus:border-tertiary focus:ring-1 focus:ring-tertiary outline-none transition-colors" id="name" placeholder="Your name" type="text">
+</div>
+<div class="flex flex-col">
+<label class="font-label-md text-label-md text-on-surface-variant mb-1" for="email">Email</label>
+<input class="rounded-lg border border-outline bg-surface px-4 py-2 focus:border-tertiary focus:ring-1 focus:ring-tertiary outline-none transition-colors" id="email" placeholder="Your email" type="email">
+</div>
+<div class="flex flex-col">
+<label class="font-label-md text-label-md text-on-surface-variant mb-1" for="message">Message</label>
+<textarea class="rounded-lg border border-outline bg-surface px-4 py-2 focus:border-tertiary focus:ring-1 focus:ring-tertiary outline-none transition-colors resize-none" id="message" placeholder="How can we help?" rows="4"></textarea>
+</div>
+<button class="mt-4 bg-primary text-on-primary font-label-md text-label-md px-8 py-3 rounded-full hover:-translate-y-0.5 hover:shadow-md transition-all duration-200" type="submit">Send Message</button>
+</form>
+</div>
+<!-- Contact Info & FAQs -->
+<div class="flex flex-col gap-gutter">
+<!-- WhatsApp CTA -->
+<div class="bg-tertiary-container rounded-xl p-8 shadow-[0_10px_30px_rgba(45,41,38,0.05)] flex items-center justify-between text-on-tertiary-container">
+<div>
+<h3 class="font-headline-md text-headline-md mb-2" style="font-size: 24px; line-height: 32px;">Need it quick?</h3>
+<p class="font-body-md text-body-md opacity-90">Chat with us directly.</p>
+</div>
+<a class="w-14 h-14 bg-surface text-tertiary rounded-full flex items-center justify-center hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined text-3xl">chat</span>
+</a>
+</div>
+<!-- FAQs -->
+<div class="bg-surface-container-low rounded-xl p-8 border border-outline-variant/20 shadow-[0_10px_30px_rgba(45,41,38,0.05)]">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6" style="font-size: 24px; line-height: 32px;">Common Questions</h3>
+<div class="flex flex-col gap-4">
+<details class="group cursor-pointer">
+<summary class="font-label-md text-label-md text-primary flex justify-between items-center list-none outline-none">
+                                    Do you do custom orders?
+                                    <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 pl-4 border-l-2 border-primary-fixed-dim">Yes, we specialize in bespoke creations tailored to your vision.</p>
+</details>
+<div class="h-px w-full bg-outline-variant/30"></div>
+<details class="group cursor-pointer">
+<summary class="font-label-md text-label-md text-primary flex justify-between items-center list-none outline-none">
+                                    What is the typical turnaround time?
+                                    <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 pl-4 border-l-2 border-primary-fixed-dim">Typically 2-4 weeks, depending on the complexity of the piece.</p>
+</details>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-lg bg-surface-container-low border-t border-outline-variant flat no shadows mt-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1 flex flex-col">
+<span class="font-headline-md text-headline-md text-primary mb-4">Vintage</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 Vintage Artisanal Studio. All rights reserved.</p>
+</div>
+<div class="col-span-1 md:col-span-3 flex flex-wrap gap-8 md:justify-end">
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary underline transition-all" href="#">Our Story</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary underline transition-all" href="#">Contact Us</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary underline transition-all" href="#">Shipping &amp; Returns</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary underline transition-all" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary underline transition-all" href="#">Custom Orders</a>
+</div>
+</div>
+</footer>
+<!-- Mobile Bottom Navigation (Hidden on Desktop) -->
+<nav class="md:hidden fixed bottom-0 w-full rounded-t-xl z-50 bg-surface border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.05)] pb-safe">
+<div class="flex justify-around items-center px-4 py-3 bg-surface">
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-fixed text-on-primary-fixed rounded-full px-4 py-1 active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mb-1 text-primary font-bold">search</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">Shop</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mb-1">favorite</span>
+<span class="font-label-sm text-label-sm">Wishlist</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mb-1">shopping_bag</span>
+<span class="font-label-sm text-label-sm">Cart</span>
+</a>
+</div>
+</nav>
+
+
+</body></html>
