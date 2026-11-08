@@ -1,0 +1,8 @@
+First name*
+Admin
+Last name*
+Strapi
+Email*
+admin@strapi.com
+Password*
+Admin@12345
