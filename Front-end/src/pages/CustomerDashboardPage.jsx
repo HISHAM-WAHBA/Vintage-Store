@@ -8,12 +8,13 @@ import {
   CircleUserRound,
   CreditCard,
   Heart,
+  LogOut,
   Package,
   ShoppingBag,
   Truck,
 } from "lucide-react";
 import Icon from "../components/Icon";
-import { api, getStoredToken } from "../services/api";
+import { api, clearStoredToken, getStoredToken } from "../services/api";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 
@@ -132,6 +133,14 @@ const CustomerDashboardPage = () => {
     }
   };
 
+  const handleLogout = () => {
+    clearStoredToken();
+    localStorage.removeItem("vintage_profile");
+    window.dispatchEvent(new Event("vintage-auth-changed"));
+    toast.success("Signed out successfully", { id: "logout-success" });
+    navigate("/auth", { replace: true });
+  };
+
   if (!token) {
     return (
       <Navigate
@@ -157,12 +166,22 @@ const CustomerDashboardPage = () => {
               place.
             </p>
           </div>
-          <Link
-            to="/shop"
-            className="inline-flex w-fit items-center gap-2 rounded-full border border-outline-variant px-6 py-2.5 font-label-md text-label-md text-on-surface transition-colors hover:border-primary hover:text-primary"
-          >
-            Continue shopping <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="flex w-fit flex-wrap items-center gap-3">
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-2 rounded-full border border-outline-variant px-6 py-2.5 font-label-md text-label-md text-on-surface transition-colors hover:border-primary hover:text-primary"
+            >
+              Continue shopping <ArrowRight className="h-4 w-4" />
+            </Link>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 rounded-full border border-error/30 px-6 py-2.5 font-label-md text-label-md text-error transition-colors hover:bg-error-container"
+            >
+              <LogOut className="h-4 w-4" />
+              Sign out
+            </button>
+          </div>
         </div>
 
         <div className="mt-8 flex gap-6 overflow-x-auto border-b border-outline-variant/40 pb-2 [scrollbar-width:none] sm:gap-10">
