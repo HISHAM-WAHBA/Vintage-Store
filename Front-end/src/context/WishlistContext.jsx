@@ -31,12 +31,16 @@ export const WishlistProvider = ({ children }) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(wishlist));
   }, [wishlist]);
 
-  // Sync with server when authenticated (on mount and after login).
+  // Sync with server when authenticated (on mount and after login/logout).
   useEffect(() => {
     let cancelled = false;
     const sync = async () => {
       const token = getStoredToken();
-      if (!token || syncedRef.current) return;
+      if (!token) {
+        syncedRef.current = false;
+        return;
+      }
+      if (syncedRef.current) return;
       try {
         const localIds = readLocal().map((p) => p.id).filter(Boolean);
         if (localIds.length) await api.syncWishlist(localIds);
@@ -46,7 +50,7 @@ export const WishlistProvider = ({ children }) => {
           syncedRef.current = true;
         }
       } catch {
-        // stay on local
+        // stay on local (401 is handled globally by the API client)
       }
     };
     sync();

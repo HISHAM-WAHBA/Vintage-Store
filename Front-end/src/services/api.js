@@ -32,7 +32,14 @@ const request = async (path, { method = "GET", body } = {}) => {
   }
 
   if (!response.ok) {
-    throw new Error(result.error || `Request failed (${response.status}).`);
+    if (response.status === 401 && getStoredToken()) {
+      clearStoredToken();
+      localStorage.removeItem("vintage_profile");
+      window.dispatchEvent(new Event("vintage-auth-changed"));
+    }
+    const error = new Error(result.error || `Request failed (${response.status}).`);
+    error.status = response.status;
+    throw error;
   }
   return result;
 };

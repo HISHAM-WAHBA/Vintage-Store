@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   ArrowRight,
@@ -31,6 +31,7 @@ const formatDate = (date) =>
 const CustomerDashboardPage = () => {
   const token = getStoredToken();
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [profile, setProfile] = useState(() => {
     try {
@@ -52,8 +53,11 @@ const CustomerDashboardPage = () => {
       .then((data) => {
         if (!cancelled && data.length > 0) setOrders(data);
       })
-      .catch(() => {
-        // Silently fall back to the local order history.
+      .catch((error) => {
+        if (error?.status === 401 || !getStoredToken()) {
+          toast.error("Your session ended. Please sign in again.", { id: "session-expired" });
+          navigate("/auth?next=/dashboard", { replace: true });
+        }
       });
 
     api
@@ -68,14 +72,17 @@ const CustomerDashboardPage = () => {
           address: user.address || "",
         }));
       })
-      .catch(() => {
-        // Silently fall back to the local profile.
+      .catch((error) => {
+        if (error?.status === 401 || !getStoredToken()) {
+          toast.error("Your session ended. Please sign in again.", { id: "session-expired" });
+          navigate("/auth?next=/dashboard", { replace: true });
+        }
       });
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [navigate]);
   const lastOrder = orders[0];
   const totalItems = orders.reduce(
     (total, order) =>
@@ -97,7 +104,8 @@ const CustomerDashboardPage = () => {
   const saveProfile = async () => {
     localStorage.setItem("vintage_profile", JSON.stringify(profile));
     if (!getStoredToken()) {
-      toast.success("Details saved");
+      toast.error("Your session ended. Please sign in again.", { id: "session-expired" });
+      navigate("/auth?next=/dashboard", { replace: true });
       return;
     }
     try {
@@ -108,7 +116,12 @@ const CustomerDashboardPage = () => {
       });
       toast.success("Details saved");
     } catch (error) {
-      toast.error(error.message);
+      if (error?.status === 401 || !getStoredToken()) {
+        toast.error("Your session ended. Please sign in again.", { id: "session-expired" });
+        navigate("/auth?next=/dashboard", { replace: true });
+      } else {
+        toast.error(error.message);
+      }
     }
   };
 
