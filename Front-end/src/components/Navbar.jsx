@@ -108,9 +108,7 @@ const Navbar = () => {
 
         {/* ── Mobile top bar ──────────────────────────────────────── */}
         <div className="flex items-center justify-between px-margin-mobile py-3 md:hidden">
-          <Link to="/" aria-label="Vintage home" className="flex items-center">
-            <VintageLogo className="h-9 w-auto" />
-          </Link>
+          <VintageLogo className="h-9 w-auto" />
           <button
             type="button"
             onClick={() => setIsSearchOpen(true)}
