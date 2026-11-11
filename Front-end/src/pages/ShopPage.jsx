@@ -103,7 +103,9 @@ const ProductCard = ({ product }) => {
 /* ─── Mobile Product Card ──────────────────────────────────────────────────── */
 const MobileProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const price = Number(product.price || 0).toFixed(2);
+  const wishlisted = isInWishlist(product.id);
 
   return (
     <article className="group relative flex flex-col">
@@ -119,6 +121,21 @@ const MobileProductCard = ({ product }) => {
               New
             </span>
           )}
+          <button
+            type="button"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              toggleWishlist(product);
+            }}
+            aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            aria-pressed={wishlisted}
+            className={`absolute right-2 top-2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-surface-container-lowest/90 shadow-sm backdrop-blur transition-colors active:scale-90 ${
+              wishlisted ? "text-primary" : "text-on-surface-variant"
+            }`}
+          >
+            <Icon name="favorite" fill={wishlisted} size={18} />
+          </button>
           <button
             type="button"
             onClick={(event) => {
