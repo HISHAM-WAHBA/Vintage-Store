@@ -7,11 +7,15 @@ import {
   ChevronRight,
   CircleUserRound,
   CreditCard,
+  Heart,
   Package,
   ShoppingBag,
   Truck,
 } from "lucide-react";
+import Icon from "../components/Icon";
 import { api, getStoredToken } from "../services/api";
+import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
 
 const getOrders = () => {
   try {
@@ -41,6 +45,8 @@ const CustomerDashboardPage = () => {
     }
   });
   const [orders, setOrders] = useState(getOrders);
+  const { wishlist, removeFromWishlist } = useWishlist();
+  const { addToCart } = useCart();
 
   // Signed-in customers get their real order history and profile from the
   // backend; guests keep using the localStorage copies written at checkout.
@@ -93,6 +99,7 @@ const CustomerDashboardPage = () => {
   const tabs = [
     { id: "overview", label: "Overview" },
     { id: "orders", label: "Orders" },
+    { id: "wishlist", label: `Wishlist (${wishlist.length})` },
     { id: "profile", label: "Profile" },
   ];
 
@@ -180,7 +187,7 @@ const CustomerDashboardPage = () => {
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               {[
                 { label: "Orders", value: orders.length, icon: Package },
-                { label: "Items bought", value: totalItems, icon: ShoppingBag },
+                { label: "Wishlist", value: wishlist.length, icon: Heart },
                 {
                   label: "Last order",
                   value: lastOrder ? formatDate(lastOrder.createdAt) : "None",
@@ -283,32 +290,37 @@ const CustomerDashboardPage = () => {
               </section>
             )}
 
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
+                [
+                  Heart,
+                  "Wishlist",
+                  `${wishlist.length} saved ${wishlist.length === 1 ? "piece" : "pieces"} in your account.`,
+                  "wishlist",
+                ],
                 [
                   Truck,
                   "Delivery updates",
                   "Follow every order from our door to yours.",
+                  "orders",
                 ],
                 [
                   CreditCard,
                   "Payment details",
                   "Your preferred payment method stays close at hand.",
+                  "orders",
                 ],
                 [
                   CircleUserRound,
                   "Personal details",
                   "Keep your contact information ready for checkout.",
+                  "profile",
                 ],
-              ].map(([DashboardIcon, title, text]) => (
+              ].map(([DashboardIcon, title, text, tab]) => (
                 <button
                   key={title}
                   type="button"
-                  onClick={() =>
-                    setActiveTab(
-                      title === "Personal details" ? "profile" : "orders",
-                    )
-                  }
+                  onClick={() => setActiveTab(tab)}
                   className="flex items-start gap-4 rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-5 text-left shadow-[0_10px_30px_rgba(45,41,38,0.05)] transition-all hover:-translate-y-0.5"
                 >
                   <DashboardIcon
@@ -375,6 +387,102 @@ const CustomerDashboardPage = () => {
               <p className="py-16 text-center font-body-md text-body-md text-on-surface-variant">
                 No orders to display yet.
               </p>
+            )}
+          </section>
+        )}
+
+        {activeTab === "wishlist" && (
+          <section className="mt-8 rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-5 shadow-[0_10px_30px_rgba(45,41,38,0.05)] sm:p-8">
+            <div className="flex flex-col justify-between gap-4 border-b border-outline-variant/40 pb-5 sm:flex-row sm:items-end">
+              <div>
+                <p className="font-label-sm text-label-sm uppercase tracking-[0.18em] text-on-surface-variant">
+                  Saved in your account
+                </p>
+                <h2 className="mt-2 font-headline-md text-headline-md text-on-surface">
+                  Wishlist
+                </h2>
+                <p className="mt-2 font-body-md text-body-md text-on-surface-variant">
+                  {wishlist.length === 0
+                    ? "Pieces you love will appear here."
+                    : `${wishlist.length} ${wishlist.length === 1 ? "piece" : "pieces"} saved for later.`}
+                </p>
+              </div>
+              <Link
+                to="/wishlist"
+                className="inline-flex w-fit items-center gap-2 rounded-full border border-outline-variant px-5 py-2.5 font-label-md text-label-md text-on-surface transition-colors hover:border-primary hover:text-primary"
+              >
+                Open wishlist page <ChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            {wishlist.length === 0 ? (
+              <div className="py-16 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary-fixed text-on-primary-fixed-variant">
+                  <Heart className="h-6 w-6" />
+                </div>
+                <p className="mt-4 font-body-md text-body-md text-on-surface-variant">
+                  Your wishlist is empty. Tap the heart on any product to save it here.
+                </p>
+                <Link
+                  to="/shop"
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-label-md text-label-md text-on-primary transition-colors hover:bg-primary/90"
+                >
+                  Explore collection <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            ) : (
+              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {wishlist.map((product) => (
+                  <article
+                    key={product.id}
+                    className="flex gap-4 rounded-xl border border-outline-variant/20 bg-surface-container-low p-4"
+                  >
+                    <Link
+                      to={`/product/${product.id}`}
+                      className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-surface-container"
+                    >
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="h-full w-full object-cover"
+                      />
+                    </Link>
+                    <div className="min-w-0 flex-1">
+                      <Link
+                        to={`/product/${product.id}`}
+                        className="block truncate font-label-md text-label-md text-on-surface hover:text-primary"
+                      >
+                        {product.name}
+                      </Link>
+                      <p className="mt-1 font-label-sm text-label-sm text-on-surface-variant">
+                        {product.categories?.[0] || "Vintage"}
+                      </p>
+                      <p className="mt-2 font-label-md text-label-md text-primary">
+                        ${Number(product.price).toFixed(2)}
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          disabled={product.quantity <= 0}
+                          onClick={() => addToCart(product, 1)}
+                          className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 font-label-sm text-label-sm text-on-primary transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
+                        >
+                          <Icon name="shopping_bag" size={14} />
+                          {product.quantity <= 0 ? "Out of stock" : "Add to cart"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removeFromWishlist(product.id)}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-outline-variant px-3 py-1.5 font-label-sm text-label-sm text-on-surface-variant transition-colors hover:border-error hover:text-error"
+                        >
+                          <Icon name="delete" size={14} />
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
             )}
           </section>
         )}
