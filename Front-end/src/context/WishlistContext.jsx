@@ -19,8 +19,7 @@ const readLocal = () => {
 
 /**
  * Wishlist: localStorage for guests, server-synced for signed-in customers.
- * On first authenticated load we merge local items into the server list so
- * nothing the guest saved before signing in is lost.
+ * Guest and logged-in wishlists are kept separate (no merge on sign-in).
  */
 export const WishlistProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState(readLocal);
@@ -43,11 +42,15 @@ export const WishlistProvider = ({ children }) => {
       if (syncedRef.current) return;
       const currentSyncId = ++syncIdRef.current;
       try {
-        const localIds = readLocal().map((p) => p.id).filter(Boolean);
-        if (localIds.length) await api.syncWishlist(localIds);
         const server = await api.getWishlist();
         if (currentSyncId !== syncIdRef.current || !getStoredToken()) return;
+        // Keep guest and logged-in wishlists separate: always use the account's wishlist.
         setWishlist(server);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(server));
+        } catch {
+          // ignore
+        }
         syncedRef.current = true;
       } catch {
         // stay on local (401 is handled globally by the API client)
