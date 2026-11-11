@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   ArrowRight,
   CalendarDays,
@@ -10,6 +11,7 @@ import {
   ShoppingBag,
   Truck,
 } from "lucide-react";
+import { api, getStoredToken } from "../services/api";
 
 const getOrders = () => {
   try {
@@ -35,7 +37,43 @@ const CustomerDashboardPage = () => {
       return {};
     }
   });
-  const orders = getOrders();
+  const [orders, setOrders] = useState(getOrders);
+
+  // Signed-in customers get their real order history and profile from the
+  // backend; guests keep using the localStorage copies written at checkout.
+  useEffect(() => {
+    if (!getStoredToken()) return undefined;
+    let cancelled = false;
+
+    api
+      .getMyOrders()
+      .then((data) => {
+        if (!cancelled && data.length > 0) setOrders(data);
+      })
+      .catch(() => {
+        // Silently fall back to the local order history.
+      });
+
+    api
+      .getProfile()
+      .then((user) => {
+        if (cancelled) return;
+        setProfile((current) => ({
+          ...current,
+          fullName: user.name,
+          email: user.email,
+          phone: user.phone || "",
+          address: user.address || "",
+        }));
+      })
+      .catch(() => {
+        // Silently fall back to the local profile.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const lastOrder = orders[0];
   const totalItems = orders.reduce(
     (total, order) =>
@@ -54,8 +92,22 @@ const CustomerDashboardPage = () => {
     setProfile((current) => ({ ...current, [name]: value }));
   };
 
-  const saveProfile = () => {
+  const saveProfile = async () => {
     localStorage.setItem("vintage_profile", JSON.stringify(profile));
+    if (!getStoredToken()) {
+      toast.success("Details saved");
+      return;
+    }
+    try {
+      await api.updateProfile({
+        name: profile.fullName,
+        phone: profile.phone,
+        address: profile.address,
+      });
+      toast.success("Details saved");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (

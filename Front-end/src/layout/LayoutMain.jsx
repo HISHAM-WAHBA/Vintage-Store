@@ -14,11 +14,9 @@ const LayoutMain = () => {
   const isAdminPage = location.pathname === "/admin";
 
   return (
-    <div className="flex flex-col min-h-screen bg-vintage-cream text-vintage-text font-sans selection:bg-vintage-gold selection:text-vintage-brown">
+    <div className="flex min-h-screen flex-col bg-surface font-body-md text-body-md text-on-surface antialiased">
       {!isAdminPage && <Navbar />}
-      <main
-        className={`grow ${isAdminPage ? "" : "pb-24 pt-20 sm:pt-14 lg:pb-0"}`}
-      >
+      <main className={`grow ${isAdminPage ? "" : "pb-20 md:pb-0"}`}>
         <Outlet />
       </main>
       {!isAdminPage && <Footer />}
@@ -27,9 +25,9 @@ const LayoutMain = () => {
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="تواصل معنا عبر واتساب"
-          title="تواصل معنا عبر واتساب"
-          className={`fixed bottom-24 left-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-3xl text-white shadow-lg transition hover:scale-110 hover:bg-[#1ebe5d] focus:outline-none focus:ring-4 focus:ring-[#25D366]/40 lg:bottom-6 ${
+          aria-label="Chat with us on WhatsApp"
+          title="Chat with us on WhatsApp"
+          className={`fixed bottom-24 left-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#236756] text-3xl text-white shadow-[0_10px_30px_rgba(35,103,86,0.3)] transition hover:scale-110 hover:bg-[#1b5244] focus:outline-none focus:ring-4 focus:ring-tertiary/40 md:bottom-6 ${
             !WHATSAPP_NUMBER ? "cursor-not-allowed opacity-70" : ""
           }`}
           onClick={(event) => {
@@ -43,10 +41,11 @@ const LayoutMain = () => {
         position="bottom-right"
         toastOptions={{
           style: {
-            background: "#5D4037",
-            color: "#FDF5E6",
-            border: "1px solid #C5A065",
-            fontFamily: "Lato, sans-serif",
+            background: "#34302c",
+            color: "#f8efea",
+            border: "1px solid #dcbfc6",
+            borderRadius: "12px",
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
           },
         }}
       />

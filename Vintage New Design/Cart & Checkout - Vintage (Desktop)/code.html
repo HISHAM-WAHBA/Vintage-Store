@@ -1,0 +1,310 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Cart &amp; Checkout - Vintage</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#ffd9e3",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#fffbff",
+                        "outline-variant": "#dcbfc6",
+                        "tertiary-container": "#3f806e",
+                        "surface": "#fff8f5",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#236756",
+                        "inverse-on-surface": "#f8efea",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#adf0db",
+                        "primary": "#a72961",
+                        "secondary-fixed-dim": "#fabd2b",
+                        "on-secondary-fixed-variant": "#5c4200",
+                        "on-tertiary-container": "#f4fff9",
+                        "surface-container-low": "#fbf2ed",
+                        "on-primary-fixed": "#3e001e",
+                        "on-primary-fixed-variant": "#8a0e4c",
+                        "tertiary-fixed-dim": "#91d4bf",
+                        "on-secondary-fixed": "#261900",
+                        "primary-container": "#c7437a",
+                        "surface-dim": "#e1d8d4",
+                        "on-background": "#1e1b18",
+                        "surface-container-highest": "#e9e1dc",
+                        "on-surface-variant": "#564147",
+                        "on-primary": "#ffffff",
+                        "background": "#fff8f5",
+                        "on-surface": "#1e1b18",
+                        "secondary-container": "#fdbf2e",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e9e1dc",
+                        "primary-fixed-dim": "#ffb0c9",
+                        "on-tertiary-fixed": "#002019",
+                        "surface-bright": "#fff8f5",
+                        "surface-container-high": "#efe6e2",
+                        "on-error-container": "#93000a",
+                        "secondary": "#7a5900",
+                        "on-tertiary-fixed-variant": "#005141",
+                        "inverse-primary": "#ffb0c9",
+                        "surface-container": "#f5ece7",
+                        "secondary-fixed": "#ffdea2",
+                        "on-secondary-container": "#6d4f00",
+                        "inverse-surface": "#34302c",
+                        "on-secondary": "#ffffff",
+                        "outline": "#897177",
+                        "surface-tint": "#aa2c64"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "stack-md": "24px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "stack-lg": "48px",
+                        "margin-desktop": "48px",
+                        "stack-sm": "12px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Libre Caslon Text"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Libre Caslon Text"],
+                        "headline-lg-mobile": ["Libre Caslon Text"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Libre Caslon Text"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .soft-shadow {
+            box-shadow: 0 10px 30px rgba(45, 41, 38, 0.05);
+        }
+        .form-input-focus:focus {
+            border-color: theme('colors.tertiary');
+            border-width: 2px;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md text-body-md bg-surface antialiased">
+<!-- TopNavBar (Shared Component) - Rendered as a semantic shell -->
+<header class="w-full top-0 sticky bg-surface shadow-sm dark:bg-surface-container-lowest z-50 transition-all duration-300 ease-in-out shadow-[0_10px_30px_rgba(45,41,38,0.05)]">
+<div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto hidden md:flex">
+<!-- Brand -->
+<div class="flex items-center gap-4">
+<a class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed" href="#"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZKguyK8agRb_wcAcCrWL4tFP7sjCKZBmWY636BwcWnpr9Reu9diz8N5x95NfVUEqHoBTkiX4lIttNbCO_4E1dCiNuhKHqzZcXeTTU7l1FxVIO9RNA6SZMsKfUvvRYm6Wg8VlYGty1OAC7IccuTsuCMMqbM20Df2GLh5LqZ5LRjlv1mM10C1TKOR0FC7dTar1VGKQYQG9a1ErPiDfpD0z5QZ7t-VFLw9GYvJeZlbE6rZowfaqugptyYdGi1lbr4-1tk70" alt="Vintage Logo" class="h-10 w-auto object-contain"></a>
+</div>
+<!-- Navigation -->
+<nav class="flex items-center gap-6">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Shop</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Categories</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Offers</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Customized</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Parties</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Journal</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<button aria-label="favorite" class="text-on-surface-variant hover:text-primary transition-colors duration-200">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button aria-label="shopping_cart" class="text-primary font-bold border-b-2 border-primary pb-1 flex items-center gap-2">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label-md text-label-md hidden lg:inline">Cart</span>
+</button>
+<button aria-label="person" class="text-on-surface-variant hover:text-primary transition-colors duration-200 flex items-center gap-2">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md hidden lg:inline">Account</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
+<div class="mb-stack-md">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Secure Checkout</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Complete your bespoke order.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- Left Column: Checkout Details -->
+<div class="lg:col-span-7 space-y-stack-md">
+<!-- Progress Indicators -->
+<div class="flex items-center justify-between mb-stack-md px-4">
+<div class="flex flex-col items-center gap-2 relative z-10">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline-md text-headline-md shadow-sm">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Information</span>
+</div>
+<div class="flex-grow h-1 bg-outline-variant/30 mx-2 mt-[-24px] relative z-0"></div>
+<div class="flex flex-col items-center gap-2 relative z-10">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-headline-md text-headline-md border border-outline-variant shadow-sm">
+<span class="text-[18px]">2</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Shipping</span>
+</div>
+<div class="flex-grow h-1 bg-outline-variant/30 mx-2 mt-[-24px] relative z-0"></div>
+<div class="flex flex-col items-center gap-2 relative z-10">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-headline-md text-headline-md border border-outline-variant shadow-sm">
+<span class="text-[18px]">3</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Payment</span>
+</div>
+</div>
+<!-- Form Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 soft-shadow border border-outline-variant/20">
+<h2 class="font-headline-md text-[24px] leading-[32px] text-on-surface mb-6">Contact Information</h2>
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface" for="email">Email address</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors" id="email" placeholder="your@email.com" type="email" value="sophia.artisan@example.com">
+</div>
+<div class="h-px bg-outline-variant/30 w-full my-8"></div>
+<h2 class="font-headline-md text-[24px] leading-[32px] text-on-surface mb-6">Shipping Address</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface" for="firstName">First name</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors" id="firstName" placeholder="Sophia" type="text">
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface" for="lastName">Last name</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors" id="lastName" placeholder="Artisan" type="text">
+</div>
+<div class="md:col-span-2 flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface" for="address">Address</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors" id="address" placeholder="123 Craft Lane, Suite A" type="text">
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface" for="city">City</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors" id="city" placeholder="Portland" type="text">
+</div>
+<div class="grid grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface" for="state">State</label>
+<select class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors" id="state">
+<option>OR</option>
+<option>WA</option>
+<option>CA</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface" for="zip">ZIP Code</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 font-body-md text-on-surface focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors" id="zip" placeholder="97204" type="text">
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 flex justify-end gap-4">
+<button class="px-6 py-3 rounded-full text-tertiary font-label-md hover:bg-tertiary/10 transition-colors">Return to Cart</button>
+<button class="bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md px-8 py-3 rounded-full shadow-sm hover:-translate-y-0.5 transition-all duration-200">Continue to Shipping</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Cart Summary -->
+<div class="lg:col-span-5 relative">
+<div class="sticky top-32 bg-surface-container-lowest rounded-xl p-8 soft-shadow border border-outline-variant/20">
+<h2 class="font-headline-md text-[24px] leading-[32px] text-on-surface mb-6 border-b border-outline-variant/30 pb-4">Order Summary</h2>
+<!-- Item -->
+<div class="flex gap-4 mb-6">
+<div class="w-24 h-32 rounded-lg bg-surface-container-low relative overflow-hidden border border-outline-variant/20 flex-shrink-0">
+<img class="object-cover w-full h-full" data-alt="A close-up shot of a highly textured, bespoke invitation card featuring deep letterpress typography on thick, creamy cotton paper. The design incorporates delicate botanical blind embossing and subtle gold foil accents, resting on a rustic wooden studio desk illuminated by warm, natural afternoon light in a modernist neo-vintage style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuYso6zrrtaL3b8c3hjo2u8LYHLxpHb3Fi6qsbPstW3bPyy_7W_whxPXukslVSUjunSngtWuOe5f8NVmyVLX_qZTdX6bU4W-0rvEVnETZnhSp4PR8WTosLeHllFXCquWdzqvxrLNTaq9yNTcJHqxROTlsU6_cXruHSqYAjDoTTViSDdUjXsKUwP4BWhP8bdrq-ZXHVCQ-O0__SZ092cgUuoEka1niVlGY6UZa7yZymnQG5ijvS9TUsuQ">
+</div>
+<div class="flex flex-col justify-between py-1 flex-grow">
+<div>
+<h3 class="font-label-md text-[16px] text-on-surface mb-1">Bespoke Invitation Suite</h3>
+<p class="font-body-md text-[14px] text-on-surface-variant line-clamp-2">"Botanical Romance" design, thick cotton paper, custom letterpress.</p>
+<div class="mt-2 flex flex-wrap gap-2">
+<span class="inline-block bg-tertiary/10 text-tertiary font-label-sm px-3 py-1 rounded-full">Gold Foil</span>
+<span class="inline-block bg-tertiary/10 text-tertiary font-label-sm px-3 py-1 rounded-full">Qty: 150</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-md text-on-surface">$850.00</span>
+</div>
+</div>
+</div>
+<!-- Discount Code -->
+<div class="flex gap-2 my-6">
+<input class="flex-grow bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 font-body-md text-on-surface focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors" placeholder="Discount code" type="text">
+<button class="bg-secondary text-on-secondary font-label-md px-4 py-2 rounded-lg hover:bg-secondary/90 transition-colors">Apply</button>
+</div>
+<div class="h-px bg-outline-variant/30 w-full my-6"></div>
+<!-- Totals -->
+<div class="space-y-3 font-body-md text-on-surface">
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Subtotal</span>
+<span class="font-medium">$850.00</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Shipping</span>
+<span class="font-medium text-on-surface-variant text-sm">Calculated at next step</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Estimated Taxes</span>
+<span class="font-medium">$42.50</span>
+</div>
+</div>
+<div class="h-px bg-outline-variant/30 w-full my-6"></div>
+<div class="flex justify-between items-center mb-8">
+<span class="font-headline-md text-[20px] text-on-surface">Total</span>
+<div class="text-right">
+<span class="font-label-sm text-on-surface-variant mr-2">USD</span>
+<span class="font-headline-md text-[28px] text-primary">$892.50</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="w-full py-stack-lg bg-surface-container-low border-t border-outline-variant dark:bg-surface-container-highest mt-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="md:col-span-1">
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Vintage</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">© 2024 Vintage Artisanal Studio. All rights reserved.</p>
+</div>
+<div class="md:col-span-3 flex flex-wrap gap-8 md:justify-end items-start pt-2">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Our Story</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Contact Us</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Shipping &amp; Returns</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Custom Orders</a>
+</div>
+</div>
+</footer>
+
+
+</body></html>

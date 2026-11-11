@@ -1,24 +1,44 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
+import Icon from "../components/Icon";
 import toast from "react-hot-toast";
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
-  },
-};
+const WHATSAPP_URL = "https://wa.me/201147414322";
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
+const CONTACT_INFO = [
+  {
+    icon: "location_on",
+    label: "123 Artisan Alley, Creative District",
+    href: null,
   },
-};
+  {
+    icon: "mail",
+    label: "hello@vintagestudio.com",
+    href: "mailto:hello@vintagestudio.com",
+  },
+  {
+    icon: "phone",
+    label: "+20 114 741 4322",
+    href: "tel:+201147414322",
+  },
+];
+
+const FAQS = [
+  {
+    q: "Do you do custom orders?",
+    a: "Yes, we specialize in bespoke creations tailored to your vision. Tell us your idea and we'll craft it.",
+  },
+  {
+    q: "What is the typical turnaround time?",
+    a: "Typically 2-4 weeks, depending on the complexity of the piece.",
+  },
+  {
+    q: "How can I track my order?",
+    a: "Once your order ships, we'll send you a tracking link by email or WhatsApp.",
+  },
+];
+
+const inputClass =
+  "w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body-md text-on-surface placeholder:text-on-surface-variant/50 transition-colors focus:border-tertiary focus:outline-none focus:ring-1 focus:ring-tertiary";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -29,255 +49,209 @@ const ContactPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
     setIsSubmitting(true);
 
     setTimeout(() => {
       setIsSubmitting(false);
       toast.success(
-        "Your message has been delivered to our curator. We will respond shortly.",
+        "Your message has been delivered. We will respond shortly.",
       );
       setFormData({ name: "", email: "", subject: "", message: "" });
     }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-vintage-cream">
-      <section className="relative overflow-hidden bg-vintage-brown px-5 pb-20 pt-32 sm:px-8 md:pb-24 md:pt-44">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none"></div>
+    <div className="relative w-full">
+      {/* Background accents */}
+      <div className="pointer-events-none absolute right-0 top-0 -z-10 h-80 w-80 -translate-y-1/4 translate-x-1/3 rounded-full bg-tertiary-fixed opacity-20 blur-3xl" />
 
-        <motion.div
-          className="max-w-4xl mx-auto text-center relative z-10"
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div variants={fadeInUp} className="flex justify-center mb-6">
-            <span className="inline-block py-1.5 px-6 border border-vintage-gold/40 rounded-full font-sans text-xs tracking-[0.3em] uppercase text-vintage-gold">
-              Inquiries
-            </span>
-          </motion.div>
-          <motion.h1
-            variants={fadeInUp}
-            className="font-serif text-5xl md:text-7xl text-vintage-cream mb-6 tracking-tight"
-          >
+      <main className="mx-auto w-full max-w-container-max px-margin-mobile py-stack-md pb-stack-lg md:px-margin-desktop md:py-stack-lg">
+        {/* Header */}
+        <div className="mb-stack-lg">
+          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
             Get in Touch
-          </motion.h1>
-          <motion.p
-            variants={fadeInUp}
-            className="font-sans text-lg text-vintage-cream/80 max-w-2xl mx-auto font-light leading-relaxed mb-4"
-          >
-            Whether you are searching for a specific historical piece or need
-            assistance with your collection, our dedicated curators are here to
-            assist you.
-          </motion.p>
-        </motion.div>
-      </section>
+          </h1>
+          <p className="mt-2 max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
+            Have a question about an order, a custom request, or just want to
+            say hello? We'd love to hear from you.
+          </p>
+        </div>
 
-      <section className="relative z-20 mx-auto -mt-10 max-w-[90rem] px-5 py-16 sm:-mt-16 sm:px-8 md:py-24 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
-          <motion.div
-            className="border-t-4 border-vintage-gold bg-white p-7 shadow-xl sm:p-10 md:p-14 lg:col-span-5"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-          >
-            <motion.h2
-              variants={fadeInUp}
-              className="font-serif text-3xl md:text-4xl text-vintage-brown mb-8 relative inline-block"
+        {/* Contact info strip */}
+        <div className="mb-stack-lg grid grid-cols-1 gap-4 rounded-xl border border-outline-variant/20 bg-surface-container-low p-6 soft-shadow sm:grid-cols-3">
+          {CONTACT_INFO.map((info) => (
+            <div
+              key={info.icon}
+              className="flex items-center gap-3 font-body-md text-body-md text-on-surface"
             >
-              Contact Details
-              <span className="absolute -bottom-2 left-0 w-1/3 h-[2px] bg-vintage-gold"></span>
-            </motion.h2>
+              <Icon name={info.icon} className="shrink-0 text-primary" />
+              {info.href ? (
+                <a
+                  href={info.href}
+                  className="transition-colors hover:text-primary"
+                >
+                  {info.label}
+                </a>
+              ) : (
+                <span>{info.label}</span>
+              )}
+            </div>
+          ))}
+        </div>
 
-            <motion.div variants={fadeInUp} className="space-y-10 mt-12">
-              <div className="flex items-start gap-6 group">
-                <div className="w-12 h-12 shrink-0 rounded-full bg-vintage-cream flex items-center justify-center text-vintage-brown group-hover:bg-vintage-brown group-hover:text-vintage-gold transition-colors duration-300">
-                  <MapPin size={22} strokeWidth={1.5} />
-                </div>
-                <div>
-                  <h3 className="font-sans text-sm tracking-[0.2em] uppercase text-vintage-light-brown mb-2 font-bold">
-                    The Gallery
-                  </h3>
-                  <p className="font-serif text-lg text-vintage-brown leading-relaxed">
-                    1892 Antiquity Lane, <br />
-                    Historic District, CA 90210
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-6 group">
-                <div className="w-12 h-12 shrink-0 rounded-full bg-vintage-cream flex items-center justify-center text-vintage-brown group-hover:bg-vintage-brown group-hover:text-vintage-gold transition-colors duration-300">
-                  <Phone size={22} strokeWidth={1.5} />
-                </div>
-                <div>
-                  <h3 className="font-sans text-sm tracking-[0.2em] uppercase text-vintage-light-brown mb-2 font-bold">
-                    Telephone
-                  </h3>
-                  <p className="font-serif text-lg text-vintage-brown tracking-wide">
-                    +1 (555) 867-5309
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-6 group">
-                <div className="w-12 h-12 shrink-0 rounded-full bg-vintage-cream flex items-center justify-center text-vintage-brown group-hover:bg-vintage-brown group-hover:text-vintage-gold transition-colors duration-300">
-                  <Mail size={22} strokeWidth={1.5} />
-                </div>
-                <div>
-                  <h3 className="font-sans text-sm tracking-[0.2em] uppercase text-vintage-light-brown mb-2 font-bold">
-                    Electronic Mail
-                  </h3>
-                  <p className="font-serif text-lg text-vintage-brown">
-                    curator@vintage.com
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-6 group">
-                <div className="w-12 h-12 shrink-0 rounded-full bg-vintage-cream flex items-center justify-center text-vintage-brown group-hover:bg-vintage-brown group-hover:text-vintage-gold transition-colors duration-300">
-                  <Clock size={22} strokeWidth={1.5} />
-                </div>
-                <div>
-                  <h3 className="font-sans text-sm tracking-[0.2em] uppercase text-vintage-light-brown mb-2 font-bold">
-                    Viewing Hours
-                  </h3>
-                  <p className="font-serif text-lg text-vintage-brown leading-relaxed">
-                    Monday - Friday: 10am - 6pm <br />
-                    Saturday: 11am - 4pm <br />
-                    <span className="text-sm italic text-vintage-light-brown font-serif mt-1 block">
-                      Private viewings available by appointment
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            className="lg:col-span-7 pt-10 lg:pt-0 lg:pl-10"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
-          >
-            <motion.div variants={fadeInUp} className="mb-10">
-              <h2 className="font-serif text-3xl md:text-4xl text-vintage-brown mb-4">
-                Send a Missive
-              </h2>
-              <p className="font-sans text-vintage-light-brown">
-                Please fill out the form below and we will respond with due
-                haste.
-              </p>
-            </motion.div>
-
-            <motion.form
-              variants={fadeInUp}
-              onSubmit={handleSubmit}
-              className="space-y-8"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="relative group">
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full bg-transparent border-b-2 border-vintage-gold/30 py-4 px-2 text-vintage-brown font-serif text-lg focus:outline-none focus:border-vintage-gold transition-colors duration-300 peer placeholder-transparent"
-                    placeholder="Name"
-                  />
-                  <label
-                    htmlFor="name"
-                    className="absolute left-2 -top-3.5 text-xs font-sans tracking-[0.2em] uppercase text-vintage-light-brown transition-all duration-300 peer-placeholder-shown:text-base peer-placeholder-shown:text-vintage-light-brown/60 peer-placeholder-shown:top-4 peer-placeholder-shown:font-serif peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:-top-3.5 peer-focus:text-xs peer-focus:font-sans peer-focus:tracking-[0.2em] peer-focus:uppercase peer-focus:text-vintage-brown"
-                  >
-                    Your Name
-                  </label>
-                </div>
-
-                <div className="relative group">
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full bg-transparent border-b-2 border-vintage-gold/30 py-4 px-2 text-vintage-brown font-serif text-lg focus:outline-none focus:border-vintage-gold transition-colors duration-300 peer placeholder-transparent"
-                    placeholder="Email"
-                  />
-                  <label
-                    htmlFor="email"
-                    className="absolute left-2 -top-3.5 text-xs font-sans tracking-[0.2em] uppercase text-vintage-light-brown transition-all duration-300 peer-placeholder-shown:text-base peer-placeholder-shown:text-vintage-light-brown/60 peer-placeholder-shown:top-4 peer-placeholder-shown:font-serif peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:-top-3.5 peer-focus:text-xs peer-focus:font-sans peer-focus:tracking-[0.2em] peer-focus:uppercase peer-focus:text-vintage-brown"
-                  >
-                    Email Address
-                  </label>
-                </div>
-              </div>
-
-              <div className="relative group">
+        <div className="grid grid-cols-1 items-start gap-gutter md:grid-cols-2">
+          {/* Form */}
+          <div className="rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-6 soft-shadow md:p-8">
+            <h2 className="mb-6 font-headline-md text-headline-md text-primary">
+              Send a Missive
+            </h2>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="name"
+                  className="font-label-md text-label-md text-on-surface"
+                >
+                  Name
+                </label>
                 <input
+                  id="name"
+                  name="name"
                   type="text"
-                  id="subject"
-                  name="subject"
                   required
-                  value={formData.subject}
+                  placeholder="Your name"
+                  value={formData.name}
                   onChange={handleChange}
-                  className="w-full bg-transparent border-b-2 border-vintage-gold/30 py-4 px-2 text-vintage-brown font-serif text-lg focus:outline-none focus:border-vintage-gold transition-colors duration-300 peer placeholder-transparent"
-                  placeholder="Subject"
+                  className={inputClass}
                 />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="email"
+                  className="font-label-md text-label-md text-on-surface"
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="Your email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="subject"
-                  className="absolute left-2 -top-3.5 text-xs font-sans tracking-[0.2em] uppercase text-vintage-light-brown transition-all duration-300 peer-placeholder-shown:text-base peer-placeholder-shown:text-vintage-light-brown/60 peer-placeholder-shown:top-4 peer-placeholder-shown:font-serif peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:-top-3.5 peer-focus:text-xs peer-focus:font-sans peer-focus:tracking-[0.2em] peer-focus:uppercase peer-focus:text-vintage-brown"
+                  className="font-label-md text-label-md text-on-surface"
                 >
-                  Subject of Inquiry
+                  Subject{" "}
+                  <span className="font-body-md text-body-md font-normal normal-case tracking-normal text-on-surface-variant">
+                    (optional)
+                  </span>
                 </label>
+                <input
+                  id="subject"
+                  name="subject"
+                  type="text"
+                  placeholder="What is it about?"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
               </div>
-
-              <div className="relative group">
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="message"
+                  className="font-label-md text-label-md text-on-surface"
+                >
+                  Message
+                </label>
                 <textarea
                   id="message"
                   name="message"
+                  rows="4"
                   required
-                  rows={5}
+                  placeholder="How can we help?"
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full bg-transparent border-b-2 border-vintage-gold/30 py-4 px-2 text-vintage-brown font-serif text-lg focus:outline-none focus:border-vintage-gold transition-colors duration-300 peer placeholder-transparent resize-none"
-                  placeholder="Message"
-                ></textarea>
-                <label
-                  htmlFor="message"
-                  className="absolute left-2 -top-3.5 text-xs font-sans tracking-[0.2em] uppercase text-vintage-light-brown transition-all duration-300 peer-placeholder-shown:text-base peer-placeholder-shown:text-vintage-light-brown/60 peer-placeholder-shown:top-4 peer-placeholder-shown:font-serif peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:-top-3.5 peer-focus:text-xs peer-focus:font-sans peer-focus:tracking-[0.2em] peer-focus:uppercase peer-focus:text-vintage-brown"
-                >
-                  Your Message
-                </label>
+                  className={`${inputClass} resize-none`}
+                />
               </div>
-
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="group relative inline-flex items-center gap-4 bg-vintage-brown text-vintage-cream border-2 border-vintage-brown px-12 py-4 font-sans font-medium text-sm tracking-[0.2em] uppercase overflow-hidden transition-all duration-500 rounded-sm w-full md:w-auto"
+                className="mt-4 flex items-center justify-center gap-2 self-start rounded-full bg-primary px-8 py-3 font-label-md text-label-md text-on-primary shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md disabled:opacity-60"
               >
-                <span className="absolute inset-0 bg-vintage-gold translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-in-out"></span>
-                <span className="relative z-10 group-hover:text-vintage-brown transition-colors duration-500 flex items-center justify-center gap-3 w-full">
-                  {isSubmitting ? "Sending..." : "Dispatch Message"}
-                  {!isSubmitting && (
-                    <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-                  )}
-                </span>
+                <Icon name="send" size={18} />
+                {isSubmitting ? "Sending..." : "Send Message"}
               </button>
-            </motion.form>
-          </motion.div>
+            </form>
+          </div>
+
+          {/* WhatsApp CTA + FAQs */}
+          <div className="flex flex-col gap-gutter">
+            {/* WhatsApp CTA */}
+            <div className="flex items-center justify-between rounded-xl bg-tertiary-container p-8 text-on-tertiary-container soft-shadow">
+              <div>
+                <h3 className="mb-2 font-headline-md text-[24px] font-semibold leading-8">
+                  Need it quick?
+                </h3>
+                <p className="font-body-md text-body-md opacity-90">
+                  Chat with us directly on WhatsApp.
+                </p>
+              </div>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Chat with us on WhatsApp"
+                className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-surface text-tertiary transition-transform hover:scale-105"
+              >
+                <Icon name="chat" size={28} />
+              </a>
+            </div>
+
+            {/* FAQs */}
+            <div className="rounded-xl border border-outline-variant/20 bg-surface-container-low p-8 soft-shadow">
+              <h3 className="mb-6 font-headline-md text-[24px] font-semibold leading-8 text-on-surface">
+                Common Questions
+              </h3>
+              <div className="flex flex-col gap-4">
+                {FAQS.map((faq, index) => (
+                  <div key={faq.q}>
+                    <details className="group cursor-pointer">
+                      <summary className="flex list-none items-center justify-between font-label-md text-label-md text-primary outline-none [&::-webkit-details-marker]:hidden">
+                        {faq.q}
+                        <Icon
+                          name="expand_more"
+                          size={20}
+                          className="shrink-0 transition-transform group-open:rotate-180"
+                        />
+                      </summary>
+                      <p className="mt-2 border-l-2 border-primary-fixed-dim pl-4 font-body-md text-body-md text-on-surface-variant">
+                        {faq.a}
+                      </p>
+                    </details>
+                    {index < FAQS.length - 1 && (
+                      <div className="mt-4 h-px w-full bg-outline-variant/30" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
+      </main>
     </div>
   );
 };

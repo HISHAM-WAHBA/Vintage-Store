@@ -1,5 +1,5 @@
-import { ArrowRight, ArrowUpRight, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import Icon from "../components/Icon";
 
 const images = {
   desktopHero:
@@ -39,87 +39,141 @@ const occasions = [
   },
 ];
 
-const Wish = () => (
-  <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 text-vintage-light-brown">
-    <Heart className="h-4 w-4" />
-  </span>
+/* ─── Shared pieces ─────────────────────────────────────────────────────────── */
+
+const WishlistButton = ({ className = "" }) => (
+  <button
+    type="button"
+    aria-label="Add to wishlist"
+    className={`flex items-center justify-center rounded-full bg-surface-container-lowest/80 text-on-surface-variant backdrop-blur ${className}`}
+  >
+    <Icon name="favorite" size={16} />
+  </button>
 );
 
+const Newsletter = () => (
+  <section className="mb-stack-lg px-margin-mobile">
+    <div className="relative overflow-hidden rounded-[24px] bg-primary-fixed p-stack-md text-center">
+      {/* Abstract decorative shapes */}
+      <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary-container/20 blur-2xl" />
+      <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-surface-container-lowest/40 blur-2xl" />
+      <h2 className="relative z-10 mb-2 font-headline-md text-headline-md text-on-primary-fixed">
+        Join the Studio
+      </h2>
+      <p className="relative z-10 mb-6 font-body-md text-body-md text-on-primary-fixed-variant">
+        Get 10% off your first custom box and exclusive artisanal updates.
+      </p>
+      <div className="relative z-10 flex flex-col gap-3">
+        <input
+          type="email"
+          placeholder="Your email address"
+          className="w-full rounded-xl border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body-md text-body-md text-on-surface outline-none transition-colors placeholder:text-on-surface-variant/60 focus:border-tertiary focus:ring-1 focus:ring-tertiary"
+        />
+        <button
+          type="button"
+          className="w-full rounded-xl bg-secondary-container px-6 py-3 font-label-md text-label-md text-on-secondary-container shadow-sm transition-transform active:scale-95"
+        >
+          Subscribe
+        </button>
+      </div>
+    </div>
+  </section>
+);
+
+/* ─── Mobile home ──────────────────────────────────────────────────────────── */
+
 const MobileHome = () => (
-  <div className="pb-24 lg:hidden">
-    <section className="px-4 py-6">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[24px] shadow-[0_10px_30px_rgba(45,41,38,0.1)]">
+  <div className="md:hidden">
+    {/* Hero */}
+    <section className="flex flex-col items-center px-margin-mobile py-stack-md text-center">
+      <div className="relative mb-stack-md aspect-[4/5] w-full overflow-hidden rounded-[24px] shadow-[0_10px_30px_rgba(45,41,38,0.1)]">
         <img
           src={images.mobileHero}
           alt="Curated artisanal gift box"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-[#34302c]/85 via-[#34302c]/10 to-transparent p-6 text-center">
-          <h1 className="font-serif text-[32px] font-bold leading-[1.05] text-white">
+        <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent p-6">
+          <h1 className="mb-2 font-headline-lg-mobile text-headline-lg-mobile leading-tight text-surface-container-lowest">
             Curated Joy,
             <br />
             Beautifully Boxed
           </h1>
-          <p className="mt-3 text-lg leading-7 text-[#e9e1dc]">
+          <p className="mb-6 font-body-lg text-body-lg text-surface-container-highest">
             Bespoke artisanal gifts for every moment.
           </p>
           <Link
             to="/shop"
-            className="mt-7 rounded-full bg-vintage-gold py-4 text-sm font-semibold"
+            className="w-full rounded-full bg-primary px-8 py-4 font-label-md text-label-md text-on-primary shadow-[0_10px_30px_rgba(167,41,97,0.3)] transition-transform active:scale-95"
           >
             Explore Collections
           </Link>
         </div>
       </div>
     </section>
-    <div className="mb-12 flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none]">
-      {["All", "Birthdays", "Anniversary", "Just Because", "Corporate"].map(
-        (category, index) => (
-          <Link
-            key={category}
-            to="/shop"
-            className={`shrink-0 rounded-full px-6 py-2 text-sm font-medium ${index === 0 ? "border border-vintage-accent/20 bg-vintage-accent/10 text-vintage-accent" : "bg-vintage-pink text-vintage-light-brown"}`}
-          >
-            {category}
-          </Link>
-        ),
-      )}
-    </div>
-    <section className="px-4">
+
+    {/* Categories pills */}
+    <section className="mb-stack-lg pl-margin-mobile">
+      <div className="no-scrollbar flex gap-3 overflow-x-auto pb-2 pr-margin-mobile">
+        {["All", "Birthdays", "Anniversary", "Just Because", "Corporate"].map(
+          (category, index) => (
+            <Link
+              key={category}
+              to="/shop"
+              className={`shrink-0 rounded-full px-6 py-2 font-label-md text-label-md ${
+                index === 0
+                  ? "border border-tertiary/20 bg-tertiary/10 text-tertiary"
+                  : "bg-surface-container text-on-surface-variant"
+              }`}
+            >
+              {category}
+            </Link>
+          ),
+        )}
+      </div>
+    </section>
+
+    {/* Featured curations bento grid */}
+    <section className="mb-stack-lg px-margin-mobile">
       <div className="mb-4 flex items-end justify-between">
-        <h2 className="max-w-56 font-serif text-[32px] font-bold leading-10 text-vintage-gold">
+        <h2 className="font-headline-md text-headline-md text-primary">
           Featured Curations
         </h2>
         <Link
           to="/shop"
-          className="mb-1 flex items-center gap-2 text-xs font-medium text-vintage-accent"
+          className="flex items-center font-label-sm text-label-sm text-tertiary"
         >
-          View All <ArrowRight className="h-4 w-4" />
+          View All <Icon name="arrow_forward" size={16} className="ml-1" />
         </Link>
       </div>
+
       <div className="grid grid-cols-2 gap-4">
+        {/* Large item */}
         <Link
           to="/shop"
-          className="col-span-2 rounded-[24px] border border-vintage-border/30 bg-white p-4 shadow-[0_10px_30px_rgba(45,41,38,0.05)]"
+          className="col-span-2 flex flex-col rounded-[24px] border border-outline-variant/30 bg-surface-container-lowest p-4 shadow-[0_10px_30px_rgba(45,41,38,0.05)]"
         >
-          <div className="relative aspect-video overflow-hidden rounded-xl">
+          <div className="relative mb-4 aspect-video w-full overflow-hidden rounded-xl">
             <img
               src={images.coffee}
               alt="The Morning Ritual coffee set"
               className="h-full w-full object-cover"
             />
-            <Wish />
+            <WishlistButton className="absolute right-3 top-3 h-8 w-8" />
           </div>
-          <div className="mt-4 flex justify-between gap-3">
+          <div className="flex items-start justify-between">
             <div>
-              <h3 className="text-sm font-semibold">The Morning Ritual</h3>
-              <p className="mt-1 text-xs text-vintage-light-brown">
+              <h3 className="mb-1 font-label-md text-label-md text-on-surface">
+                The Morning Ritual
+              </h3>
+              <p className="font-label-sm text-label-sm text-on-surface-variant">
                 Artisanal Coffee Set
               </p>
             </div>
-            <b className="text-sm text-vintage-gold">$85</b>
+            <span className="font-label-md text-label-md text-primary">$85</span>
           </div>
         </Link>
+
+        {/* Small items */}
         {[
           { name: "Self-Care Sunday", price: "$55", image: images.care },
           { name: "Botanical Bites", price: "$35", image: images.bites },
@@ -127,99 +181,107 @@ const MobileHome = () => (
           <Link
             to="/shop"
             key={item.name}
-            className="rounded-[24px] border border-vintage-border/30 bg-white p-3 shadow-[0_10px_30px_rgba(45,41,38,0.05)]"
+            className="flex flex-col rounded-[24px] border border-outline-variant/30 bg-surface-container-lowest p-3 shadow-[0_10px_30px_rgba(45,41,38,0.05)]"
           >
-            <div className="relative aspect-square overflow-hidden rounded-xl">
+            <div className="relative mb-3 aspect-square w-full overflow-hidden rounded-xl">
               <img
                 src={item.image}
                 alt={item.name}
                 className="h-full w-full object-cover"
               />
-              <Wish />
+              <WishlistButton className="absolute right-2 top-2 h-7 w-7" />
             </div>
-            <h3 className="mt-3 truncate text-sm font-semibold">{item.name}</h3>
-            <b className="mt-1 block text-sm text-vintage-gold">{item.price}</b>
+            <h3 className="mb-1 truncate font-label-md text-label-md text-on-surface">
+              {item.name}
+            </h3>
+            <span className="font-label-md text-label-md text-primary">
+              {item.price}
+            </span>
           </Link>
         ))}
       </div>
     </section>
-    <section className="mt-12 overflow-hidden">
-      <h2 className="px-4 font-serif text-[32px] font-bold leading-10 text-vintage-gold">
+
+    {/* Occasions horizontal scroll */}
+    <section className="mb-stack-lg pl-margin-mobile">
+      <h2 className="mb-4 pr-margin-mobile font-headline-md text-headline-md text-primary">
         Shop by Occasion
       </h2>
-      <div className="mt-4 flex gap-4 overflow-x-auto px-4 pb-3 [scrollbar-width:none]">
+      <div className="no-scrollbar flex gap-4 overflow-x-auto pb-4 pr-margin-mobile">
         {[
           { name: "Weddings", count: "12 Curations", image: images.bridal },
-          { name: "Housewarming", count: "8 Curations", image: images.coffee },
+          {
+            name: "Housewarming",
+            count: "8 Curations",
+            image: images.coffee,
+          },
           { name: "Birthdays", count: "15 Curations", image: images.birthday },
         ].map((item) => (
           <Link
-            to="/shop"
             key={item.name}
-            className="flex w-64 shrink-0 items-center gap-4 rounded-[24px] border border-vintage-border/20 bg-vintage-pink p-4"
+            to="/shop"
+            className="flex w-64 shrink-0 items-center gap-4 rounded-[24px] border border-outline-variant/20 bg-surface-container-low p-4 shadow-[0_10px_30px_rgba(45,41,38,0.03)]"
           >
-            <img
-              src={item.image}
-              alt=""
-              className="h-16 w-16 rounded-full object-cover"
-            />
+            <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full">
+              <img
+                src={item.image}
+                alt=""
+                className="h-full w-full object-cover"
+              />
+            </div>
             <div>
-              <h3 className="text-sm font-semibold">{item.name}</h3>
-              <p className="text-xs text-vintage-light-brown">{item.count}</p>
+              <h3 className="font-label-md text-label-md text-on-surface">
+                {item.name}
+              </h3>
+              <p className="font-label-sm text-label-sm text-on-surface-variant">
+                {item.count}
+              </p>
             </div>
           </Link>
         ))}
       </div>
     </section>
-    <section className="mx-4 mt-12 overflow-hidden rounded-t-[24px] bg-[#ffd9e3] p-6 text-center">
-      <h2 className="font-serif text-[32px] font-bold text-[#3e001e]">
-        Join the Studio
-      </h2>
-      <p className="mt-2 text-sm leading-5 text-[#8a0e4c]">
-        Get 10% off your first custom box and exclusive artisanal updates.
-      </p>
-      <input
-        type="email"
-        placeholder="Your email address"
-        className="mt-6 w-full rounded-xl border border-vintage-border bg-white px-4 py-3 text-sm outline-none focus:border-vintage-accent"
-      />
-      <button className="mt-3 w-full rounded-xl bg-vintage-mustard py-3 text-sm font-semibold text-[#6d4f00]">
-        Subscribe
-      </button>
-    </section>
+
+    <Newsletter />
   </div>
 );
 
+/* ─── Desktop home ─────────────────────────────────────────────────────────── */
+
 const DesktopHome = () => (
-  <div className="hidden overflow-hidden bg-vintage-cream lg:block">
-    <section className="relative flex min-h-[calc(100svh-5rem)] items-center overflow-hidden bg-vintage-pink">
-      <img
-        src={images.desktopHero}
-        alt="Curated gift boxes"
-        className="absolute inset-0 h-full w-full object-cover object-[65%_center] opacity-80"
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-vintage-pink via-vintage-pink/88 to-vintage-pink/15" />
-      <div className="relative mx-auto w-full max-w-[1280px] px-12 py-24">
-        <div className="max-w-xl">
-          <h1 className="font-serif text-[64px] font-bold leading-[1.12] tracking-[-0.035em] text-vintage-brown">
-            Curated Joy,
-            <br />
-            Beautifully Boxed
+  <div className="hidden overflow-hidden md:block">
+    {/* Hero */}
+    <section
+      className="relative flex min-h-[calc(100svh-5rem)] items-center overflow-hidden bg-surface-container-low px-margin-desktop py-stack-lg"
+      id="collections"
+    >
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-surface-container-low via-surface-container-low/80 to-transparent" />
+        <img
+          src={images.desktopHero}
+          alt="Curated gift boxes"
+          className="absolute inset-0 h-full w-full object-cover object-[65%_center] opacity-80"
+        />
+      </div>
+      <div className="relative z-20 mx-auto w-full max-w-container-max">
+        <div className="flex max-w-xl flex-col items-start justify-center space-y-stack-md">
+          <h1 className="font-display-lg text-display-lg text-on-surface">
+            Curated Joy, Beautifully Boxed
           </h1>
-          <p className="mt-6 max-w-lg text-lg leading-7 text-vintage-light-brown">
+          <p className="max-w-lg font-body-lg text-body-lg text-on-surface-variant">
             Discover bespoke gifting experiences tailored for every meaningful
             moment. Hand-selected, artisanally crafted, and delivered with love.
           </p>
-          <div className="mt-9 flex gap-4">
+          <div className="flex flex-wrap gap-4 pt-4">
             <Link
               to="/shop"
-              className="btn-vintage-primary inline-flex items-center justify-center rounded-xl px-8 py-4 text-sm font-semibold shadow-md"
+              className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-4 font-label-md text-label-md text-on-primary shadow-[0_10px_30px_rgba(45,41,38,0.05)] transition-all hover:-translate-y-0.5 hover:bg-surface-tint"
             >
               Explore Collections
             </Link>
             <Link
               to="/shop"
-              className="btn-vintage-secondary inline-flex items-center justify-center rounded-xl px-8 py-4 text-sm font-semibold shadow-md"
+              className="inline-flex items-center justify-center rounded-xl bg-secondary-container px-8 py-4 font-label-md text-label-md text-on-secondary-container shadow-[0_10px_30px_rgba(45,41,38,0.05)] transition-all hover:-translate-y-0.5 hover:bg-secondary-fixed"
             >
               Customize a Gift
             </Link>
@@ -227,50 +289,56 @@ const DesktopHome = () => (
         </div>
       </div>
     </section>
-    <section className="mx-auto max-w-[1280px] px-12 py-12">
-      <div className="mb-6 flex items-end justify-between">
+
+    {/* Collections / Occasions */}
+    <section className="mx-auto max-w-container-max px-margin-desktop py-stack-lg">
+      <div className="mb-stack-md flex items-end justify-between">
         <div>
-          <h2 className="font-serif text-5xl font-bold text-vintage-brown">
+          <h2 className="mb-2 font-headline-lg text-headline-lg text-on-surface">
             Shop by Occasion
           </h2>
-          <p className="mt-2 text-base text-vintage-light-brown">
+          <p className="font-body-md text-body-md text-on-surface-variant">
             Perfectly tailored collections for life's special moments.
           </p>
         </div>
         <Link
           to="/shop"
-          className="group flex items-center gap-2 text-sm font-medium text-vintage-gold transition-colors hover:text-[#8a0e4c]"
+          className="group flex items-center font-label-md text-label-md text-primary hover:underline"
         >
-          View All Occasions{" "}
-          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
+          View All Occasions
+          <Icon
+            name="arrow_forward"
+            className="ml-1 transition-transform group-hover:translate-x-1"
+          />
         </Link>
       </div>
-      <div className="grid grid-cols-3 gap-6">
+
+      <div className="grid grid-cols-1 gap-gutter md:grid-cols-3">
         {occasions.map((item) => (
           <Link
             key={item.name}
             to={`/shop?category=${item.category}`}
-            className="group overflow-hidden rounded-xl border border-vintage-border/30 bg-white shadow-[0_10px_30px_rgba(45,41,38,0.05)]"
+            className="group relative overflow-hidden rounded-xl border border-outline-variant/30 bg-surface-container-lowest shadow-[0_10px_30px_rgba(45,41,38,0.05)] transition-all duration-300 hover:-translate-y-1"
           >
-            <div className="h-64 overflow-hidden">
+            <div className="relative h-64 overflow-hidden">
               <img
                 src={item.image}
-                alt=""
-                className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                alt={item.name}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
-            <div className="flex items-center justify-between p-6">
+            <div className="relative z-10 flex items-center justify-between bg-surface-container-lowest p-6">
               <div>
-                <h3 className="font-serif text-3xl font-bold leading-none">
+                <h3 className="font-headline-md text-headline-md text-on-surface">
                   {item.name}
                 </h3>
-                <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.1em] text-vintage-light-brown">
+                <p className="mt-1 font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">
                   {item.count}
                 </p>
               </div>
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-vintage-pink group-hover:bg-vintage-mustard active:scale-95 transition-all duration-300">
-                <ArrowUpRight className="h-5 w-5 transition-all duration-300 group-hover:rotate-45" />
-              </span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container transition-colors group-hover:bg-primary group-hover:text-on-primary">
+                <Icon name="arrow_outward" />
+              </div>
             </div>
           </Link>
         ))}

@@ -14,22 +14,16 @@ import {
   X,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { api } from "../services/api";
+import { api, getStoredToken } from "../services/api";
 
 const emptyProduct = {
   name: "",
   price: "",
+  quantity: "",
   category: "",
   image: "",
   description: "",
 };
-
-const toSlug = (value) =>
-  value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
 
 const AdminDashboardPage = () => {
   const [products, setProducts] = useState([]);
@@ -55,25 +49,37 @@ const AdminDashboardPage = () => {
   }, []);
 
   const filteredProducts = products.filter((product) => {
+    const category = product.categories?.[0] || "";
     const matchesCategory =
-      categoryFilter === "all" || product.category === categoryFilter;
+      categoryFilter === "all" || category === categoryFilter;
     const normalizedQuery = searchQuery.toLowerCase().trim();
     const matchesSearch =
       !normalizedQuery ||
       product.name.toLowerCase().includes(normalizedQuery) ||
-      product.category.toLowerCase().includes(normalizedQuery);
+      category.toLowerCase().includes(normalizedQuery);
     return matchesCategory && matchesSearch;
   });
 
   const openNewProduct = () => {
     setEditingProductId(null);
-    setProductForm({ ...emptyProduct, category: categories[0]?.name || "" });
+    setProductForm({
+      ...emptyProduct,
+      quantity: "10",
+      category: categories[0]?.name || "",
+    });
     setIsProductModalOpen(true);
   };
 
   const openEditProduct = (product) => {
     setEditingProductId(product.id);
-    setProductForm({ ...product, price: String(product.price) });
+    setProductForm({
+      name: product.name,
+      price: String(product.price),
+      quantity: String(product.quantity ?? 0),
+      category: product.categories?.[0] || "",
+      image: product.image,
+      description: product.description || "",
+    });
     setIsProductModalOpen(true);
   };
 
@@ -84,42 +90,62 @@ const AdminDashboardPage = () => {
 
   const saveProduct = async (event) => {
     event.preventDefault();
-    const normalizedProduct = {
-      ...productForm,
-      id:
-        editingProductId || Math.max(0, ...products.map((item) => item.id)) + 1,
-      price: Number(productForm.price),
-    };
-    const nextProducts = editingProductId
-      ? products.map((product) =>
-          product.id === editingProductId ? normalizedProduct : product,
-        )
-      : [normalizedProduct, ...products];
-    await api.saveProducts(nextProducts);
-    setProducts(nextProducts);
-    setIsProductModalOpen(false);
-    toast.success(editingProductId ? "Product updated" : "Product added");
+    try {
+      const saved = await api.saveProduct({
+        ...(editingProductId ? { id: editingProductId } : {}),
+        name: productForm.name,
+        price: Number(productForm.price),
+        quantity: Math.max(0, Math.trunc(Number(productForm.quantity) || 0)),
+        description: productForm.description,
+        image: productForm.image,
+        category: productForm.category,
+      });
+      setProducts((current) =>
+        editingProductId
+          ? current.map((product) =>
+              product.id === saved.id ? saved : product,
+            )
+          : [saved, ...current],
+      );
+      setIsProductModalOpen(false);
+      toast.success(editingProductId ? "Product updated" : "Product added");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const deleteProduct = async (productId) => {
     const product = products.find((item) => item.id === productId);
     if (!product || !window.confirm(`Delete ${product.name}?`)) return;
-    const nextProducts = products.filter((item) => item.id !== productId);
-    await api.saveProducts(nextProducts);
-    setProducts(nextProducts);
-    toast.success("Product deleted");
+    try {
+      await api.deleteProduct(productId);
+      setProducts((current) => current.filter((item) => item.id !== productId));
+      toast.success("Product deleted");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const addCategory = async (event) => {
     event.preventDefault();
     const name = newCategory.trim();
-    const id = toSlug(name);
-    if (!name || categories.some((category) => category.id === id)) return;
-    const nextCategories = [...categories, { id, name }];
-    await api.saveCategories(nextCategories);
-    setCategories(nextCategories);
-    setNewCategory("");
-    toast.success("Category added");
+    if (!name) return;
+    if (
+      categories.some(
+        (category) => category.name.toLowerCase() === name.toLowerCase(),
+      )
+    ) {
+      toast.error("This category already exists");
+      return;
+    }
+    try {
+      const saved = await api.saveCategory(name);
+      setCategories((current) => [...current, saved]);
+      setNewCategory("");
+      toast.success("Category added");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const deleteCategory = async (categoryId) => {
@@ -129,21 +155,20 @@ const AdminDashboardPage = () => {
     }
     const category = categories.find((item) => item.id === categoryId);
     if (!category || !window.confirm(`Delete ${category.name}?`)) return;
-    const replacement = categories.find((item) => item.id !== categoryId);
-    const nextCategories = categories.filter((item) => item.id !== categoryId);
-    const nextProducts = products.map((product) =>
-      product.category === category.name
-        ? { ...product, category: replacement.name }
-        : product,
-    );
-    await Promise.all([
-      api.saveCategories(nextCategories),
-      api.saveProducts(nextProducts),
-    ]);
-    setCategories(nextCategories);
-    setProducts(nextProducts);
-    if (categoryFilter === category.name) setCategoryFilter("all");
-    toast.success("Category deleted and products reassigned");
+    try {
+      await api.deleteCategory(categoryId);
+      // The backend reassigns the category's products — reload both lists.
+      const [loadedProducts, loadedCategories] = await Promise.all([
+        api.getProducts(),
+        api.getCategories(),
+      ]);
+      setProducts(loadedProducts);
+      setCategories(loadedCategories);
+      if (categoryFilter === category.name) setCategoryFilter("all");
+      toast.success("Category deleted and products reassigned");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -160,6 +185,12 @@ const AdminDashboardPage = () => {
             <p className="mt-4 max-w-xl font-sans text-sm leading-relaxed text-vintage-light-brown">
               Manage the catalog and keep every collection ready for customers.
             </p>
+            {!getStoredToken() && (
+              <p className="mt-2 max-w-xl font-sans text-xs leading-relaxed text-vintage-light-brown">
+                Sign in with an admin account to add, edit or remove catalog
+                items.
+              </p>
+            )}
           </div>
           <Link
             to="/"
@@ -176,9 +207,9 @@ const AdminDashboardPage = () => {
             [
               Package,
               "In catalog",
-              products.filter((product) => product.category).length,
+              products.filter((product) => product.categories?.[0]).length,
             ],
-            [Settings2, "Mode", "Local"],
+            [Settings2, "Mode", "Live API"],
           ].map(([DashboardIcon, label, value]) => (
             <div
               key={label}
@@ -273,7 +304,8 @@ const AdminDashboardPage = () => {
                         {product.name}
                       </h3>
                       <p className="mt-1 truncate font-sans text-xs text-vintage-light-brown">
-                        {product.category} · ${product.price.toFixed(2)}
+                        {product.categories?.[0] || "Uncategorized"} · $
+                        {product.price.toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -405,6 +437,7 @@ const AdminDashboardPage = () => {
               {[
                 ["name", "Product name", "text"],
                 ["price", "Price", "number"],
+                ["quantity", "Quantity in stock", "number"],
                 ["image", "Image URL", "url"],
               ].map(([name, label, type]) => (
                 <label
@@ -419,7 +452,7 @@ const AdminDashboardPage = () => {
                     value={productForm[name]}
                     onChange={handleProductChange}
                     min={type === "number" ? "0" : undefined}
-                    step={type === "number" ? "0.01" : undefined}
+                    step={name === "quantity" ? "1" : type === "number" ? "0.01" : undefined}
                     className="mt-2 w-full border-b border-vintage-brown/25 bg-transparent py-3 font-sans text-base font-normal normal-case tracking-normal text-vintage-brown outline-none focus:border-vintage-gold"
                   />
                 </label>

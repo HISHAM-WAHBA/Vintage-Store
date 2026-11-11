@@ -1,214 +1,211 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { User, Mail, Lock, LogIn, UserPlus } from "lucide-react";
-import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import Icon from "../components/Icon";
+import { api, setStoredToken } from "../services/api";
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
+const inputClass =
+  "w-full rounded-lg border border-outline-variant bg-surface-container-low py-3 pl-11 pr-4 font-body-md text-on-surface placeholder:text-on-surface-variant/50 transition-colors focus:border-tertiary focus:outline-none focus:ring-1 focus:ring-tertiary";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast.success(
-        isLogin
-          ? "Welcome back to Vintage."
-          : "Your account has been successfully created.",
-      );
-      setFormData({ name: "", email: "", password: "" });
-      navigate("/");
-    }, 1500);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
   };
 
   const toggleMode = () => {
-    setIsLogin(!isLogin);
+    setIsLogin((current) => !current);
     setFormData({ name: "", email: "", password: "" });
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const result = isLogin
+        ? await api.login(formData.email, formData.password)
+        : await api.register(formData.name, formData.email, formData.password);
+
+      setStoredToken(result.token);
+      localStorage.setItem(
+        "vintage_profile",
+        JSON.stringify({
+          fullName: result.user.name,
+          email: result.user.email,
+          phone: result.user.phone || "",
+          address: result.user.address || "",
+        }),
+      );
+
+      toast.success(
+        isLogin
+          ? `Welcome back, ${result.user.name.split(" ")[0]}.`
+          : "Your account has been created.",
+      );
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error(error.message);
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-vintage-cream px-5 pb-24 pt-24 sm:px-8">
-      <motion.div
-        className="relative z-10 w-full max-w-lg border-t-4 border-vintage-gold bg-white p-7 shadow-xl sm:p-10 md:p-14"
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="text-center mb-10">
-          <motion.div
-            variants={fadeInUp}
-            className="flex justify-center mb-6 text-vintage-brown"
-          >
-            {isLogin ? (
-              <LogIn size={40} strokeWidth={1} />
-            ) : (
-              <UserPlus size={40} strokeWidth={1} />
-            )}
-          </motion.div>
-          <motion.h1
-            variants={fadeInUp}
-            className="font-serif text-3xl md:text-4xl text-vintage-brown mb-3"
-          >
-            {isLogin ? "Curatorial Access" : "Become a Collector"}
-          </motion.h1>
-          <motion.p
-            variants={fadeInUp}
-            className="font-sans text-vintage-light-brown text-sm"
-          >
-            {isLogin
-              ? "Enter your credentials to access your collection."
-              : "Register your details to acquire rare artifacts."}
-          </motion.p>
-        </div>
+    <div className="relative flex min-h-[80vh] items-center justify-center overflow-hidden px-margin-mobile py-stack-lg">
+      {/* Background accents */}
+      <div className="pointer-events-none absolute -left-24 top-0 -z-10 h-96 w-96 rounded-full bg-primary-fixed opacity-25 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 bottom-0 -z-10 h-96 w-96 rounded-full bg-secondary-fixed opacity-15 blur-3xl" />
 
-        <motion.form
-          variants={fadeInUp}
-          onSubmit={handleSubmit}
-          className="space-y-8"
-        >
-          {!isLogin && (
-            <div className="relative group">
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required={!isLogin}
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full bg-transparent border-b-2 border-vintage-gold/30 pl-10 py-4 text-vintage-brown font-serif text-lg focus:outline-none focus:border-vintage-gold transition-colors duration-300 peer placeholder-transparent"
-                placeholder="Full Name"
-              />
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 text-vintage-light-brown group-focus-within:text-vintage-gold transition-colors">
-                <User size={20} strokeWidth={1.5} />
+      <div className="w-full max-w-md">
+        <div className="rounded-2xl border border-outline-variant/20 bg-surface-container-lowest p-8 soft-shadow md:p-10">
+          {/* Heading */}
+          <div className="mb-8 flex flex-col items-center text-center">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-primary-fixed text-on-primary-fixed-variant">
+              <Icon name={isLogin ? "lock" : "person_add"} size={28} />
+            </div>
+            <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
+              {isLogin ? "Welcome back" : "Join Vintage"}
+            </h1>
+            <p className="mt-2 font-body-md text-body-md text-on-surface-variant">
+              {isLogin
+                ? "Sign in to track orders and check out faster."
+                : "Create an account to start your collection."}
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {!isLogin && (
+              <div className="flex flex-col gap-2">
+                <label
+                  htmlFor="name"
+                  className="font-label-md text-label-md text-on-surface"
+                >
+                  Full name
+                </label>
+                <div className="relative">
+                  <Icon
+                    name="person"
+                    size={18}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant"
+                  />
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                    minLength={2}
+                    placeholder="Amelia Crafts"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={inputClass}
+                  />
+                </div>
               </div>
+            )}
+
+            <div className="flex flex-col gap-2">
               <label
-                htmlFor="name"
-                className="absolute left-10 -top-3.5 text-xs font-sans tracking-[0.2em] uppercase text-vintage-light-brown transition-all duration-300 peer-placeholder-shown:text-base peer-placeholder-shown:text-vintage-light-brown/60 peer-placeholder-shown:top-4 peer-placeholder-shown:font-serif peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:-top-3.5 peer-focus:text-xs peer-focus:font-sans peer-focus:tracking-[0.2em] peer-focus:uppercase peer-focus:text-vintage-brown"
+                htmlFor="email"
+                className="font-label-md text-label-md text-on-surface"
               >
-                Full Name
+                Email address
               </label>
+              <div className="relative">
+                <Icon
+                  name="mail"
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant"
+                />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
             </div>
-          )}
 
-          <div className="relative group">
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full bg-transparent border-b-2 border-vintage-gold/30 pl-10 py-4 text-vintage-brown font-serif text-lg focus:outline-none focus:border-vintage-gold transition-colors duration-300 peer placeholder-transparent"
-              placeholder="Email Address"
-            />
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 text-vintage-light-brown group-focus-within:text-vintage-gold transition-colors">
-              <Mail size={20} strokeWidth={1.5} />
-            </div>
-            <label
-              htmlFor="email"
-              className="absolute left-10 -top-3.5 text-xs font-sans tracking-[0.2em] uppercase text-vintage-light-brown transition-all duration-300 peer-placeholder-shown:text-base peer-placeholder-shown:text-vintage-light-brown/60 peer-placeholder-shown:top-4 peer-placeholder-shown:font-serif peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:-top-3.5 peer-focus:text-xs peer-focus:font-sans peer-focus:tracking-[0.2em] peer-focus:uppercase peer-focus:text-vintage-brown"
-            >
-              Email Address
-            </label>
-          </div>
-
-          <div className="relative group">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full bg-transparent border-b-2 border-vintage-gold/30 pl-10 py-4 text-vintage-brown font-serif text-lg focus:outline-none focus:border-vintage-gold transition-colors duration-300 peer placeholder-transparent"
-              placeholder="Password"
-            />
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 text-vintage-light-brown group-focus-within:text-vintage-gold transition-colors">
-              <Lock size={20} strokeWidth={1.5} />
-            </div>
-            <label
-              htmlFor="password"
-              className="absolute left-10 -top-3.5 text-xs font-sans tracking-[0.2em] uppercase text-vintage-light-brown transition-all duration-300 peer-placeholder-shown:text-base peer-placeholder-shown:text-vintage-light-brown/60 peer-placeholder-shown:top-4 peer-placeholder-shown:font-serif peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-focus:-top-3.5 peer-focus:text-xs peer-focus:font-sans peer-focus:tracking-[0.2em] peer-focus:uppercase peer-focus:text-vintage-brown"
-            >
-              Password
-            </label>
-          </div>
-
-          {isLogin && (
-            <div className="flex justify-end">
-              <Link
-                to="#"
-                className="text-xs font-sans tracking-widest text-vintage-brown hover:text-vintage-gold border-b border-transparent hover:border-vintage-gold transition-colors uppercase"
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="password"
+                className="font-label-md text-label-md text-on-surface"
               >
-                Forgot Password?
-              </Link>
+                Password
+              </label>
+              <div className="relative">
+                <Icon
+                  name="lock"
+                  size={18}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant"
+                />
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  minLength={6}
+                  placeholder="At least 6 characters"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={`${inputClass} pr-11`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant transition-colors hover:text-on-surface"
+                >
+                  <Icon name={showPassword ? "visibility_off" : "visibility"} size={18} />
+                </button>
+              </div>
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="group relative flex justify-center items-center gap-4 bg-vintage-brown text-vintage-cream border-2 border-vintage-brown w-full py-4 font-sans font-medium text-sm tracking-[0.2em] uppercase overflow-hidden transition-all duration-500 rounded-sm mt-4"
-          >
-            <span className="absolute inset-0 bg-vintage-gold translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-in-out"></span>
-            <span className="relative z-10 group-hover:text-vintage-brown transition-colors duration-500 flex items-center justify-center gap-3 w-full">
-              {isSubmitting
-                ? "Authenticating..."
-                : isLogin
-                  ? "Authenticate"
-                  : "Register Collection"}
-            </span>
-          </button>
-        </motion.form>
-
-        <motion.div
-          variants={fadeInUp}
-          className="mt-8 text-center border-t border-vintage-gold/10 pt-8"
-        >
-          <p className="font-sans text-sm text-vintage-light-brown">
-            {isLogin
-              ? "Do not possess an account? "
-              : "Already an esteemed member? "}
             <button
-              onClick={toggleMode}
-              className="text-vintage-brown font-bold hover:text-vintage-gold uppercase tracking-widest ml-1 transition-colors underline decoration-vintage-gold/30 hover:decoration-vintage-gold underline-offset-4"
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 font-label-md text-label-md text-on-primary shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-60"
             >
-              {isLogin ? "Register" : "Sign In"}
+              <Icon name={isSubmitting ? "progress_activity" : isLogin ? "login" : "person_add"} size={18} />
+              {isSubmitting
+                ? "Just a moment…"
+                : isLogin
+                  ? "Sign In"
+                  : "Create Account"}
+            </button>
+          </form>
+
+          <p className="mt-6 text-center font-body-md text-body-md text-on-surface-variant">
+            {isLogin ? "New to Vintage?" : "Already have an account?"}{" "}
+            <button
+              type="button"
+              onClick={toggleMode}
+              className="font-semibold text-primary transition-colors hover:underline"
+            >
+              {isLogin ? "Create an account" : "Sign in"}
             </button>
           </p>
-        </motion.div>
-      </motion.div>
+        </div>
+
+        <p className="mt-6 text-center font-body-md text-sm text-on-surface-variant">
+          <Link to="/shop" className="text-primary transition-colors hover:underline">
+            ← Continue browsing the shop
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };

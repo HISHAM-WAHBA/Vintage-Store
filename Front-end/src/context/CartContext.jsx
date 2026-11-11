@@ -5,15 +5,51 @@ const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);
 
+/* Demo discount codes (percent off) */
+const DISCOUNT_CODES = {
+  VINTAGE10: 0.1,
+  WELCOME5: 0.05,
+};
+
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("vintage_cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
+  const [discount, setDiscount] = useState(() => {
+    try {
+      const saved = localStorage.getItem("vintage_discount");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
   useEffect(() => {
     localStorage.setItem("vintage_cart", JSON.stringify(cart));
   }, [cart]);
+
+  useEffect(() => {
+    if (discount) {
+      localStorage.setItem("vintage_discount", JSON.stringify(discount));
+    } else {
+      localStorage.removeItem("vintage_discount");
+    }
+  }, [discount]);
+
+  const applyDiscountCode = (code) => {
+    const normalized = code.trim().toUpperCase();
+    const percent = DISCOUNT_CODES[normalized];
+    if (!percent) {
+      toast.error("That code didn't work — try VINTAGE10");
+      return false;
+    }
+    setDiscount({ code: normalized, percent });
+    toast.success(`Code ${normalized} applied — ${percent * 100}% off your order`);
+    return true;
+  };
+
+  const removeDiscount = () => setDiscount(null);
 
   const addToCart = (product, quantity = 1) => {
     const existingItem = cart.find((item) => item.id === product.id);
@@ -50,6 +86,7 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = () => {
     setCart([]);
+    setDiscount(null);
     toast.success("Cart cleared");
   };
 
@@ -71,6 +108,9 @@ export const CartProvider = ({ children }) => {
         clearCart,
         getCartTotal,
         getCartCount,
+        discount,
+        applyDiscountCode,
+        removeDiscount,
       }}
     >
       {children}

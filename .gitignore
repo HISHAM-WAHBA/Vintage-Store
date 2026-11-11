@@ -1,0 +1,9 @@
+# Local-only folders
+# Embedded git repo holding an old copy of the design references.
+Vintage New Design/Vintage BackUp/
+
+# Node
+node_modules/
+
+# Env files with secrets
+.env
