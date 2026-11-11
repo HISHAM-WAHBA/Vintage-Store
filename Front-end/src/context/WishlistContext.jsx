@@ -25,6 +25,7 @@ const readLocal = () => {
 export const WishlistProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState(readLocal);
   const syncedRef = useRef(false);
+  const syncIdRef = useRef(0);
 
   // Persist guest/local state always (handy fallback).
   useEffect(() => {
@@ -33,7 +34,6 @@ export const WishlistProvider = ({ children }) => {
 
   // Sync with server when authenticated (on mount and after login/logout).
   useEffect(() => {
-    let cancelled = false;
     const sync = async () => {
       const token = getStoredToken();
       if (!token) {
@@ -41,21 +41,24 @@ export const WishlistProvider = ({ children }) => {
         return;
       }
       if (syncedRef.current) return;
+      const currentSyncId = ++syncIdRef.current;
       try {
         const localIds = readLocal().map((p) => p.id).filter(Boolean);
         if (localIds.length) await api.syncWishlist(localIds);
         const server = await api.getWishlist();
-        if (!cancelled) {
-          setWishlist(server);
-          syncedRef.current = true;
-        }
+        if (currentSyncId !== syncIdRef.current || !getStoredToken()) return;
+        setWishlist(server);
+        syncedRef.current = true;
       } catch {
         // stay on local (401 is handled globally by the API client)
       }
     };
+
     sync();
+
     const onAuth = () => {
       syncedRef.current = false;
+      syncIdRef.current += 1; // invalidate any in-flight sync
       const token = getStoredToken();
       if (!token) {
         setWishlist([]);
@@ -68,9 +71,10 @@ export const WishlistProvider = ({ children }) => {
       }
       sync();
     };
+
     window.addEventListener("vintage-auth-changed", onAuth);
     return () => {
-      cancelled = true;
+      syncIdRef.current += 1;
       window.removeEventListener("vintage-auth-changed", onAuth);
     };
   }, []);
