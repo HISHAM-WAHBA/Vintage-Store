@@ -141,12 +141,12 @@ const CheckoutPage = () => {
         {/* ── Left Column: Checkout Details (7 cols) ─────────────────── */}
         <div className="space-y-stack-md lg:col-span-7">
           {/* Progress Indicators */}
-          <div className="mb-stack-md flex items-start justify-between px-4">
+          <div className="mb-stack-md flex items-start justify-between gap-1 px-2 sm:gap-2 sm:px-4">
             {CHECKOUT_STEPS.map((step, index) => (
               <Fragment key={step.label}>
                 {index > 0 && (
                   <div
-                    className={`relative z-0 mx-2 mt-[18px] h-1 flex-grow ${
+                    className={`relative z-0 mx-1 mt-4 h-1 min-w-3 flex-grow sm:mx-2 sm:mt-[18px] ${
                       step.state === "done"
                         ? "bg-tertiary"
                         : step.state === "active"
@@ -155,9 +155,9 @@ const CheckoutPage = () => {
                     }`}
                   />
                 )}
-                <div className="relative z-10 flex flex-col items-center gap-2">
+                <div className="relative z-10 flex min-w-0 flex-col items-center gap-1.5 sm:gap-2">
                   <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full shadow-sm ${
+                    className={`flex h-8 w-8 items-center justify-center rounded-full shadow-sm sm:h-10 sm:w-10 ${
                       step.state === "done"
                         ? "bg-tertiary text-on-tertiary"
                         : step.state === "active"
@@ -167,11 +167,17 @@ const CheckoutPage = () => {
                   >
                     <Icon
                       name={step.state === "done" ? "check" : "lock"}
+                      size={16}
+                      className="sm:hidden"
+                    />
+                    <Icon
+                      name={step.state === "done" ? "check" : "lock"}
                       size={18}
+                      className="hidden sm:block"
                     />
                   </div>
                   <span
-                    className={`font-label-sm text-label-sm ${
+                    className={`max-w-[5.5rem] text-center font-label-sm text-[11px] leading-tight sm:max-w-none sm:text-label-sm ${
                       step.state === "active"
                         ? "font-semibold text-primary"
                         : step.state === "done"
