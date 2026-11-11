@@ -1,4 +1,4 @@
-const BASE = "/api";
+const BASE = import.meta.env.VITE_API_BASE || "/api";
 
 const getToken = () => localStorage.getItem("vintage_admin_token");
 const setToken = (t) => (t ? localStorage.setItem("vintage_admin_token", t) : localStorage.removeItem("vintage_admin_token"));
