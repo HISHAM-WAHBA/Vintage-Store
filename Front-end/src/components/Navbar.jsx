@@ -48,10 +48,15 @@ const Navbar = () => {
     <>
       <header className="sticky top-0 z-50 w-full bg-surface/95 backdrop-blur-md shadow-[0_10px_30px_rgba(45,41,38,0.05)]">
         {/* ── Desktop / Tablet navbar ─────────────────────────────── */}
-        <div className="mx-auto hidden h-20 max-w-container-max items-center justify-between px-margin-desktop md:flex">
-          <VintageLogo className="h-10 w-auto" />
+        <div className="mx-auto hidden h-20 max-w-container-max grid-cols-[1fr_auto_1fr] items-center px-margin-desktop md:grid">
+          <div className="flex items-center justify-start">
+            <VintageLogo className="h-10 w-auto" />
+          </div>
 
-          <nav className="flex items-center gap-8" aria-label="Main navigation">
+          <nav
+            className="flex items-center justify-center gap-10"
+            aria-label="Main navigation"
+          >
             {links.map((link) => (
               <NavLink
                 key={link.name}
@@ -63,45 +68,45 @@ const Navbar = () => {
             ))}
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-end gap-2">
             <button
               type="button"
               onClick={() => setIsSearchOpen(true)}
-              className="rounded-full p-2 text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
               aria-label="Search products"
             >
-              <Icon name="search" />
+              <Icon name="search" size={22} />
             </button>
             <Link
               to="/wishlist"
-              className="relative rounded-full p-2 text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
               aria-label="Wishlist"
             >
-              <Icon name="favorite" />
+              <Icon name="favorite" size={22} />
               {wishlistCount > 0 && (
-                <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-tertiary text-[10px] font-bold text-on-tertiary">
+                <span className="absolute right-0.5 top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-tertiary text-[10px] font-bold text-on-tertiary">
                   {wishlistCount}
                 </span>
               )}
             </Link>
             <Link
               to="/cart"
-              className="relative rounded-full p-2 text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
+              className="relative flex h-10 w-10 items-center justify-center rounded-full text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
               aria-label="Shopping cart"
             >
-              <Icon name="shopping_cart" />
+              <Icon name="shopping_cart" size={22} />
               {cartCount > 0 && (
-                <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-on-primary">
+                <span className="absolute right-0.5 top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-on-primary">
                   {cartCount}
                 </span>
               )}
             </Link>
             <Link
               to="/dashboard"
-              className="rounded-full p-2 text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
               aria-label="Account"
             >
-              <Icon name="person" />
+              <Icon name="person" size={22} />
             </Link>
           </div>
         </div>
