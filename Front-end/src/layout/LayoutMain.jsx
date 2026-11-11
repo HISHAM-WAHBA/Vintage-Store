@@ -28,13 +28,36 @@ const LayoutMain = () => (
     </a>
     <Toaster
       position="bottom-right"
+      gutter={8}
       toastOptions={{
+        duration: 3200,
         style: {
-          background: "#34302c",
-          color: "#f8efea",
-          border: "1px solid #dcbfc6",
           borderRadius: "12px",
           fontFamily: "'Plus Jakarta Sans', sans-serif",
+          padding: "12px 14px",
+        },
+        success: {
+          style: {
+            background: "#236756",
+            color: "#f8efea",
+            border: "1px solid #236756",
+          },
+          iconTheme: { primary: "#f8efea", secondary: "#236756" },
+        },
+        error: {
+          style: {
+            background: "#b3261e",
+            color: "#ffffff",
+            border: "1px solid #b3261e",
+          },
+          iconTheme: { primary: "#ffffff", secondary: "#b3261e" },
+        },
+        loading: {
+          style: {
+            background: "#34302c",
+            color: "#f8efea",
+            border: "1px solid #dcbfc6",
+          },
         },
       }}
     />

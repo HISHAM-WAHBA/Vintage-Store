@@ -6,6 +6,16 @@ import { publicUser, signToken } from "../auth.js";
 
 const router = Router();
 
+/* GET /api/auth/providers — public: which social providers are configured */
+router.get("/providers", (_req, res) => {
+  res.json({
+    data: {
+      google: !!(config.oauth.google.clientId && config.oauth.google.clientSecret),
+      facebook: !!(config.oauth.facebook.clientId && config.oauth.facebook.clientSecret),
+    },
+  });
+});
+
 /**
  * Minimal OAuth2 (authorization code) flow for Google and Facebook.
  * Requires provider credentials in .env (see .env.example). Without them the

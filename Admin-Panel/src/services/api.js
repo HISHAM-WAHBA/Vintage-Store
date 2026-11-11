@@ -46,6 +46,9 @@ export const api = {
   deleteOrder: (id) => request(`/orders/${id}`, { method: "DELETE" }),
 
   getUsers: () => request("/users").then((r) => r.data),
+  createUser: (u) => request("/users", { method: "POST", body: u }).then((r) => r.data),
+  updateUser: (id, u) => request(`/users/${id}`, { method: "PUT", body: u }).then((r) => r.data),
+  deleteUser: (id) => request(`/users/${id}`, { method: "DELETE" }),
 
   getSubscribers: () => request("/newsletter").then((r) => r.data),
   getMessages: () => request("/contact").then((r) => r.data),

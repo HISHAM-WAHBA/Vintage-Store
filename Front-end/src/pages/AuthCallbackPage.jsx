@@ -11,7 +11,7 @@ const AuthCallbackPage = () => {
     const token = searchParams.get("token");
     const next = searchParams.get("next") || "/dashboard";
     if (!token) {
-      toast.error("Sign-in failed. Please try again.");
+      toast.error("Sign-in failed. Please try again.", { id: "auth-callback-error" });
       navigate("/auth", { replace: true });
       return;
     }
@@ -29,11 +29,11 @@ const AuthCallbackPage = () => {
           }),
         );
         window.dispatchEvent(new Event("vintage-auth-changed"));
-        toast.success(`Welcome, ${user.name.split(" ")[0] || "friend"}.`);
+        toast.success(`Welcome, ${user.name.split(" ")[0] || "friend"}.`, { id: "auth-success" });
         navigate(next.startsWith("/") ? next : "/dashboard", { replace: true });
       })
       .catch(() => {
-        toast.error("Could not load your account. Please sign in again.");
+        toast.error("Could not load your account. Please sign in again.", { id: "auth-callback-error" });
         navigate("/auth", { replace: true });
       });
   }, [searchParams, navigate]);

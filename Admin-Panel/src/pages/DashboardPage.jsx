@@ -221,7 +221,9 @@ const DashboardPage = () => {
               {section === "orders" && (
                 <OrdersSection orders={orders} reload={reload} />
               )}
-              {section === "customers" && <CustomersSection customers={customers} />}
+              {section === "customers" && (
+                <CustomersSection customers={customers} reload={reload} />
+              )}
               {section === "messages" && (
                 <MessagesSection messages={messages} reload={reload} />
               )}
@@ -1063,35 +1065,274 @@ const OrderDetailsModal = ({ order, onClose, onStatus, onDelete }) => (
   </div>
 );
 
-/* ─── Customers ────────────────────────────────────────────────────────────── */
+/* ─── Customers / Users ────────────────────────────────────────────────────── */
 
-const CustomersSection = ({ customers }) => (
-  <div className="overflow-x-auto rounded-xl border border-outline-variant/20 bg-surface-container-lowest shadow-[0_10px_30px_rgba(45,41,38,0.05)]">
-    <table className="w-full text-left font-body-md text-body-md">
-      <thead className="border-b border-outline-variant/40 text-on-surface-variant">
-        <tr>
-          <th className="py-3 pl-4 pr-3 font-label-md text-label-md">Name</th>
-          <th className="py-3 pr-3 font-label-md text-label-md">Email</th>
-          <th className="py-3 pr-3 font-label-md text-label-md">Phone</th>
-          <th className="py-3 pr-3 font-label-md text-label-md">Orders</th>
-          <th className="py-3 pr-4 font-label-md text-label-md">Spent</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-outline-variant/20">
-        {customers.map((u) => (
-          <tr key={u.id}>
-            <td className="py-3 pl-4 pr-3 font-label-md text-on-surface">{u.name}</td>
-            <td className="py-3 pr-3 text-on-surface-variant">{u.email}</td>
-            <td className="py-3 pr-3">{u.phone || "—"}</td>
-            <td className="py-3 pr-3">{u.orderCount}</td>
-            <td className="py-3 pr-4">${Number(u.totalSpent).toFixed(2)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    {customers.length === 0 && (
-      <p className="py-12 text-center text-on-surface-variant">No customers yet.</p>
-    )}
+const emptyUser = {
+  name: "",
+  email: "",
+  password: "",
+  role: "customer",
+  phone: "",
+  address: "",
+};
+
+const CustomersSection = ({ customers, reload }) => {
+  const [editing, setEditing] = useState(null); // null | 'new' | user
+  const [form, setForm] = useState(emptyUser);
+  const [saving, setSaving] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const openNew = () => {
+    setForm(emptyUser);
+    setEditing("new");
+  };
+  const openEdit = (u) => {
+    setForm({
+      name: u.name || "",
+      email: u.email || "",
+      password: "",
+      role: u.role || "customer",
+      phone: u.phone || "",
+      address: u.address || "",
+    });
+    setEditing(u);
+  };
+  const close = () => setEditing(null);
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    if (saving) return;
+    setSaving(true);
+    try {
+      if (editing === "new") {
+        await api.createUser({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          password: form.password,
+          role: form.role,
+          phone: form.phone.trim(),
+          address: form.address.trim(),
+        });
+        toast.success("User created");
+      } else {
+        const payload = {
+          name: form.name.trim(),
+          email: form.email.trim(),
+          role: form.role,
+          phone: form.phone.trim(),
+          address: form.address.trim(),
+        };
+        if (form.password.trim()) payload.password = form.password;
+        await api.updateUser(editing.id, payload);
+        toast.success("User updated");
+      }
+      await reload();
+      close();
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (u) => {
+    if (!window.confirm(`Delete user "${u.name}" (${u.email})?`)) return;
+    try {
+      await api.deleteUser(u.id);
+      toast.success("User deleted");
+      await reload();
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const filtered = customers.filter((u) => {
+    const q = search.toLowerCase();
+    return (
+      !q ||
+      (u.name || "").toLowerCase().includes(q) ||
+      (u.email || "").toLowerCase().includes(q) ||
+      (u.role || "").toLowerCase().includes(q)
+    );
+  });
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full sm:max-w-xs">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search users…"
+            className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest py-2 pl-9 pr-3 font-body-md text-body-md outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={openNew}
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 font-label-md text-label-md text-on-primary transition-colors hover:bg-primary/90"
+        >
+          <Plus className="h-4 w-4" />
+          New user
+        </button>
+      </div>
+
+      <div className="overflow-x-auto rounded-xl border border-outline-variant/20 bg-surface-container-lowest shadow-[0_10px_30px_rgba(45,41,38,0.05)]">
+        <table className="w-full text-left font-body-md text-body-md">
+          <thead className="border-b border-outline-variant/40 text-on-surface-variant">
+            <tr>
+              <th className="py-3 pl-4 pr-3 font-label-md text-label-md">Name</th>
+              <th className="py-3 pr-3 font-label-md text-label-md">Email</th>
+              <th className="py-3 pr-3 font-label-md text-label-md">Role</th>
+              <th className="py-3 pr-3 font-label-md text-label-md">Phone</th>
+              <th className="py-3 pr-3 font-label-md text-label-md">Orders</th>
+              <th className="py-3 pr-3 font-label-md text-label-md">Spent</th>
+              <th className="py-3 pr-4 font-label-md text-label-md">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-outline-variant/20">
+            {filtered.map((u) => (
+              <tr key={u.id}>
+                <td className="py-3 pl-4 pr-3">
+                  <div className="font-label-md text-on-surface">{u.name}</div>
+                  <div className="font-label-sm text-label-sm text-on-surface-variant">
+                    {u.provider && u.provider !== "local" ? `via ${u.provider}` : "local account"}
+                  </div>
+                </td>
+                <td className="py-3 pr-3 text-on-surface-variant">{u.email}</td>
+                <td className="py-3 pr-3">
+                  <span
+                    className={`inline-flex rounded-full px-2.5 py-0.5 font-label-sm text-label-sm ${
+                      u.role === "admin"
+                        ? "bg-primary-fixed text-on-primary-fixed-variant"
+                        : "bg-surface-container text-on-surface-variant"
+                    }`}
+                  >
+                    {u.role}
+                  </span>
+                </td>
+                <td className="py-3 pr-3">{u.phone || "—"}</td>
+                <td className="py-3 pr-3">{u.orderCount ?? 0}</td>
+                <td className="py-3 pr-3">${Number(u.totalSpent || 0).toFixed(2)}</td>
+                <td className="py-3 pr-4">
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={() => openEdit(u)}
+                      className="rounded-lg p-2 text-on-surface-variant hover:bg-surface-container hover:text-primary"
+                      title="Edit user"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(u)}
+                      className="rounded-lg p-2 text-on-surface-variant hover:bg-error-container hover:text-error"
+                      title="Delete user"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {filtered.length === 0 && (
+          <p className="py-12 text-center text-on-surface-variant">
+            {customers.length === 0 ? "No users yet." : "No users match your search."}
+          </p>
+        )}
+      </div>
+
+      {editing && (
+        <UserModal
+          form={form}
+          setForm={setForm}
+          saving={saving}
+          onSave={handleSave}
+          onClose={close}
+          isNew={editing === "new"}
+        />
+      )}
+    </div>
+  );
+};
+
+const UserModal = ({ form, setForm, saving, onSave, onClose, isNew }) => (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/50 p-4">
+    <div className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-surface-container-lowest p-6 shadow-xl">
+      <div className="mb-5 flex items-center justify-between">
+        <h3 className="font-headline-md text-headline-md text-on-surface">
+          {isNew ? "New user" : "Edit user"}
+        </h3>
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-lg p-2 text-on-surface-variant hover:bg-surface-container"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
+      <form onSubmit={onSave} className="space-y-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
+          <Field label="Email" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="font-label-md text-label-md text-on-surface-variant">
+              Password {isNew ? "" : "(leave blank to keep)"}
+            </span>
+            <input
+              type="password"
+              required={isNew}
+              minLength={isNew ? 6 : undefined}
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              placeholder={isNew ? "At least 6 characters" : "New password (optional)"}
+              className="mt-2 w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body-md text-body-md text-on-surface outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+            />
+          </label>
+          <label className="block">
+            <span className="font-label-md text-label-md text-on-surface-variant">Role</span>
+            <select
+              value={form.role}
+              onChange={(e) => setForm({ ...form, role: e.target.value })}
+              className="mt-2 w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body-md text-body-md text-on-surface outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+            >
+              <option value="customer">Customer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </label>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Field label="Phone" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
+          <Field label="Address" value={form.address} onChange={(v) => setForm({ ...form, address: v })} />
+        </div>
+
+        <div className="flex justify-end gap-3 pt-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border border-outline-variant px-5 py-2.5 font-label-md text-label-md text-on-surface-variant transition-colors hover:border-primary hover:text-primary"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 font-label-md text-label-md text-on-primary transition-colors hover:bg-primary/90 disabled:opacity-60"
+          >
+            <Check className="h-4 w-4" />
+            {saving ? "Saving…" : "Save"}
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 );
 

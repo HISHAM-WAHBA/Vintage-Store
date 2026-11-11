@@ -111,40 +111,14 @@ const Navbar = () => {
           <Link to="/" aria-label="Vintage home" className="flex items-center">
             <VintageLogo className="h-9 w-auto" />
           </Link>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setIsSearchOpen(true)}
-              className="rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
-              aria-label="Search products"
-            >
-              <Icon name="search" />
-            </button>
-            <Link
-              to="/wishlist"
-              className="relative rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
-              aria-label="Wishlist"
-            >
-              <Icon name="favorite" />
-              {wishlistCount > 0 && (
-                <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-tertiary px-1 text-[10px] font-bold text-on-tertiary">
-                  {wishlistCount}
-                </span>
-              )}
-            </Link>
-            <Link
-              to="/cart"
-              className="relative rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
-              aria-label="Shopping cart"
-            >
-              <Icon name="shopping_bag" />
-              {cartCount > 0 && (
-                <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-on-primary">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsSearchOpen(true)}
+            className="rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
+            aria-label="Search products"
+          >
+            <Icon name="search" />
+          </button>
         </div>
       </header>
 

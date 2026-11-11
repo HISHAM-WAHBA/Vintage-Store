@@ -51,6 +51,7 @@ export const api = {
   getProfile: async () => (await request("/auth/me")).data,
   updateProfile: async (details) =>
     (await request("/auth/me", { method: "PUT", body: details })).data,
+  getAuthProviders: async () => (await request("/auth/providers")).data,
 
   /* ── Wishlist (authenticated) ─────────────────────────────────────────── */
   getWishlist: async () => (await request("/wishlist")).data,
