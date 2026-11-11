@@ -9,6 +9,8 @@ import authRoutes from "./src/routes/auth.js";
 import productRoutes from "./src/routes/products.js";
 import categoryRoutes from "./src/routes/categories.js";
 import orderRoutes from "./src/routes/orders.js";
+import userRoutes from "./src/routes/users.js";
+import supportRoutes from "./src/routes/support.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -38,6 +40,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api", supportRoutes);
 
 app.use((_req, res) => {
   res.status(404).json({ error: "Endpoint not found." });

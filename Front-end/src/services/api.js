@@ -57,6 +57,12 @@ export const api = {
     (await request("/orders", { method: "POST", body: payload })).data,
   getMyOrders: async () => (await request("/orders")).data,
 
+  /* ── Newsletter & contact ─────────────────────────────────────────────── */
+  subscribeNewsletter: async (email) =>
+    request("/newsletter", { method: "POST", body: { email } }),
+  sendMessage: async (payload) =>
+    request("/contact", { method: "POST", body: payload }),
+
   /* ── Admin: catalog management ──────────────────────────────────────────── */
   saveProduct: async (product) =>
     product.id

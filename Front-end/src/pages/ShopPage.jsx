@@ -3,14 +3,17 @@ import { Link, useSearchParams } from "react-router-dom";
 import Icon from "../components/Icon";
 import { api } from "../services/api";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 const ITEMS_PER_PAGE = 9;
 
 /* ─── Desktop Product Card ──────────────────────────────────────────────────── */
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const price = Number(product.price || 0).toFixed(2);
   const category = product.categories?.[0];
+  const wishlisted = isInWishlist(product.id);
 
   return (
     <article className="group card-hover-effect relative flex h-full cursor-pointer flex-col rounded-xl border border-outline-variant/20 bg-surface-container-lowest p-4 shadow-[0_10px_30px_rgba(45,41,38,0.05)]">
@@ -26,10 +29,19 @@ const ProductCard = ({ product }) => {
       {/* Wishlist */}
       <button
         type="button"
-        aria-label="Add to wishlist"
-        className="absolute right-6 top-6 z-10 translate-y-2 rounded-full bg-surface-container-lowest/80 p-2 text-on-surface-variant opacity-0 shadow-sm backdrop-blur-md transition-all duration-200 hover:text-primary group-hover:translate-y-0 group-hover:opacity-100"
+        aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+        aria-pressed={wishlisted}
+        onClick={(event) => {
+          event.preventDefault();
+          toggleWishlist(product);
+        }}
+        className={`absolute right-6 top-6 z-10 translate-y-2 rounded-full bg-surface-container-lowest/80 p-2 shadow-sm backdrop-blur-md transition-all duration-200 hover:text-primary group-hover:translate-y-0 group-hover:opacity-100 ${
+          wishlisted
+            ? "translate-y-0 text-primary opacity-100"
+            : "text-on-surface-variant opacity-0"
+        }`}
       >
-        <Icon name="favorite" size={18} />
+        <Icon name="favorite" fill={wishlisted} size={18} />
       </button>
 
       {/* Image */}

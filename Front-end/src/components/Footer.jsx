@@ -1,33 +1,44 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import VintageLogo from "./VintageLogo";
 import Icon from "./Icon";
+import { api } from "../services/api";
 
 const FOOTER_LINKS = {
   explore: [
     { label: "Shop", to: "/shop" },
     { label: "Categories", to: "/shop" },
-    { label: "Customized", to: "/shop" },
+    { label: "Customized", to: "/info/custom-orders" },
     { label: "Our Story", to: "/about" },
   ],
   support: [
     { label: "Contact Us", to: "/contact" },
-    { label: "Shipping & Returns", to: "/contact" },
-    { label: "FAQ", to: "/contact" },
-    { label: "Privacy Policy", to: "/contact" },
-    { label: "Custom Orders", to: "/contact" },
+    { label: "Shipping & Returns", to: "/info/shipping-returns" },
+    { label: "FAQ", to: "/info/faq" },
+    { label: "Privacy Policy", to: "/info/privacy-policy" },
+    { label: "Custom Orders", to: "/info/custom-orders" },
   ],
 };
 
 const Footer = () => {
   const [email, setEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubscribe = (event) => {
+  const handleSubscribe = async (event) => {
     event.preventDefault();
-    if (email.trim()) {
+    if (isSubscribing) return;
+    setIsSubscribing(true);
+    try {
+      await api.subscribeNewsletter(email);
       setSubscribed(true);
       setEmail("");
+      toast.success("You're on the list — welcome to the studio.");
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsSubscribing(false);
     }
   };
 
@@ -124,9 +135,10 @@ const Footer = () => {
               />
               <button
                 type="submit"
-                className="shrink-0 rounded-lg bg-primary px-4 py-2 font-label-md text-label-md text-on-primary transition-colors hover:bg-primary-container"
+                disabled={isSubscribing}
+                className="shrink-0 rounded-lg bg-primary px-4 py-2 font-label-md text-label-md text-on-primary transition-colors hover:bg-primary-container disabled:opacity-60"
               >
-                Subscribe
+                {isSubscribing ? "…" : "Subscribe"}
               </button>
             </form>
           )}

@@ -43,6 +43,8 @@ All responses use the envelope `{ "data": ... }`; errors use
 | POST   | `/api/orders`            | Place an order (guest or signed-in)     |
 | POST   | `/api/auth/register`     | `{ name, email, password }`             |
 | POST   | `/api/auth/login`        | `{ email, password }`                   |
+| POST   | `/api/newsletter`        | `{ email }` — subscribe                 |
+| POST   | `/api/contact`           | `{ name, email, subject, message }`     |
 
 ### Authenticated (`Authorization: Bearer <token>`)
 
@@ -58,6 +60,11 @@ All responses use the envelope `{ "data": ... }`; errors use
 | DELETE | `/api/products/:id`   | Admin: delete product                        |
 | POST   | `/api/categories`    | Admin: create category                       |
 | DELETE | `/api/categories/:id` | Admin: delete category (products reassigned) |
+| GET    | `/api/users`          | Admin: customers with order stats            |
+| GET    | `/api/newsletter`     | Admin: subscriber list                        |
+| GET    | `/api/contact`        | Admin: contact inbox                         |
+| PATCH  | `/api/contact/:id`    | Admin: mark message read                     |
+| DELETE | `/api/contact/:id`    | Admin: delete message                        |
 
 ### Orders
 

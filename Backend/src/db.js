@@ -80,6 +80,22 @@ db.exec(`
     quantity   INTEGER NOT NULL
   );
 
+  CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    email      TEXT    NOT NULL UNIQUE,
+    created_at TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE TABLE IF NOT EXISTS contact_messages (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    name       TEXT    NOT NULL,
+    email      TEXT    NOT NULL,
+    subject    TEXT    NOT NULL DEFAULT '',
+    message    TEXT    NOT NULL,
+    is_read    INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
+
   CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
   CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
   CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);

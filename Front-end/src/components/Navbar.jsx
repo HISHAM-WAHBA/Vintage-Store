@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import VintageLogo from "./VintageLogo";
 import Icon from "./Icon";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 const links = [
   { name: "Shop", to: "/shop" },
@@ -28,8 +29,10 @@ const bottomLinkClass = ({ isActive }) =>
 
 const Navbar = () => {
   const { getCartCount } = useCart();
+  const { getWishlistCount } = useWishlist();
   const navigate = useNavigate();
   const cartCount = getCartCount();
+  const wishlistCount = getWishlistCount();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -62,13 +65,18 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center gap-4">
-            <button
-              type="button"
-              className="rounded-full p-2 text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
-              aria-label="Favorites"
+            <Link
+              to="/wishlist"
+              className="relative rounded-full p-2 text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
+              aria-label="Wishlist"
             >
               <Icon name="favorite" />
-            </button>
+              {wishlistCount > 0 && (
+                <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-tertiary text-[10px] font-bold text-on-tertiary">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
             <Link
               to="/cart"
               className="relative rounded-full p-2 text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
@@ -165,6 +173,13 @@ const Navbar = () => {
                 </NavLink>
               ))}
               <NavLink
+                to="/wishlist"
+                onClick={() => setIsMenuOpen(false)}
+                className="rounded-xl px-4 py-3 font-body-md text-body-md text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
+              >
+                My Wishlist
+              </NavLink>
+              <NavLink
                 to="/dashboard"
                 onClick={() => setIsMenuOpen(false)}
                 className="rounded-xl px-4 py-3 font-body-md text-body-md text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
@@ -221,10 +236,17 @@ const Navbar = () => {
             <Icon name="search" />
             <span className="font-label-sm text-label-sm">Shop</span>
           </NavLink>
-          <button type="button" className={bottomLinkClass(false)}>
-            <Icon name="favorite" />
+          <NavLink to="/wishlist" className={bottomLinkClass}>
+            <span className="relative">
+              <Icon name="favorite" />
+              {wishlistCount > 0 && (
+                <span className="absolute -right-2 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-tertiary text-[9px] font-bold text-on-tertiary">
+                  {wishlistCount}
+                </span>
+              )}
+            </span>
             <span className="font-label-sm text-label-sm">Wishlist</span>
-          </button>
+          </NavLink>
           <NavLink to="/cart" className={bottomLinkClass}>
             <Icon name="shopping_bag" />
             <span className="font-label-sm text-label-sm">Cart</span>

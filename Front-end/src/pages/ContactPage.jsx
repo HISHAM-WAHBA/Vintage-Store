@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Icon from "../components/Icon";
 import toast from "react-hot-toast";
+import { api } from "../services/api";
 
 const WHATSAPP_URL = "https://wa.me/201147414322";
 
@@ -54,17 +55,21 @@ const ContactPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    if (isSubmitting) return;
     setIsSubmitting(true);
-
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await api.sendMessage(formData);
       toast.success(
         "Your message has been delivered. We will respond shortly.",
       );
       setFormData({ name: "", email: "", subject: "", message: "" });
-    }, 1500);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

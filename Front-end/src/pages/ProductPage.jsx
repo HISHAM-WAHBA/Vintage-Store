@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import Icon from "../components/Icon";
 import { api } from "../services/api";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -10,6 +11,7 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -52,6 +54,7 @@ const ProductPage = () => {
 
   const category = product.categories?.[0];
   const inStock = product.quantity == null || Number(product.quantity) > 0;
+  const wishlisted = isInWishlist(product.id);
 
   return (
     <div className="relative w-full">
@@ -214,16 +217,33 @@ const ProductPage = () => {
               {inStock ? "In Stock — Ready to ship" : "Out of Stock"}
             </p>
 
-            {/* Add to cart */}
-            <button
-              type="button"
-              onClick={() => addToCart(product, quantity)}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-label-md text-label-md text-on-primary shadow-sm transition-all hover:-translate-y-0.5 hover:bg-primary/90"
-            >
-              <Icon name="shopping_bag" size={20} />
-              Add to Cart — $
-              {(product.price * quantity).toFixed(2)}
-            </button>
+            {/* Add to cart + wishlist */}
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => addToCart(product, quantity)}
+                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-label-md text-label-md text-on-primary shadow-sm transition-all hover:-translate-y-0.5 hover:bg-primary/90"
+              >
+                <Icon name="shopping_bag" size={20} />
+                Add to Cart — $
+                {(product.price * quantity).toFixed(2)}
+              </button>
+              <button
+                type="button"
+                onClick={() => toggleWishlist(product)}
+                aria-label={
+                  wishlisted ? "Remove from wishlist" : "Add to wishlist"
+                }
+                aria-pressed={wishlisted}
+                className={`flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border transition-all hover:-translate-y-0.5 ${
+                  wishlisted
+                    ? "border-primary bg-primary-fixed text-primary"
+                    : "border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary"
+                }`}
+              >
+                <Icon name="favorite" fill={wishlisted} size={22} />
+              </button>
+            </div>
           </div>
 
           {/* Trust badges */}
