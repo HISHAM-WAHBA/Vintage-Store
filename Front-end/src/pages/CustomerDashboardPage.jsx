@@ -136,6 +136,7 @@ const CustomerDashboardPage = () => {
   const handleLogout = () => {
     clearStoredToken();
     localStorage.removeItem("vintage_profile");
+    localStorage.removeItem("vintage_wishlist");
     window.dispatchEvent(new Event("vintage-auth-changed"));
     toast.success("Signed out successfully", { id: "logout-success" });
     navigate("/auth", { replace: true });

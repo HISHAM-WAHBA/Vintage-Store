@@ -56,6 +56,16 @@ export const WishlistProvider = ({ children }) => {
     sync();
     const onAuth = () => {
       syncedRef.current = false;
+      const token = getStoredToken();
+      if (!token) {
+        setWishlist([]);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+        } catch {
+          // ignore
+        }
+        return;
+      }
       sync();
     };
     window.addEventListener("vintage-auth-changed", onAuth);
