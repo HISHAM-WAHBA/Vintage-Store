@@ -65,6 +65,14 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => setIsSearchOpen(true)}
+              className="rounded-full p-2 text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
+              aria-label="Search products"
+            >
+              <Icon name="search" />
+            </button>
             <Link
               to="/wishlist"
               className="relative rounded-full p-2 text-on-surface transition-colors hover:bg-surface-variant hover:text-primary"
@@ -194,7 +202,7 @@ const Navbar = () => {
       {/* ── Mobile search overlay ──────────────────────────────────── */}
       {isSearchOpen && (
         <div
-          className="fixed inset-0 z-[60] bg-inverse-surface/25 p-4 pt-24 md:hidden"
+          className="fixed inset-0 z-[60] bg-inverse-surface/25 p-4 pt-24"
           onClick={() => setIsSearchOpen(false)}
         >
           <form

@@ -73,7 +73,7 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full overflow-hidden">
       {/* Background accents */}
       <div className="pointer-events-none absolute right-0 top-0 -z-10 h-80 w-80 -translate-y-1/4 translate-x-1/3 rounded-full bg-tertiary-fixed opacity-20 blur-3xl" />
 

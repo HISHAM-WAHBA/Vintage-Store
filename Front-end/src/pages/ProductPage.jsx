@@ -57,7 +57,7 @@ const ProductPage = () => {
   const wishlisted = isInWishlist(product.id);
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full overflow-hidden">
       {/* Background accents */}
       <div className="pointer-events-none absolute right-0 top-0 -z-10 h-96 w-96 -translate-y-1/3 translate-x-1/3 rounded-full bg-primary-fixed opacity-20 blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 left-0 -z-10 h-[500px] w-[500px] -translate-x-1/4 translate-y-1/4 rounded-full bg-secondary-fixed opacity-10 blur-3xl" />

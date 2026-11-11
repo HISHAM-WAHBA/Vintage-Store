@@ -163,7 +163,7 @@ const DashboardPage = () => {
       )}
 
       {/* Main */}
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 min-w-0 flex-col">
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-outline-variant/30 bg-surface-container-lowest/80 px-4 backdrop-blur md:px-8">
           <button
             type="button"
@@ -193,7 +193,7 @@ const DashboardPage = () => {
           </button>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+        <main className="flex-1 min-w-0 overflow-y-auto p-4 md:p-8">
           {loading ? (
             <div className="flex h-64 items-center justify-center text-on-surface-variant">
               Loading data…
