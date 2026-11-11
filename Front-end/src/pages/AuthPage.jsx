@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import Icon from "../components/Icon";
-import { api, setStoredToken } from "../services/api";
+import { api, setStoredToken, getStoredToken } from "../services/api";
 
 const inputClass =
   "w-full rounded-lg border border-outline-variant bg-surface-container-low py-3 pl-11 pr-4 font-body-md text-on-surface placeholder:text-on-surface-variant/50 transition-colors focus:border-tertiary focus:outline-none focus:ring-1 focus:ring-tertiary";
@@ -17,6 +17,19 @@ const AuthPage = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const next = searchParams.get("next") || "/dashboard";
+
+  useEffect(() => {
+    if (getStoredToken()) {
+      navigate(next.startsWith("/") ? next : "/dashboard", { replace: true });
+      return;
+    }
+    const error = searchParams.get("error");
+    if (error) {
+      toast.error(error);
+    }
+  }, [searchParams, navigate, next]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -26,6 +39,10 @@ const AuthPage = () => {
   const toggleMode = () => {
     setIsLogin((current) => !current);
     setFormData({ name: "", email: "", password: "" });
+  };
+
+  const handleSocial = (provider) => {
+    window.location.href = `/api/auth/${provider}?next=${encodeURIComponent(next)}`;
   };
 
   const handleSubmit = async (event) => {
@@ -47,13 +64,14 @@ const AuthPage = () => {
           address: result.user.address || "",
         }),
       );
+      window.dispatchEvent(new Event("vintage-auth-changed"));
 
       toast.success(
         isLogin
           ? `Welcome back, ${result.user.name.split(" ")[0]}.`
           : "Your account has been created.",
       );
-      navigate("/dashboard");
+      navigate(next.startsWith("/") ? next : "/dashboard", { replace: true });
     } catch (error) {
       toast.error(error.message);
       setIsSubmitting(false);
@@ -187,6 +205,43 @@ const AuthPage = () => {
                   : "Create Account"}
             </button>
           </form>
+
+          <div className="my-6 flex items-center gap-3">
+            <div className="h-px flex-1 bg-outline-variant/40" />
+            <span className="font-label-sm text-label-sm uppercase tracking-[0.15em] text-on-surface-variant">
+              or continue with
+            </span>
+            <div className="h-px flex-1 bg-outline-variant/40" />
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => handleSocial("google")}
+              className="flex items-center justify-center gap-2 rounded-full border border-outline-variant bg-surface px-4 py-3 font-label-md text-label-md text-on-surface transition-colors hover:bg-surface-container"
+            >
+              <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+                <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.654 32.657 29.223 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+                <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+                <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+                <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+              </svg>
+              Google
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSocial("facebook")}
+              className="flex items-center justify-center gap-2 rounded-full border border-outline-variant bg-surface px-4 py-3 font-label-md text-label-md text-on-surface transition-colors hover:bg-surface-container"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="#1877F2">
+                <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.413c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.265h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
+              </svg>
+              Facebook
+            </button>
+          </div>
+          <p className="mt-3 text-center font-label-sm text-label-sm text-on-surface-variant">
+            Social sign-in works once Google/Facebook credentials are configured on the server.
+          </p>
 
           <p className="mt-6 text-center font-body-md text-body-md text-on-surface-variant">
             {isLogin ? "New to Vintage?" : "Already have an account?"}{" "}

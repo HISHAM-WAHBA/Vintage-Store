@@ -5,8 +5,10 @@ import { db } from "./db.js";
 
 export const hashPassword = (password) => bcrypt.hashSync(password, 10);
 
-export const verifyPassword = (password, hash) =>
-  bcrypt.compareSync(password, hash);
+export const verifyPassword = (password, hash) => {
+  if (!hash) return false;
+  return bcrypt.compareSync(password, hash);
+};
 
 export const signToken = (user) =>
   jwt.sign({ sub: user.id }, config.jwtSecret, {
@@ -19,8 +21,10 @@ export const publicUser = (row) => ({
   name: row.name,
   email: row.email,
   role: row.role,
-  phone: row.phone,
-  address: row.address,
+  phone: row.phone || "",
+  address: row.address || "",
+  provider: row.provider || "local",
+  avatar: row.avatar || "",
   createdAt: row.created_at,
 });
 

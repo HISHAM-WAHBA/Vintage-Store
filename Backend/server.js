@@ -11,6 +11,9 @@ import categoryRoutes from "./src/routes/categories.js";
 import orderRoutes from "./src/routes/orders.js";
 import userRoutes from "./src/routes/users.js";
 import supportRoutes from "./src/routes/support.js";
+import uploadRoutes from "./src/routes/uploads.js";
+import wishlistRoutes from "./src/routes/wishlist.js";
+import oauthRoutes from "./src/routes/oauth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -36,11 +39,14 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", service: "vintage-api" });
 });
 
+app.use("/api/auth", oauthRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/uploads", uploadRoutes);
+app.use("/api/wishlist", wishlistRoutes);
 app.use("/api", supportRoutes);
 
 app.use((_req, res) => {

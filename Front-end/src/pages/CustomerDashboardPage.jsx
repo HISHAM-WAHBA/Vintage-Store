@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   ArrowRight,
@@ -29,6 +29,8 @@ const formatDate = (date) =>
   }).format(new Date(date));
 
 const CustomerDashboardPage = () => {
+  const token = getStoredToken();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
   const [profile, setProfile] = useState(() => {
     try {
@@ -109,6 +111,15 @@ const CustomerDashboardPage = () => {
       toast.error(error.message);
     }
   };
+
+  if (!token) {
+    return (
+      <Navigate
+        to={`/auth?next=${encodeURIComponent(location.pathname || "/dashboard")}`}
+        replace
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-surface px-margin-mobile py-stack-lg text-on-surface md:px-margin-desktop">

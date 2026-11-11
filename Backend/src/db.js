@@ -42,10 +42,13 @@ db.exec(`
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     name          TEXT    NOT NULL,
     email         TEXT    NOT NULL UNIQUE,
-    password_hash TEXT    NOT NULL,
+    password_hash TEXT,
     role          TEXT    NOT NULL DEFAULT 'customer',
     phone         TEXT    NOT NULL DEFAULT '',
     address       TEXT    NOT NULL DEFAULT '',
+    provider      TEXT    NOT NULL DEFAULT 'local',
+    provider_id   TEXT,
+    avatar        TEXT    NOT NULL DEFAULT '',
     created_at    TEXT    NOT NULL DEFAULT (datetime('now'))
   );
 
@@ -96,7 +99,61 @@ db.exec(`
     created_at TEXT    NOT NULL DEFAULT (datetime('now'))
   );
 
+  CREATE TABLE IF NOT EXISTS wishlist_items (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    created_at TEXT    NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(user_id, product_id)
+  );
+
   CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
   CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
   CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
+  CREATE INDEX IF NOT EXISTS idx_wishlist_user ON wishlist_items(user_id);
 `);
+
+// Lightweight migrations for existing databases (idempotent).
+const ensureColumn = (table, column, def) => {
+  try {
+    db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${def}`);
+  } catch {
+    // already exists
+  }
+};
+ensureColumn("users", "provider", "TEXT NOT NULL DEFAULT 'local'");
+ensureColumn("users", "provider_id", "TEXT");
+ensureColumn("users", "avatar", "TEXT NOT NULL DEFAULT ''");
+
+// Allow OAuth users without a local password (rebuild if password_hash is NOT NULL).
+try {
+  const info = db.prepare("PRAGMA table_info(users)").all();
+  const pw = info.find((c) => c.name === "password_hash");
+  if (pw && pw.notnull === 1) {
+    db.exec(`
+      BEGIN;
+      CREATE TABLE users_new (
+        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        name          TEXT    NOT NULL,
+        email         TEXT    NOT NULL UNIQUE,
+        password_hash TEXT,
+        role          TEXT    NOT NULL DEFAULT 'customer',
+        phone         TEXT    NOT NULL DEFAULT '',
+        address       TEXT    NOT NULL DEFAULT '',
+        provider      TEXT    NOT NULL DEFAULT 'local',
+        provider_id   TEXT,
+        avatar        TEXT    NOT NULL DEFAULT '',
+        created_at    TEXT    NOT NULL DEFAULT (datetime('now'))
+      );
+      INSERT INTO users_new (id,name,email,password_hash,role,phone,address,provider,provider_id,avatar,created_at)
+        SELECT id,name,email,password_hash,role,phone,address,
+               COALESCE(provider,'local'), provider_id, COALESCE(avatar,''), created_at
+        FROM users;
+      DROP TABLE users;
+      ALTER TABLE users_new RENAME TO users;
+      COMMIT;
+    `);
+  }
+} catch {
+  // migration failed or already applied
+}

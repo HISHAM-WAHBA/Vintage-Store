@@ -50,6 +50,20 @@ export const api = {
   getMessages: () => request("/contact").then((r) => r.data),
   markMessageRead: (id) => request(`/contact/${id}`, { method: "PATCH" }),
   deleteMessage: (id) => request(`/contact/${id}`, { method: "DELETE" }),
+
+  uploadImage: async (file) => {
+    const token = getToken();
+    const form = new FormData();
+    form.append("image", file);
+    const res = await fetch(`${BASE}/uploads?folder=products`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: form,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `Upload failed (${res.status})`);
+    return data.data; // { url, filename }
+  },
 };
 
 export { getToken, setToken };

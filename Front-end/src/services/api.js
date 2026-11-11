@@ -52,6 +52,15 @@ export const api = {
   updateProfile: async (details) =>
     (await request("/auth/me", { method: "PUT", body: details })).data,
 
+  /* ── Wishlist (authenticated) ─────────────────────────────────────────── */
+  getWishlist: async () => (await request("/wishlist")).data,
+  syncWishlist: async (productIds) =>
+    (await request("/wishlist", { method: "POST", body: { productIds } })).data,
+  toggleWishlist: async (productId) =>
+    (await request("/wishlist/toggle", { method: "POST", body: { productId } })).data,
+  removeWishlistItem: async (productId) =>
+    (await request(`/wishlist/${productId}`, { method: "DELETE" })).data,
+
   /* ── Orders ────────────────────────────────────────────────────────────── */
   createOrder: async (payload) =>
     (await request("/orders", { method: "POST", body: payload })).data,

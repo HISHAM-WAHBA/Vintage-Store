@@ -15,6 +15,8 @@ import {
   X,
   Check,
   Search,
+  Upload,
+  Image as ImageIcon,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
@@ -493,85 +495,142 @@ const ProductsSection = ({ products, categories, reload }) => {
   );
 };
 
-const ProductModal = ({ form, setForm, categories, saving, onSave, onClose, isNew }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/50 p-4">
-    <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-surface-container-lowest p-6 shadow-xl">
-      <div className="mb-5 flex items-center justify-between">
-        <h3 className="font-headline-md text-headline-md text-on-surface">
-          {isNew ? "New product" : "Edit product"}
-        </h3>
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-lg p-2 text-on-surface-variant hover:bg-surface-container"
-        >
-          <X className="h-5 w-5" />
-        </button>
-      </div>
+const ProductModal = ({ form, setForm, categories, saving, onSave, onClose, isNew }) => {
+  const [uploading, setUploading] = useState(false);
 
-      <form onSubmit={onSave} className="space-y-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-          <Field
-            label="Category"
-            type="select"
-            value={form.category}
-            onChange={(v) => setForm({ ...form, category: v })}
-            options={categories.map((c) => ({ value: c.name, label: c.name }))}
-          />
-          <Field label="Price" type="number" value={form.price} onChange={(v) => setForm({ ...form, price: v })} required />
-          <Field label="Quantity" type="number" value={form.quantity} onChange={(v) => setForm({ ...form, quantity: v })} required />
-        </div>
-        <Field label="Image URL" value={form.image} onChange={(v) => setForm({ ...form, image: v })} />
-        <Field
-          label="Description"
-          type="textarea"
-          value={form.description}
-          onChange={(v) => setForm({ ...form, description: v })}
-        />
+  const handleUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const result = await api.uploadImage(file);
+      setForm((prev) => ({ ...prev, image: result.url }));
+      toast.success("Image uploaded");
+    } catch (err) {
+      toast.error(err.message || "Upload failed");
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  };
 
-        <div className="flex gap-6">
-          <label className="flex items-center gap-2 font-body-md text-body-md">
-            <input
-              type="checkbox"
-              checked={form.featured}
-              onChange={(e) => setForm({ ...form, featured: e.target.checked })}
-              className="h-4 w-4 accent-primary"
-            />
-            Featured
-          </label>
-          <label className="flex items-center gap-2 font-body-md text-body-md">
-            <input
-              type="checkbox"
-              checked={form.isNew}
-              onChange={(e) => setForm({ ...form, isNew: e.target.checked })}
-              className="h-4 w-4 accent-primary"
-            />
-            New arrival
-          </label>
-        </div>
-
-        <div className="flex justify-end gap-3 pt-2">
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/50 p-4">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-surface-container-lowest p-6 shadow-xl">
+        <div className="mb-5 flex items-center justify-between">
+          <h3 className="font-headline-md text-headline-md text-on-surface">
+            {isNew ? "New product" : "Edit product"}
+          </h3>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border border-outline-variant px-5 py-2.5 font-label-md text-label-md text-on-surface-variant transition-colors hover:border-primary hover:text-primary"
+            className="rounded-lg p-2 text-on-surface-variant hover:bg-surface-container"
           >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 font-label-md text-label-md text-on-primary transition-colors hover:bg-primary/90 disabled:opacity-60"
-          >
-            <Check className="h-4 w-4" />
-            {saving ? "Saving…" : "Save"}
+            <X className="h-5 w-5" />
           </button>
         </div>
-      </form>
+
+        <form onSubmit={onSave} className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
+            <Field
+              label="Category"
+              type="select"
+              value={form.category}
+              onChange={(v) => setForm({ ...form, category: v })}
+              options={categories.map((c) => ({ value: c.name, label: c.name }))}
+            />
+            <Field label="Price" type="number" value={form.price} onChange={(v) => setForm({ ...form, price: v })} required />
+            <Field label="Quantity" type="number" value={form.quantity} onChange={(v) => setForm({ ...form, quantity: v })} required />
+          </div>
+
+          {/* Image: upload or paste URL */}
+          <div className="rounded-xl border border-outline-variant/30 bg-surface-container-low p-4">
+            <span className="font-label-md text-label-md text-on-surface-variant">Product image</span>
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start">
+              <div className="flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-outline-variant/40 bg-surface">
+                {form.image ? (
+                  <img src={form.image} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <ImageIcon className="h-8 w-8 text-on-surface-variant/50" />
+                )}
+              </div>
+              <div className="flex-1 space-y-3">
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-outline-variant bg-surface px-4 py-2 font-label-md text-label-md text-on-surface transition-colors hover:border-primary hover:text-primary">
+                  <Upload className="h-4 w-4" />
+                  {uploading ? "Uploading…" : "Upload image"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleUpload}
+                    disabled={uploading}
+                  />
+                </label>
+                <input
+                  type="text"
+                  value={form.image}
+                  onChange={(e) => setForm({ ...form, image: e.target.value })}
+                  placeholder="or paste an image URL / path"
+                  className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body-md text-body-md text-on-surface outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                />
+                <p className="font-label-sm text-label-sm text-on-surface-variant">
+                  Uploads are saved to <code>Backend/public/images/uploads/products/</code> and served as <code>/api/images/...</code>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <Field
+            label="Description"
+            type="textarea"
+            value={form.description}
+            onChange={(v) => setForm({ ...form, description: v })}
+          />
+
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2 font-body-md text-body-md">
+              <input
+                type="checkbox"
+                checked={form.featured}
+                onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+                className="h-4 w-4 accent-primary"
+              />
+              Featured
+            </label>
+            <label className="flex items-center gap-2 font-body-md text-body-md">
+              <input
+                type="checkbox"
+                checked={form.isNew}
+                onChange={(e) => setForm({ ...form, isNew: e.target.checked })}
+                className="h-4 w-4 accent-primary"
+              />
+              New arrival
+            </label>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-full border border-outline-variant px-5 py-2.5 font-label-md text-label-md text-on-surface-variant transition-colors hover:border-primary hover:text-primary"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={saving || uploading}
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 font-label-md text-label-md text-on-primary transition-colors hover:bg-primary/90 disabled:opacity-60"
+            >
+              <Check className="h-4 w-4" />
+              {saving ? "Saving…" : "Save"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Field = ({ label, value, onChange, type = "text", required, options }) => (
   <label className="block">

@@ -7,6 +7,7 @@ import CartPage from "./pages/CartPage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
 import AuthPage from "./pages/AuthPage";
+import AuthCallbackPage from "./pages/AuthCallbackPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import CustomerDashboardPage from "./pages/CustomerDashboardPage";
@@ -34,6 +35,7 @@ function App() {
               <Route path="contact" element={<ContactPage />} />
               <Route path="about" element={<AboutPage />} />
               <Route path="auth" element={<AuthPage />} />
+              <Route path="auth/callback" element={<AuthCallbackPage />} />
 
               <Route
                 path="*"
