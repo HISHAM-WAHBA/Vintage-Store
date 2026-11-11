@@ -17,6 +17,8 @@ import {
   Search,
   Upload,
   Image as ImageIcon,
+  Eye,
+  Filter,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
@@ -31,7 +33,7 @@ const NAV = [
   { id: "subscribers", label: "Subscribers", icon: Newspaper },
 ];
 
-const ORDER_STATUSES = ["pending", "processing", "shipped", "delivered", "cancelled"];
+const ORDER_STATUSES = ["Processing", "Shipped", "Delivered", "Cancelled"];
 
 const DashboardPage = () => {
   const { user, logout } = useAuth();
@@ -763,68 +765,303 @@ const CategoriesSection = ({ categories, reload }) => {
 
 /* ─── Orders ───────────────────────────────────────────────────────────────── */
 
+const statusStyle = (status) => {
+  switch (status) {
+    case "Delivered":
+      return "bg-tertiary/10 text-tertiary";
+    case "Shipped":
+      return "bg-secondary-container text-on-secondary-container";
+    case "Cancelled":
+      return "bg-error-container text-error";
+    default:
+      return "bg-primary-fixed text-on-primary-fixed-variant";
+  }
+};
+
 const OrdersSection = ({ orders, reload }) => {
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [selected, setSelected] = useState(null);
+
   const handleStatus = async (o, status) => {
     try {
       await api.updateOrderStatus(o.id, status);
       toast.success("Status updated");
+      await reload();
+      setSelected((cur) => (cur && cur.id === o.id ? { ...cur, status } : cur));
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleDelete = async (o) => {
+    if (!window.confirm(`Delete order ${o.id}? This cannot be undone.`)) return;
+    try {
+      await api.deleteOrder(o.id);
+      toast.success("Order deleted");
+      setSelected(null);
       await reload();
     } catch (err) {
       toast.error(err.message);
     }
   };
 
+  const filtered = orders.filter((o) => {
+    const q = search.toLowerCase();
+    const matchQ =
+      !q ||
+      o.id.toLowerCase().includes(q) ||
+      (o.customer?.fullName || "").toLowerCase().includes(q) ||
+      (o.customer?.email || "").toLowerCase().includes(q);
+    const matchStatus = statusFilter === "All" || o.status === statusFilter;
+    return matchQ && matchStatus;
+  });
+
+  const totals = {
+    count: filtered.length,
+    revenue: filtered.reduce((s, o) => s + Number(o.total || 0), 0),
+  };
+
   return (
-    <div className="overflow-x-auto rounded-xl border border-outline-variant/20 bg-surface-container-lowest shadow-[0_10px_30px_rgba(45,41,38,0.05)]">
-      <table className="w-full text-left font-body-md text-body-md">
-        <thead className="border-b border-outline-variant/40 text-on-surface-variant">
-          <tr>
-            <th className="py-3 pl-4 pr-3 font-label-md text-label-md">Order</th>
-            <th className="py-3 pr-3 font-label-md text-label-md">Customer</th>
-            <th className="py-3 pr-3 font-label-md text-label-md">Items</th>
-            <th className="py-3 pr-3 font-label-md text-label-md">Total</th>
-            <th className="py-3 pr-3 font-label-md text-label-md">Status</th>
-            <th className="py-3 pr-4 font-label-md text-label-md">Date</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-outline-variant/20">
-          {orders.map((o) => (
-            <tr key={o.id}>
-              <td className="py-3 pl-4 pr-3 font-label-md text-primary">{o.id}</td>
-              <td className="py-3 pr-3">
-                {o.user?.name || o.customer?.name || "Guest"}
-                <div className="font-label-sm text-label-sm text-on-surface-variant">
-                  {o.user?.email || o.customer?.email}
-                </div>
-              </td>
-              <td className="py-3 pr-3">{o.items?.length || 0}</td>
-              <td className="py-3 pr-3">${Number(o.total).toFixed(2)}</td>
-              <td className="py-3 pr-3">
-                <select
-                  value={o.status}
-                  onChange={(e) => handleStatus(o, e.target.value)}
-                  className="rounded-lg border border-outline-variant bg-surface px-2 py-1 font-body-md text-body-md capitalize outline-none focus:border-primary"
-                >
-                  {ORDER_STATUSES.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              </td>
-              <td className="py-3 pr-4 text-on-surface-variant">
-                {new Date(o.createdAt).toLocaleDateString()}
-              </td>
+    <div className="space-y-4">
+      {/* Toolbar */}
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-1 flex-col gap-3 sm:flex-row">
+          <div className="relative w-full sm:max-w-xs">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
+            <input
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by order, name, email…"
+              className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest py-2 pl-9 pr-3 font-body-md text-body-md outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+            />
+          </div>
+          <div className="relative w-full sm:w-48">
+            <Filter className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full appearance-none rounded-lg border border-outline-variant bg-surface-container-lowest py-2 pl-9 pr-3 font-body-md text-body-md outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+            >
+              <option value="All">All statuses</option>
+              {ORDER_STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 rounded-lg border border-outline-variant/20 bg-surface-container-lowest px-4 py-2">
+          <span className="font-label-sm text-label-sm text-on-surface-variant">
+            Showing <strong className="text-on-surface">{totals.count}</strong> orders
+          </span>
+          <span className="h-4 w-px bg-outline-variant/40" />
+          <span className="font-label-sm text-label-sm text-on-surface-variant">
+            Revenue <strong className="text-primary">${totals.revenue.toFixed(2)}</strong>
+          </span>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="overflow-x-auto rounded-xl border border-outline-variant/20 bg-surface-container-lowest shadow-[0_10px_30px_rgba(45,41,38,0.05)]">
+        <table className="w-full text-left font-body-md text-body-md">
+          <thead className="border-b border-outline-variant/40 text-on-surface-variant">
+            <tr>
+              <th className="py-3 pl-4 pr-3 font-label-md text-label-md">Order</th>
+              <th className="py-3 pr-3 font-label-md text-label-md">Customer</th>
+              <th className="py-3 pr-3 font-label-md text-label-md">Items</th>
+              <th className="py-3 pr-3 font-label-md text-label-md">Total</th>
+              <th className="py-3 pr-3 font-label-md text-label-md">Status</th>
+              <th className="py-3 pr-3 font-label-md text-label-md">Date</th>
+              <th className="py-3 pr-4 font-label-md text-label-md">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {orders.length === 0 && (
-        <p className="py-12 text-center text-on-surface-variant">No orders yet.</p>
+          </thead>
+          <tbody className="divide-y divide-outline-variant/20">
+            {filtered.map((o) => (
+              <tr key={o.id} className="hover:bg-surface-container-low/60">
+                <td className="py-3 pl-4 pr-3 font-label-md text-primary">{o.id}</td>
+                <td className="py-3 pr-3">
+                  <div className="max-w-[180px] truncate font-label-md text-on-surface">
+                    {o.customer?.fullName || "Guest"}
+                  </div>
+                  <div className="max-w-[180px] truncate font-label-sm text-label-sm text-on-surface-variant">
+                    {o.customer?.email || ""}
+                  </div>
+                </td>
+                <td className="py-3 pr-3">{o.items?.length || 0}</td>
+                <td className="py-3 pr-3 font-label-md text-on-surface">${Number(o.total).toFixed(2)}</td>
+                <td className="py-3 pr-3">
+                  <select
+                    value={o.status}
+                    onChange={(e) => handleStatus(o, e.target.value)}
+                    className={`rounded-full border-0 px-3 py-1 font-label-sm text-label-sm outline-none ring-1 ring-inset ring-transparent focus:ring-primary ${statusStyle(o.status)}`}
+                  >
+                    {ORDER_STATUSES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td className="py-3 pr-3 text-on-surface-variant">
+                  {new Date(o.createdAt).toLocaleDateString()}
+                </td>
+                <td className="py-3 pr-4">
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setSelected(o)}
+                      className="rounded-lg p-2 text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary"
+                      title="View details"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(o)}
+                      className="rounded-lg p-2 text-on-surface-variant transition-colors hover:bg-error-container hover:text-error"
+                      title="Delete order"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {filtered.length === 0 && (
+          <p className="py-12 text-center text-on-surface-variant">
+            {orders.length === 0 ? "No orders yet." : "No orders match your filters."}
+          </p>
+        )}
+      </div>
+
+      {selected && (
+        <OrderDetailsModal
+          order={selected}
+          onClose={() => setSelected(null)}
+          onStatus={handleStatus}
+          onDelete={handleDelete}
+        />
       )}
     </div>
   );
 };
+
+const OrderDetailsModal = ({ order, onClose, onStatus, onDelete }) => (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/50 p-4">
+    <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-surface-container-lowest p-6 shadow-xl">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <p className="font-label-sm text-label-sm uppercase tracking-[0.15em] text-tertiary">
+            Order details
+          </p>
+          <h3 className="mt-1 font-headline-md text-headline-md text-primary">{order.id}</h3>
+          <p className="mt-1 font-body-md text-body-md text-on-surface-variant">
+            {new Date(order.createdAt).toLocaleString()} · {order.paymentMethod === "cash" ? "Cash on delivery" : "Card payment"}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-lg p-2 text-on-surface-variant hover:bg-surface-container"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="rounded-xl border border-outline-variant/20 bg-surface-container-low p-4">
+          <p className="font-label-sm text-label-sm uppercase tracking-[0.12em] text-on-surface-variant">Customer</p>
+          <p className="mt-2 font-label-md text-label-md text-on-surface">{order.customer?.fullName || "Guest"}</p>
+          <p className="font-body-md text-body-md text-on-surface-variant">{order.customer?.email}</p>
+          {order.customer?.phone && (
+            <p className="font-body-md text-body-md text-on-surface-variant">{order.customer.phone}</p>
+          )}
+        </div>
+        <div className="rounded-xl border border-outline-variant/20 bg-surface-container-low p-4">
+          <p className="font-label-sm text-label-sm uppercase tracking-[0.12em] text-on-surface-variant">Shipping</p>
+          <p className="mt-2 font-body-md text-body-md text-on-surface">
+            {order.customer?.address || "—"}
+          </p>
+          <p className="font-body-md text-body-md text-on-surface-variant">
+            {[order.customer?.city, order.customer?.zip].filter(Boolean).join(", ")}
+          </p>
+          {order.customer?.notes && (
+            <p className="mt-2 font-body-md text-body-md text-on-surface-variant">Note: {order.customer.notes}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-xl border border-outline-variant/20 bg-surface-container-low p-4">
+        <p className="mb-3 font-label-sm text-label-sm uppercase tracking-[0.12em] text-on-surface-variant">Items</p>
+        <div className="divide-y divide-outline-variant/30">
+          {(order.items || []).map((item, idx) => (
+            <div key={idx} className="flex items-center gap-3 py-3">
+              {item.image && (
+                <img src={item.image} alt="" className="h-12 w-12 rounded-md object-cover" />
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-label-md text-label-md text-on-surface">{item.name}</p>
+                <p className="font-body-md text-body-md text-on-surface-variant">
+                  ${Number(item.price).toFixed(2)} × {item.quantity}
+                </p>
+              </div>
+              <p className="font-label-md text-label-md text-primary">
+                ${(Number(item.price) * item.quantity).toFixed(2)}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 space-y-1 border-t border-outline-variant/30 pt-3 font-body-md text-body-md">
+          <div className="flex justify-between text-on-surface-variant">
+            <span>Subtotal</span><span>${Number(order.subtotal).toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-on-surface-variant">
+            <span>Shipping</span><span>${Number(order.shipping).toFixed(2)}</span>
+          </div>
+          {Number(order.discountAmount) > 0 && (
+            <div className="flex justify-between text-tertiary">
+              <span>Discount ({order.discountCode})</span>
+              <span>- ${Number(order.discountAmount).toFixed(2)}</span>
+            </div>
+          )}
+          <div className="flex justify-between pt-1 font-label-md text-label-md text-on-surface">
+            <span>Total</span><span className="text-primary">${Number(order.total).toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <span className="font-label-md text-label-md text-on-surface-variant">Status:</span>
+          <select
+            value={order.status}
+            onChange={(e) => onStatus(order, e.target.value)}
+            className={`rounded-full border-0 px-3 py-1.5 font-label-md text-label-md outline-none ${statusStyle(order.status)}`}
+          >
+            {ORDER_STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button
+          type="button"
+          onClick={() => onDelete(order)}
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-error/30 px-5 py-2.5 font-label-md text-label-md text-error transition-colors hover:bg-error-container"
+        >
+          <Trash2 className="h-4 w-4" />
+          Delete order
+        </button>
+      </div>
+    </div>
+  </div>
+);
 
 /* ─── Customers ────────────────────────────────────────────────────────────── */
 

@@ -209,4 +209,20 @@ router.patch("/:id", requireAdmin, (req, res) => {
   res.json({ data: toOrderJSON(updated) });
 });
 
+/* DELETE /api/orders/:id — admin: delete order (and its items) */
+router.delete("/:id", requireAdmin, (req, res) => {
+  const row = findOrder(req.params.id);
+  if (!row) return res.status(404).json({ error: "Order not found." });
+  db.exec("BEGIN");
+  try {
+    db.prepare("DELETE FROM order_items WHERE order_id = ?").run(row.id);
+    db.prepare("DELETE FROM orders WHERE id = ?").run(row.id);
+    db.exec("COMMIT");
+  } catch (e) {
+    db.exec("ROLLBACK");
+    throw e;
+  }
+  res.json({ data: { deleted: true, id: row.code } });
+});
+
 export default router;

@@ -43,6 +43,7 @@ export const api = {
 
   getOrders: () => request("/orders").then((r) => r.data),
   updateOrderStatus: (id, status) => request(`/orders/${id}`, { method: "PATCH", body: { status } }),
+  deleteOrder: (id) => request(`/orders/${id}`, { method: "DELETE" }),
 
   getUsers: () => request("/users").then((r) => r.data),
 
