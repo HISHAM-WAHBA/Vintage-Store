@@ -3,14 +3,9 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import Icon from "../components/Icon";
 import CategoryShowcase from "../components/CategoryShowcase";
+import HeroSlider from "../components/HeroSlider";
 import { api } from "../services/api";
 import { useWishlist } from "../context/WishlistContext";
-
-/* Self-hosted imagery served by the API (proxied in dev). */
-const images = {
-  desktopHero: "/api/images/hero/desktop-hero.jpg",
-  mobileHero: "/api/images/hero/mobile-hero.jpg",
-};
 
 /* ─── Shared pieces ─────────────────────────────────────────────────────────── */
 
@@ -124,33 +119,6 @@ const MobileHome = ({ products, categories, loading }) => {
 
   return (
     <div className="md:hidden">
-      {/* Hero */}
-      <section className="flex flex-col items-center px-margin-mobile py-stack-md text-center">
-        <div className="relative mb-stack-md aspect-[4/5] w-full overflow-hidden rounded-[24px] shadow-[0_10px_30px_rgba(45,41,38,0.1)]">
-          <img
-            src={images.mobileHero}
-            alt="Curated artisanal gift box"
-            className="h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent p-6">
-            <h1 className="mb-2 font-headline-lg-mobile text-headline-lg-mobile leading-tight text-surface-container-lowest">
-              Curated Joy,
-              <br />
-              Beautifully Boxed
-            </h1>
-            <p className="mb-6 font-body-lg text-body-lg text-surface-container-highest">
-              Bespoke artisanal gifts for every moment.
-            </p>
-            <Link
-              to="/shop"
-              className="w-full rounded-full bg-primary px-8 py-4 font-label-md text-label-md text-on-primary shadow-[0_10px_30px_rgba(167,41,97,0.3)] transition-transform active:scale-95"
-            >
-              Explore Collections
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Our categories */}
       <CategoryShowcase categories={categories} />
 
@@ -249,47 +217,6 @@ const DesktopHome = ({ products, categories, loading }) => {
 
   return (
     <div className="hidden overflow-hidden md:block">
-      {/* Hero */}
-      <section
-        className="relative flex min-h-[calc(100svh-5rem)] items-center overflow-hidden bg-surface-container-low px-margin-desktop py-stack-lg"
-        id="collections"
-      >
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 z-10 bg-gradient-to-r from-surface-container-low via-surface-container-low/80 to-transparent" />
-          <img
-            src={images.desktopHero}
-            alt="Curated gift boxes"
-            className="absolute inset-0 h-full w-full object-cover object-[65%_center] opacity-80"
-          />
-        </div>
-        <div className="relative z-20 mx-auto w-full max-w-container-max">
-          <div className="flex max-w-xl flex-col items-start justify-center space-y-stack-md">
-            <h1 className="font-display-lg text-display-lg text-on-surface">
-              Curated Joy, Beautifully Boxed
-            </h1>
-            <p className="max-w-lg font-body-lg text-body-lg text-on-surface-variant">
-              Discover bespoke gifting experiences tailored for every meaningful
-              moment. Hand-selected, artisanally crafted, and delivered with
-              love.
-            </p>
-            <div className="flex flex-wrap gap-4 pt-4">
-              <Link
-                to="/shop"
-                className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-4 font-label-md text-label-md text-on-primary shadow-[0_10px_30px_rgba(45,41,38,0.05)] transition-all hover:-translate-y-0.5 hover:bg-primary-tint"
-              >
-                Explore Collections
-              </Link>
-              <Link
-                to="/info/custom-orders"
-                className="inline-flex items-center justify-center rounded-xl bg-secondary-container px-8 py-4 font-label-md text-label-md text-on-secondary-container shadow-[0_10px_30px_rgba(45,41,38,0.05)] transition-all hover:-translate-y-0.5 hover:bg-secondary-fixed"
-              >
-                Customize a Gift
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Our categories */}
       <CategoryShowcase categories={categories} />
 
@@ -377,6 +304,8 @@ const HomePage = () => {
 
   return (
     <>
+      <HeroSlider />
+
       <MobileHome
         products={products}
         categories={categories}
