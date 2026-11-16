@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <g fill="none" stroke="#5b6bb5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="22" y="50" width="84" height="56" rx="5" fill="#e3f0fb"/>
+    <rect x="16" y="38" width="96" height="16" rx="4" fill="#bfe3f7"/>
+    <path d="M64 38v68" />
+    <path d="M64 38c-12 0-22-6-22-14 0-12 18-10 22 14z" fill="#f9c8dc"/>
+    <path d="M64 38c12 0 22-6 22-14 0-12-18-10-22 14z" fill="#f6a8c8"/>
+    <rect x="40" y="76" width="48" height="18" rx="4" fill="#ffffff"/>
+  </g>
+  <text x="64" y="89" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8" font-weight="bold" fill="#5b6bb5">GIFTS ONLY</text>
+  <g fill="none" stroke="#8fa4e8" stroke-width="1.8" stroke-linecap="round">
+    <path d="M16 20l4 4M20 20l-4 4M104 18l4 4M108 18l-4 4M20 112l3 3M23 112l-3 3M106 110l4 4M110 110l-4 4"/>
+  </g>
+</svg>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import Icon from "../components/Icon";
+import CategoryShowcase from "../components/CategoryShowcase";
 import { api } from "../services/api";
 import { useWishlist } from "../context/WishlistContext";
 
@@ -150,26 +151,8 @@ const MobileHome = ({ products, categories, loading }) => {
         </div>
       </section>
 
-      {/* Categories pills */}
-      <section className="mb-stack-lg pl-margin-mobile">
-        <div className="no-scrollbar flex gap-3 overflow-x-auto pb-2 pr-margin-mobile">
-          <Link
-            to="/shop"
-            className="shrink-0 rounded-full border border-tertiary/20 bg-tertiary/10 px-6 py-2 font-label-md text-label-md text-tertiary"
-          >
-            All
-          </Link>
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              to={`/shop?category=${category.id}`}
-              className="shrink-0 rounded-full bg-surface-container px-6 py-2 font-label-md text-label-md text-on-surface-variant"
-            >
-              {category.name}
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* Our categories */}
+      <CategoryShowcase categories={categories} />
 
       {/* Featured curations bento grid */}
       <section className="mb-stack-lg px-margin-mobile">
@@ -254,45 +237,6 @@ const MobileHome = ({ products, categories, loading }) => {
         )}
       </section>
 
-      {/* Categories horizontal scroll */}
-      <section className="mb-stack-lg pl-margin-mobile">
-        <h2 className="mb-4 pr-margin-mobile font-headline-md text-headline-md text-primary">
-          Shop by Category
-        </h2>
-        <div className="no-scrollbar flex gap-4 overflow-x-auto pb-4 pr-margin-mobile">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              to={`/shop?category=${category.id}`}
-              className="flex w-64 shrink-0 items-center gap-4 rounded-[24px] border border-outline-variant/20 bg-surface-container-low p-4 shadow-[0_10px_30px_rgba(45,41,38,0.03)]"
-            >
-              <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-surface-container">
-                {category.image ? (
-                  <img
-                    src={category.image}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-tertiary">
-                    <Icon name="category" size={24} />
-                  </div>
-                )}
-              </div>
-              <div>
-                <h3 className="font-label-md text-label-md text-on-surface">
-                  {category.name}
-                </h3>
-                <p className="font-label-sm text-label-sm text-on-surface-variant">
-                  {category.productCount}{" "}
-                  {category.productCount === 1 ? "piece" : "pieces"}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       <Newsletter />
     </div>
   );
@@ -345,6 +289,9 @@ const DesktopHome = ({ products, categories, loading }) => {
           </div>
         </div>
       </section>
+
+      {/* Our categories */}
+      <CategoryShowcase categories={categories} />
 
       {/* Featured curations */}
       <section className="mx-auto max-w-container-max px-margin-desktop py-stack-lg">
@@ -409,67 +356,6 @@ const DesktopHome = ({ products, categories, loading }) => {
         )}
       </section>
 
-      {/* Categories */}
-      <section className="mx-auto max-w-container-max px-margin-desktop py-stack-lg pb-stack-xl">
-        <div className="mb-stack-md flex items-end justify-between">
-          <div>
-            <h2 className="mb-2 font-headline-lg text-headline-lg text-on-surface">
-              Shop by Category
-            </h2>
-            <p className="font-body-md text-body-md text-on-surface-variant">
-              Perfectly tailored collections for life's special moments.
-            </p>
-          </div>
-          <Link
-            to="/shop"
-            className="group flex items-center font-label-md text-label-md text-primary hover:underline"
-          >
-            View All Categories
-            <Icon
-              name="arrow_forward"
-              className="ml-1 transition-transform group-hover:translate-x-1"
-            />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 gap-gutter md:grid-cols-3">
-          {categories.slice(0, 3).map((category) => (
-            <Link
-              key={category.id}
-              to={`/shop?category=${category.id}`}
-              className="group relative overflow-hidden rounded-xl border border-outline-variant/30 bg-surface-container-lowest shadow-[0_10px_30px_rgba(45,41,38,0.05)] transition-all duration-300 hover:-translate-y-1"
-            >
-              <div className="relative h-64 overflow-hidden bg-surface-container">
-                {category.image ? (
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-tertiary">
-                    <Icon name="category" size={48} />
-                  </div>
-                )}
-              </div>
-              <div className="relative z-10 flex items-center justify-between bg-surface-container-lowest p-6">
-                <div>
-                  <h3 className="font-headline-md text-headline-md text-on-surface">
-                    {category.name}
-                  </h3>
-                  <p className="mt-1 font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">
-                    {category.productCount}{" "}
-                    {category.productCount === 1 ? "piece" : "pieces"}
-                  </p>
-                </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container transition-colors group-hover:bg-primary group-hover:text-on-primary">
-                  <Icon name="arrow_outward" />
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
     </div>
   );
 };

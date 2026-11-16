@@ -45,15 +45,19 @@ router.post("/", requireAuth, (req, res) => {
     "INSERT OR IGNORE INTO wishlist_items (user_id, product_id) VALUES (?, ?)",
   );
   const exists = db.prepare("SELECT id FROM products WHERE id = ?");
-  const tx = db.transaction((userId, productIds) => {
-    for (const id of productIds) {
+  db.exec("BEGIN");
+  try {
+    for (const id of ids) {
       const pid = Number(id);
       if (!Number.isFinite(pid)) continue;
       if (!exists.get(pid)) continue;
-      insert.run(userId, pid);
+      insert.run(req.user.id, pid);
     }
-  });
-  tx(req.user.id, ids);
+    db.exec("COMMIT");
+  } catch (error) {
+    db.exec("ROLLBACK");
+    throw error;
+  }
   res.json({ data: loadWishlist(req.user.id) });
 });
 

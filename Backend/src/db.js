@@ -21,7 +21,14 @@ db.exec(`
     name        TEXT    NOT NULL UNIQUE,
     slug        TEXT    NOT NULL UNIQUE,
     description TEXT    NOT NULL DEFAULT '',
-    image       TEXT    NOT NULL DEFAULT ''
+    image       TEXT    NOT NULL DEFAULT '',
+    subtitle    TEXT    NOT NULL DEFAULT '',
+    sort_order  INTEGER NOT NULL DEFAULT 0
+  );
+
+  CREATE TABLE IF NOT EXISTS app_meta (
+    key   TEXT PRIMARY KEY,
+    value TEXT NOT NULL DEFAULT ''
   );
 
   CREATE TABLE IF NOT EXISTS products (
@@ -124,6 +131,8 @@ const ensureColumn = (table, column, def) => {
 ensureColumn("users", "provider", "TEXT NOT NULL DEFAULT 'local'");
 ensureColumn("users", "provider_id", "TEXT");
 ensureColumn("users", "avatar", "TEXT NOT NULL DEFAULT ''");
+ensureColumn("categories", "subtitle", "TEXT NOT NULL DEFAULT ''");
+ensureColumn("categories", "sort_order", "INTEGER NOT NULL DEFAULT 0");
 
 // Allow OAuth users without a local password (rebuild if password_hash is NOT NULL).
 try {

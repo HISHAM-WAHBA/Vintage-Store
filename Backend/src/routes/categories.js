@@ -6,7 +6,7 @@ import { slugify } from "../utils.js";
 const router = Router();
 
 const listQuery = `
-  SELECT c.id, c.name, c.slug, c.description, c.image,
+  SELECT c.id, c.name, c.slug, c.description, c.image, c.subtitle, c.sort_order,
          (SELECT COUNT(*) FROM products p WHERE p.category_id = c.id) AS product_count
   FROM categories c
 `;
@@ -17,12 +17,20 @@ const toCategory = (row) => ({
   slug: row.slug,
   description: row.description,
   image: row.image,
+  subtitle: row.subtitle || "",
+  sortOrder: row.sort_order || 0,
   productCount: row.product_count,
 });
 
-/* GET /api/categories — public listing */
+/* GET /api/categories — public listing (showcase order first) */
 router.get("/", (_req, res) => {
-  const rows = db.prepare(`${listQuery} ORDER BY c.name ASC`).all();
+  const rows = db
+    .prepare(
+      `${listQuery}
+       ORDER BY CASE WHEN c.sort_order > 0 THEN 0 ELSE 1 END,
+                c.sort_order ASC, c.name ASC`,
+    )
+    .all();
   res.json({ data: rows.map(toCategory) });
 });
 
@@ -40,12 +48,17 @@ router.post("/", requireAdmin, (req, res) => {
     return res.status(409).json({ error: "This category already exists." });
   }
   const result = db
-    .prepare("INSERT INTO categories (name, slug, description, image) VALUES (?, ?, ?, ?)")
+    .prepare(
+      `INSERT INTO categories (name, slug, description, image, subtitle, sort_order)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+    )
     .run(
       name,
       slug,
       String((req.body || {}).description || ""),
       String((req.body || {}).image || ""),
+      String((req.body || {}).subtitle || ""),
+      Number((req.body || {}).sortOrder) || 0,
     );
   const row = db
     .prepare(`${listQuery} WHERE c.id = ?`)

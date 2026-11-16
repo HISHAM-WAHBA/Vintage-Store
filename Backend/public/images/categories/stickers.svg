@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <g fill="none" stroke="#5b6bb5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="64" cy="64" r="38" fill="#e3f0fb" stroke="#8fa4e8" stroke-width="3"/>
+    <circle cx="64" cy="64" r="30" fill="#bfe3f7" stroke="#8fa4e8" stroke-width="1.6" stroke-dasharray="4 5"/>
+  </g>
+  <text x="64" y="69" text-anchor="middle" font-family="Verdana, sans-serif" font-size="13" font-weight="bold" fill="#5b6bb5" transform="rotate(-10 64 64)">STICKERS</text>
+  <g fill="none" stroke="#ef6fa6" stroke-width="2" stroke-linecap="round">
+    <path d="M18 28l5 5M23 28l-5 5M104 100l5 5M109 100l-5 5M102 22l4 4M106 22l-4 4"/>
+  </g>
+  <circle cx="28" cy="98" r="2" fill="#8fc4ea"/>
+  <circle cx="104" cy="44" r="2" fill="#f7d774"/>
+</svg>

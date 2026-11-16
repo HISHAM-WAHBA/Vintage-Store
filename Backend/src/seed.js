@@ -36,6 +36,126 @@ const CATEGORIES = [
   },
 ];
 
+/**
+ * Home-page "Our Categories" showcase (order matches the storefront design).
+ * Inserted once into existing databases via `app_meta` so admin deletions are
+ * not undone on every restart.
+ */
+const SHOWCASE_CATEGORIES = [
+  {
+    name: "Christmas",
+    slug: "christmas",
+    subtitle: "",
+    sortOrder: 1,
+    description: "Festive gifting, ornaments and seasonal sets.",
+    image: categoryImage("christmas-tree.svg"),
+  },
+  {
+    name: "Birthday Giveaways",
+    slug: "birthday-giveaways",
+    subtitle: "",
+    sortOrder: 2,
+    description: "Cakes, balloons and birthday gift bundles.",
+    image: categoryImage("birthday-giveaways.svg"),
+  },
+  {
+    name: "Baby Giveaways",
+    slug: "baby-giveaways",
+    subtitle: "",
+    sortOrder: 3,
+    description: "Newborn keepsakes and baby shower gifts.",
+    image: categoryImage("baby-giveaways.svg"),
+  },
+  {
+    name: "Bridal Giveaways",
+    slug: "bridal-giveaways",
+    subtitle: "",
+    sortOrder: 4,
+    description: "Bridal shower favours and wedding keepsakes.",
+    image: categoryImage("bridal-giveaways.svg"),
+  },
+  {
+    name: "Photo Prints",
+    slug: "photo-prints",
+    subtitle: "",
+    sortOrder: 5,
+    description: "Printed photographs, frames and albums.",
+    image: categoryImage("photo-prints.svg"),
+  },
+  {
+    name: "Party Supplies",
+    slug: "party-supplies",
+    subtitle: "",
+    sortOrder: 6,
+    description: "Tableware, decorations and celebration essentials.",
+    image: categoryImage("party-supplies.svg"),
+  },
+  {
+    name: "Create your Gift Box",
+    slug: "create-your-gift-box",
+    subtitle: "",
+    sortOrder: 7,
+    description: "Build a custom gift box from our curated pieces.",
+    image: categoryImage("create-your-gift-box.svg"),
+  },
+  {
+    name: "Gifts Only",
+    slug: "gifts-only",
+    subtitle: "",
+    sortOrder: 8,
+    description: "Ready-made gifts chosen by our studio.",
+    image: categoryImage("gifts-only.svg"),
+  },
+  {
+    name: "Outlet",
+    slug: "outlet",
+    subtitle: "Sale on defects",
+    sortOrder: 9,
+    description: "Gently imperfect pieces at reduced prices.",
+    image: categoryImage("outlet.svg"),
+  },
+  {
+    name: "Stickers",
+    slug: "stickers",
+    subtitle: "New",
+    sortOrder: 10,
+    description: "Doodle sticker packs for planners and parcels.",
+    image: categoryImage("stickers.svg"),
+  },
+  {
+    name: "Mugs & Bottles",
+    slug: "mugs-bottles",
+    subtitle: "",
+    sortOrder: 11,
+    description: "Hand-finished mugs, cups and reusable bottles.",
+    image: categoryImage("mugs-bottles.svg"),
+  },
+  {
+    name: "Mask-Hat-Crown",
+    slug: "mask-hat-crown",
+    subtitle: "",
+    sortOrder: 12,
+    description: "Party masks, hats and crowns for every celebration.",
+    image: categoryImage("mask-hat-crown.svg"),
+  },
+  {
+    name: "Mystery Box",
+    slug: "mystery-box",
+    subtitle: "New Product!",
+    sortOrder: 13,
+    description: "A surprise box of curated vintage treasures.",
+    image: categoryImage("mystery-box.svg"),
+  },
+  {
+    name: "عمرة و حج",
+    slug: "umrah-hajj",
+    subtitle: "صدقة جارية",
+    sortOrder: 14,
+    description: "هدايا العمرة والحج والصدقة الجارية.",
+    image: categoryImage("umrah-hajj.svg"),
+  },
+];
+
 const PRODUCTS = [
   {
     name: "Velvet Chesterfield Sofa",
@@ -256,12 +376,44 @@ const seedDiscountCodes = () => {
   }
 };
 
+/** Adds the "Our Categories" showcase once to existing databases. */
+const ensureShowcaseCategories = () => {
+  const marker = db
+    .prepare("SELECT value FROM app_meta WHERE key = ?")
+    .get("showcase_categories_v1");
+  if (marker) return;
+
+  const insert = db.prepare(
+    `INSERT OR IGNORE INTO categories
+       (name, slug, description, image, subtitle, sort_order)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+  );
+  for (const category of SHOWCASE_CATEGORIES) {
+    insert.run(
+      category.name,
+      category.slug,
+      category.description,
+      category.image,
+      category.subtitle,
+      category.sortOrder,
+    );
+  }
+  db.prepare("INSERT OR REPLACE INTO app_meta (key, value) VALUES (?, ?)").run(
+    "showcase_categories_v1",
+    "done",
+  );
+  console.log(
+    `[seed] ${SHOWCASE_CATEGORIES.length} showcase categories ensured`,
+  );
+};
+
 /** Runs on boot: fills empty tables so the API is useful immediately. */
 export const ensureSeed = () => {
   const categoryCount = db
     .prepare("SELECT COUNT(*) AS count FROM categories")
     .get().count;
   if (categoryCount === 0) seedCategories();
+  ensureShowcaseCategories();
 
   const productCount = db
     .prepare("SELECT COUNT(*) AS count FROM products")
