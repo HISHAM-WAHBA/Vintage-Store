@@ -13,14 +13,11 @@ const CategoryShowcase = ({ categories = [] }) => {
 
   return (
     <section
-      aria-labelledby="our-categories"
+      aria-label="Our Categories"
       className="px-margin-mobile py-stack-lg md:px-margin-desktop"
     >
       <div className="mx-auto max-w-container-max">
-        <h2
-          id="our-categories"
-          className="mb-10 text-center font-headline-md text-[26px] font-bold uppercase tracking-[0.18em] text-on-background md:text-[30px]"
-        >
+        <h2 className="mb-10 text-center font-headline-md text-[26px] font-bold uppercase tracking-[0.18em] text-on-background md:text-[30px]">
           Our Categories
         </h2>
 
