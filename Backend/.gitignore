@@ -1,4 +1,8 @@
 node_modules/
-.env
 data/
 *.log
+
+# Environment files with secrets (.env.example stays tracked)
+.env
+.env.*
+!.env.example

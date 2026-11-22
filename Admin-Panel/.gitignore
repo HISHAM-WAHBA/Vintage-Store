@@ -1,4 +1,10 @@
 node_modules
 dist
+.vite/
 *.local
 .DS_Store
+
+# Environment files with secrets (.env.example stays tracked)
+.env
+.env.*
+!.env.example

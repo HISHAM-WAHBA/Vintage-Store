@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Icon from "../components/Icon";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
+import { assetUrl } from "../utils/assets";
 
 const WishlistPage = () => {
   const { wishlist, removeFromWishlist } = useWishlist();
@@ -66,7 +67,7 @@ const WishlistPage = () => {
                 className="relative mb-4 block aspect-square w-full overflow-hidden rounded-lg bg-surface-container"
               >
                 <img
-                  src={product.image}
+                  src={assetUrl(product.image)}
                   alt={product.name}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />

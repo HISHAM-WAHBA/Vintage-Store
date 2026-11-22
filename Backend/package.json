@@ -1,7 +1,7 @@
 {
   "name": "vintage-backend",
   "version": "1.0.0",
-  "description": "Node.js + SQLite REST API for the Vintage storefront",
+  "description": "Node.js + SQLite (Turso) REST API for the Vintage storefront",
   "private": true,
   "type": "module",
   "main": "server.js",
@@ -11,9 +11,14 @@
   "scripts": {
     "dev": "node --watch --no-warnings server.js",
     "start": "node --no-warnings server.js",
-    "reseed": "node --no-warnings src/reseed.js"
+    "reseed": "node --no-warnings src/reseed.js",
+    "db:backup": "node --no-warnings scripts/backup-local-db.js",
+    "db:migrate": "node --no-warnings scripts/migrate-to-turso.js",
+    "db:verify": "node --no-warnings scripts/migrate-to-turso.js --verify-only",
+    "test:api": "node --no-warnings scripts/smoke-test.js"
   },
   "dependencies": {
+    "@libsql/client": "^0.15.15",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

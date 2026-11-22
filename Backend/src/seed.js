@@ -315,92 +315,102 @@ const DISCOUNT_CODES = {
   WELCOME5: 0.05,
 };
 
-const seedCategories = () => {
-  const insert = db.prepare(
-    "INSERT INTO categories (name, slug, description, image) VALUES (?, ?, ?, ?)",
+const seedCategories = async () => {
+  await db.batch(
+    CATEGORIES.map((category) => ({
+      sql: "INSERT INTO categories (name, slug, description, image) VALUES (?, ?, ?, ?)",
+      args: [category.name, category.slug, category.description, category.image],
+    })),
   );
-  for (const category of CATEGORIES) {
-    insert.run(category.name, category.slug, category.description, category.image);
-  }
   console.log(`[seed] ${CATEGORIES.length} categories inserted`);
 };
 
-const seedProducts = () => {
-  const insert = db.prepare(`
-    INSERT INTO products
-      (name, slug, description, price, quantity, image, featured, is_new, category_id, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-  const findCategory = db.prepare("SELECT id FROM categories WHERE slug = ?");
+const seedProducts = async () => {
+  const categoryRows = await db.all("SELECT id, slug FROM categories");
+  const categoryIdBySlug = new Map(
+    categoryRows.map((row) => [row.slug, row.id]),
+  );
   let offset = PRODUCTS.length; // newest first ids for "Newest Arrivals" sort
-  for (const product of PRODUCTS) {
-    const category = findCategory.get(product.category);
-    insert.run(
-      product.name,
-      product.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, ""),
-      product.description,
-      product.price,
-      product.quantity,
-      product.image,
-      product.featured ? 1 : 0,
-      product.isNew ? 1 : 0,
-      category ? category.id : null,
-      new Date(Date.now() - offset-- * 36e5).toISOString(),
-    );
-  }
+  await db.batch(
+    PRODUCTS.map((product) => {
+      const categoryId = categoryIdBySlug.get(product.category) ?? null;
+      return {
+        sql: `INSERT INTO products
+                (name, slug, description, price, quantity, image, featured, is_new, category_id, created_at)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        args: [
+          product.name,
+          product.name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, ""),
+          product.description,
+          product.price,
+          product.quantity,
+          product.image,
+          product.featured ? 1 : 0,
+          product.isNew ? 1 : 0,
+          categoryId,
+          new Date(Date.now() - offset-- * 36e5).toISOString(),
+        ],
+      };
+    }),
+  );
   console.log(`[seed] ${PRODUCTS.length} products inserted`);
 };
 
-const seedAdmin = () => {
-  const existing = db
-    .prepare("SELECT id FROM users WHERE email = ?")
-    .get(config.admin.email);
+const seedAdmin = async () => {
+  const existing = await db.get("SELECT id FROM users WHERE email = ?", [
+    config.admin.email,
+  ]);
   if (existing) return;
-  db.prepare(
+  if (!config.admin.canSeed) {
+    console.warn(
+      "[seed] Skipped creating the default admin account: set ADMIN_EMAIL and ADMIN_PASSWORD explicitly in production.",
+    );
+    return;
+  }
+  await db.run(
     "INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')",
-  ).run(config.admin.name, config.admin.email, hashPassword(config.admin.password));
-  console.log(
-    `[seed] Admin account created — ${config.admin.email} / ${config.admin.password}`,
+    [config.admin.name, config.admin.email, hashPassword(config.admin.password)],
   );
+  console.log(`[seed] Admin account created — ${config.admin.email}`);
 };
 
-const seedDiscountCodes = () => {
-  const insert = db.prepare(
-    "INSERT OR IGNORE INTO discount_codes (code, percent, active) VALUES (?, ?, 1)",
+const seedDiscountCodes = async () => {
+  await db.batch(
+    Object.entries(DISCOUNT_CODES).map(([code, percent]) => ({
+      sql: "INSERT OR IGNORE INTO discount_codes (code, percent, active) VALUES (?, ?, 1)",
+      args: [code, percent],
+    })),
   );
-  for (const [code, percent] of Object.entries(DISCOUNT_CODES)) {
-    insert.run(code, percent);
-  }
 };
 
 /** Adds the "Our Categories" showcase once to existing databases. */
-const ensureShowcaseCategories = () => {
-  const marker = db
-    .prepare("SELECT value FROM app_meta WHERE key = ?")
-    .get("showcase_categories_v1");
+const ensureShowcaseCategories = async () => {
+  const marker = await db.get("SELECT value FROM app_meta WHERE key = ?", [
+    "showcase_categories_v1",
+  ]);
   if (marker) return;
 
-  const insert = db.prepare(
-    `INSERT OR IGNORE INTO categories
-       (name, slug, description, image, subtitle, sort_order)
-     VALUES (?, ?, ?, ?, ?, ?)`,
+  await db.batch(
+    SHOWCASE_CATEGORIES.map((category) => ({
+      sql: `INSERT OR IGNORE INTO categories
+              (name, slug, description, image, subtitle, sort_order)
+            VALUES (?, ?, ?, ?, ?, ?)`,
+      args: [
+        category.name,
+        category.slug,
+        category.description,
+        category.image,
+        category.subtitle,
+        category.sortOrder,
+      ],
+    })),
   );
-  for (const category of SHOWCASE_CATEGORIES) {
-    insert.run(
-      category.name,
-      category.slug,
-      category.description,
-      category.image,
-      category.subtitle,
-      category.sortOrder,
-    );
-  }
-  db.prepare("INSERT OR REPLACE INTO app_meta (key, value) VALUES (?, ?)").run(
-    "showcase_categories_v1",
-    "done",
+  await db.run(
+    "INSERT OR REPLACE INTO app_meta (key, value) VALUES (?, ?)",
+    ["showcase_categories_v1", "done"],
   );
   console.log(
     `[seed] ${SHOWCASE_CATEGORIES.length} showcase categories ensured`,
@@ -408,18 +418,16 @@ const ensureShowcaseCategories = () => {
 };
 
 /** Runs on boot: fills empty tables so the API is useful immediately. */
-export const ensureSeed = () => {
-  const categoryCount = db
-    .prepare("SELECT COUNT(*) AS count FROM categories")
-    .get().count;
-  if (categoryCount === 0) seedCategories();
-  ensureShowcaseCategories();
+export const ensureSeed = async () => {
+  const categoryCount = await db.get(
+    "SELECT COUNT(*) AS count FROM categories",
+  );
+  if (!categoryCount || Number(categoryCount.count) === 0) await seedCategories();
+  await ensureShowcaseCategories();
 
-  const productCount = db
-    .prepare("SELECT COUNT(*) AS count FROM products")
-    .get().count;
-  if (productCount === 0) seedProducts();
+  const productCount = await db.get("SELECT COUNT(*) AS count FROM products");
+  if (!productCount || Number(productCount.count) === 0) await seedProducts();
 
-  seedAdmin();
-  seedDiscountCodes();
+  await seedAdmin();
+  await seedDiscountCodes();
 };

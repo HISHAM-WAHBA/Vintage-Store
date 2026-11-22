@@ -3,26 +3,39 @@
  * then re-inserts the seed data. Users (incl. the admin account) are kept.
  *
  * Run with: npm run reseed
+ *
+ * Targets whatever `TURSO_DATABASE_URL` points to (local file by default).
  */
-import { db } from "./db.js";
+import { db, initDb } from "./db.js";
 import { ensureSeed } from "./seed.js";
 
-db.exec("BEGIN");
+await initDb();
+
+const statements = [
+  { sql: "DELETE FROM order_items" },
+  { sql: "DELETE FROM orders" },
+  { sql: "DELETE FROM products" },
+  { sql: "DELETE FROM categories" },
+  { sql: "DELETE FROM discount_codes" },
+];
+
+await db.batch(statements);
+
+// Restart AUTOINCREMENT counters so seeded rows keep predictable ids (1, 2, 3…).
 try {
-  db.exec("DELETE FROM order_items");
-  db.exec("DELETE FROM orders");
-  db.exec("DELETE FROM products");
-  db.exec("DELETE FROM categories");
-  db.exec("DELETE FROM discount_codes");
-  // Restart id counters so seeded rows keep predictable ids (1, 2, 3, …).
-  db.exec(
-    "DELETE FROM sqlite_sequence WHERE name IN ('orders', 'order_items', 'products', 'categories', 'discount_codes')",
+  await db.run(
+    "DELETE FROM sqlite_sequence WHERE name IN ('orders', 'order_items', 'products', 'categories')",
   );
-  db.exec("COMMIT");
-} catch (error) {
-  db.exec("ROLLBACK");
-  throw error;
+} catch {
+  // sqlite_sequence only exists once an AUTOINCREMENT row was inserted.
 }
 
-ensureSeed();
+// Forget the "showcase inserted" marker so the categories come back.
+try {
+  await db.run("DELETE FROM app_meta WHERE key = ?", ["showcase_categories_v1"]);
+} catch {
+  // ignore
+}
+
+await ensureSeed();
 console.log("[reseed] Catalog restored to seed state. Existing orders were cleared.");

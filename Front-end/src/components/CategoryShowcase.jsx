@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { assetUrl } from "../utils/assets";
 
 /**
  * "Our Categories" — round doodle illustrations with labels, matching the
@@ -30,7 +31,7 @@ const CategoryShowcase = ({ categories = [] }) => {
             >
               <span className="flex h-20 w-20 items-center justify-center transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-105 sm:h-[5.5rem] sm:w-[5.5rem] lg:h-24 lg:w-24">
                 <img
-                  src={category.image}
+                  src={assetUrl(category.image)}
                   alt={category.name}
                   loading="lazy"
                   className="h-full w-full object-contain"

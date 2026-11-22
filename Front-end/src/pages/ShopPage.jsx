@@ -4,6 +4,7 @@ import Icon from "../components/Icon";
 import { api } from "../services/api";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
+import { assetUrl } from "../utils/assets";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -48,7 +49,7 @@ const ProductCard = ({ product }) => {
       <Link to={`/product/${product.id}`} className="block">
         <div className="relative mb-4 aspect-[4/5] overflow-hidden rounded-lg bg-surface-container-low">
           <img
-            src={product.image}
+            src={assetUrl(product.image)}
             alt={product.name}
             className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
@@ -112,7 +113,7 @@ const MobileProductCard = ({ product }) => {
       <Link to={`/product/${product.id}`} className="block">
         <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low">
           <img
-            src={product.image}
+            src={assetUrl(product.image)}
             alt={product.name}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />

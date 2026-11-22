@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import Icon from "../components/Icon";
 import { useCart } from "../context/CartContext";
 import { api } from "../services/api";
+import { assetUrl } from "../utils/assets";
 
 const shippingFee = 12;
 
@@ -446,7 +447,7 @@ const CheckoutPage = () => {
                 <div key={item.id} className="flex gap-4">
                   <div className="h-24 w-16 shrink-0 overflow-hidden rounded-lg border border-outline-variant/20 bg-surface-container-low">
                     <img
-                      src={item.image}
+                      src={assetUrl(item.image)}
                       alt={item.name}
                       className="h-full w-full object-cover"
                     />

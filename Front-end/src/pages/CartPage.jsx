@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Icon from "../components/Icon";
 import { useCart } from "../context/CartContext";
+import { assetUrl } from "../utils/assets";
 
 const CartPage = () => {
   const {
@@ -77,7 +78,7 @@ const CartPage = () => {
                 className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-surface-container-low md:h-32"
               >
                 <img
-                  src={item.image}
+                  src={assetUrl(item.image)}
                   alt={item.name}
                   className="h-full w-full object-cover"
                 />

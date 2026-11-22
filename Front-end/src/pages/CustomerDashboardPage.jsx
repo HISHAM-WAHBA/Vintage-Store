@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { assetUrl } from "../utils/assets";
 import {
   ArrowRight,
   CalendarDays,
@@ -462,7 +463,7 @@ const CustomerDashboardPage = () => {
                       className="h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-surface-container"
                     >
                       <img
-                        src={product.image}
+                        src={assetUrl(product.image)}
                         alt={product.name}
                         className="h-full w-full object-cover"
                       />

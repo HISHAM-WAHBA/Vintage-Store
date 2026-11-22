@@ -29,37 +29,45 @@ export const publicUser = (row) => ({
 });
 
 /** Returns the signed-in user for a request, or null (no throw on bad token). */
-export const userFromRequest = (req) => {
+export const userFromRequest = async (req) => {
   const header = req.headers.authorization || "";
   if (!header.startsWith("Bearer ")) return null;
   try {
     const payload = jwt.verify(header.slice(7), config.jwtSecret);
-    const row = db
-      .prepare("SELECT * FROM users WHERE id = ?")
-      .get(Number(payload.sub));
+    const row = await db.get("SELECT * FROM users WHERE id = ?", [
+      Number(payload.sub),
+    ]);
     return row ? publicUser(row) : null;
   } catch {
     return null;
   }
 };
 
-export const requireAuth = (req, res, next) => {
-  const user = userFromRequest(req);
-  if (!user) {
-    return res.status(401).json({ error: "Please sign in to continue." });
+export const requireAuth = async (req, res, next) => {
+  try {
+    const user = await userFromRequest(req);
+    if (!user) {
+      return res.status(401).json({ error: "Please sign in to continue." });
+    }
+    req.user = user;
+    next();
+  } catch (error) {
+    next(error);
   }
-  req.user = user;
-  next();
 };
 
-export const requireAdmin = (req, res, next) => {
-  const user = userFromRequest(req);
-  if (!user) {
-    return res.status(401).json({ error: "Please sign in to continue." });
+export const requireAdmin = async (req, res, next) => {
+  try {
+    const user = await userFromRequest(req);
+    if (!user) {
+      return res.status(401).json({ error: "Please sign in to continue." });
+    }
+    if (user.role !== "admin") {
+      return res.status(403).json({ error: "Admin access required." });
+    }
+    req.user = user;
+    next();
+  } catch (error) {
+    next(error);
   }
-  if (user.role !== "admin") {
-    return res.status(403).json({ error: "Admin access required." });
-  }
-  req.user = user;
-  next();
 };

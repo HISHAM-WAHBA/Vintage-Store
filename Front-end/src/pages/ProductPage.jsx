@@ -4,6 +4,7 @@ import Icon from "../components/Icon";
 import { api } from "../services/api";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
+import { assetUrl } from "../utils/assets";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -90,7 +91,7 @@ const ProductPage = () => {
           {/* Main image */}
           <div className="group relative aspect-square overflow-hidden rounded-xl border border-primary-fixed/30 bg-surface-container-lowest shadow-[0_10px_30px_rgba(45,41,38,0.05)]">
             <img
-              src={product.image}
+              src={assetUrl(product.image)}
               alt={product.name}
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
             />

@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import Icon from "./Icon";
+import { assetUrl } from "../utils/assets";
 
 /**
  * Full-width hero slider for the home page.
@@ -93,9 +94,9 @@ const HeroSlider = () => {
             aria-hidden={i !== index}
           >
             <picture>
-              <source media="(max-width: 767px)" srcSet={slide.mobileImage} />
+              <source media="(max-width: 767px)" srcSet={assetUrl(slide.mobileImage)} />
               <img
-                src={slide.image}
+                src={assetUrl(slide.image)}
                 alt={`${slide.title} — ${slide.eyebrow}`}
                 className="h-full w-full object-cover"
                 draggable="false"

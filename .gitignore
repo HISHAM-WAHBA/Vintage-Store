@@ -5,5 +5,7 @@ Vintage New Design/Vintage BackUp/
 # Node
 node_modules/
 
-# Env files with secrets
+# Env files with secrets (.env.example files are tracked in each app)
 .env
+.env.*
+!**/.env.example

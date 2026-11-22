@@ -6,6 +6,7 @@ import CategoryShowcase from "../components/CategoryShowcase";
 import HeroSlider from "../components/HeroSlider";
 import { api } from "../services/api";
 import { useWishlist } from "../context/WishlistContext";
+import { assetUrl } from "../utils/assets";
 
 /* ─── Shared pieces ─────────────────────────────────────────────────────────── */
 
@@ -151,7 +152,7 @@ const MobileHome = ({ products, categories, loading }) => {
               >
                 <div className="relative mb-4 aspect-video w-full overflow-hidden rounded-xl">
                   <img
-                    src={large.image}
+                    src={assetUrl(large.image)}
                     alt={large.name}
                     className="h-full w-full object-cover"
                   />
@@ -184,7 +185,7 @@ const MobileHome = ({ products, categories, loading }) => {
               >
                 <div className="relative mb-3 aspect-square w-full overflow-hidden rounded-xl">
                   <img
-                    src={item.image}
+                    src={assetUrl(item.image)}
                     alt={item.name}
                     className="h-full w-full object-cover"
                   />
@@ -259,7 +260,7 @@ const DesktopHome = ({ products, categories, loading }) => {
               >
                 <div className="relative mb-4 aspect-square w-full overflow-hidden rounded-lg bg-surface-container">
                   <img
-                    src={product.image}
+                    src={assetUrl(product.image)}
                     alt={product.name}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />

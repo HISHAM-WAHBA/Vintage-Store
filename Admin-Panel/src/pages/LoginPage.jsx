@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
+const STORE_URL = String(import.meta.env.VITE_STORE_URL || "http://localhost:5173").replace(/\/+$/, "");
+
 const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -79,7 +81,7 @@ const LoginPage = () => {
           <p className="mt-5 text-center font-body-md text-body-md text-on-surface-variant">
             Not an admin?{" "}
             <a
-              href="http://localhost:5173"
+              href={STORE_URL}
               className="font-label-md text-primary hover:underline"
             >
               Go to the store

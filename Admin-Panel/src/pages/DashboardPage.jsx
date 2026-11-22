@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
+import { assetUrl } from "../utils/assets";
 
 const NAV = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -433,7 +434,7 @@ const ProductsSection = ({ products, categories, reload }) => {
                   <div className="flex items-center gap-3">
                     {p.image && (
                       <img
-                        src={p.image}
+                        src={assetUrl(p.image)}
                         alt=""
                         className="h-10 w-10 rounded-md object-cover"
                       />
@@ -554,7 +555,7 @@ const ProductModal = ({ form, setForm, categories, saving, onSave, onClose, isNe
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start">
               <div className="flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-outline-variant/40 bg-surface">
                 {form.image ? (
-                  <img src={form.image} alt="" className="h-full w-full object-cover" />
+                  <img src={assetUrl(form.image)} alt="" className="h-full w-full object-cover" />
                 ) : (
                   <ImageIcon className="h-8 w-8 text-on-surface-variant/50" />
                 )}
@@ -579,7 +580,7 @@ const ProductModal = ({ form, setForm, categories, saving, onSave, onClose, isNe
                   className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body-md text-body-md text-on-surface outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                 />
                 <p className="font-label-sm text-label-sm text-on-surface-variant">
-                  Uploads are saved to <code>Backend/public/images/uploads/products/</code> and served as <code>/api/images/...</code>
+                  Images are served from the API (local dev: <code>/api/images/...</code>, production: Cloudinary CDN).
                 </p>
               </div>
             </div>
@@ -1004,7 +1005,7 @@ const OrderDetailsModal = ({ order, onClose, onStatus, onDelete }) => (
           {(order.items || []).map((item, idx) => (
             <div key={idx} className="flex items-center gap-3 py-3">
               {item.image && (
-                <img src={item.image} alt="" className="h-12 w-12 rounded-md object-cover" />
+                <img src={assetUrl(item.image)} alt="" className="h-12 w-12 rounded-md object-cover" />
               )}
               <div className="min-w-0 flex-1">
                 <p className="truncate font-label-md text-label-md text-on-surface">{item.name}</p>

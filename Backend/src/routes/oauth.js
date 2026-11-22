@@ -47,21 +47,23 @@ const redirectWithToken = (res, user, next = "/dashboard") => {
   res.redirect(url.toString());
 };
 
-const findOrCreateOAuthUser = ({ provider, providerId, email, name, avatar }) => {
+const findOrCreateOAuthUser = async ({ provider, providerId, email, name, avatar }) => {
   // 1) existing link by provider+id
-  let row = db
-    .prepare("SELECT * FROM users WHERE provider = ? AND provider_id = ?")
-    .get(provider, providerId);
+  let row = await db.get(
+    "SELECT * FROM users WHERE provider = ? AND provider_id = ?",
+    [provider, providerId],
+  );
   if (row) return publicUser(row);
 
   // 2) existing account by email -> link it
   if (email) {
-    row = db.prepare("SELECT * FROM users WHERE email = ?").get(email.toLowerCase());
+    row = await db.get("SELECT * FROM users WHERE email = ?", [email.toLowerCase()]);
     if (row) {
-      db.prepare(
+      await db.run(
         "UPDATE users SET provider = ?, provider_id = ?, avatar = CASE WHEN avatar = '' THEN ? ELSE avatar END WHERE id = ?",
-      ).run(provider, providerId, avatar || "", row.id);
-      row = db.prepare("SELECT * FROM users WHERE id = ?").get(row.id);
+        [provider, providerId, avatar || "", row.id],
+      );
+      row = await db.get("SELECT * FROM users WHERE id = ?", [row.id]);
       return publicUser(row);
     }
   }
@@ -70,12 +72,13 @@ const findOrCreateOAuthUser = ({ provider, providerId, email, name, avatar }) =>
   const safeEmail =
     (email && email.toLowerCase()) ||
     `${provider}-${providerId}@${provider}.local`;
-  const result = db
-    .prepare(
-      "INSERT INTO users (name, email, password_hash, role, provider, provider_id, avatar) VALUES (?, ?, NULL, 'customer', ?, ?, ?)",
-    )
-    .run(name || "Customer", safeEmail, provider, providerId, avatar || "");
-  row = db.prepare("SELECT * FROM users WHERE id = ?").get(Number(result.lastInsertRowid));
+  const result = await db.run(
+    "INSERT INTO users (name, email, password_hash, role, provider, provider_id, avatar) VALUES (?, ?, NULL, 'customer', ?, ?, ?)",
+    [name || "Customer", safeEmail, provider, providerId, avatar || ""],
+  );
+  row = await db.get("SELECT * FROM users WHERE id = ?", [
+    result.lastInsertRowid,
+  ]);
   return publicUser(row);
 };
 
@@ -133,7 +136,7 @@ router.get("/google/callback", async (req, res) => {
     const profile = await profileRes.json();
     if (!profileRes.ok || !profile.id) throw new Error("Profile fetch failed");
 
-    const user = findOrCreateOAuthUser({
+    const user = await findOrCreateOAuthUser({
       provider: "google",
       providerId: String(profile.id),
       email: profile.email,
@@ -198,7 +201,7 @@ router.get("/facebook/callback", async (req, res) => {
     const profile = await profileRes.json();
     if (!profileRes.ok || !profile.id) throw new Error("Profile fetch failed");
 
-    const user = findOrCreateOAuthUser({
+    const user = await findOrCreateOAuthUser({
       provider: "facebook",
       providerId: String(profile.id),
       email: profile.email,
