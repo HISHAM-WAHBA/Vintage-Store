@@ -169,8 +169,8 @@ const MobileProductCard = ({ product }) => {
 const FiltersPanel = ({
   categories,
   categoryCounts,
-  selectedCategories,
-  onToggleCategory,
+  selectedCategory,
+  onSelectCategory,
   onClearAll,
   priceMin,
   priceMax,
@@ -201,30 +201,19 @@ const FiltersPanel = ({
       <legend className="mb-4 font-label-md text-label-sm uppercase tracking-widest text-on-surface-variant">
         Category
       </legend>
-      <div className="flex flex-col gap-3">
-        {categories.map((item) => {
-          const isSelected = selectedCategories.has(String(item.id));
-          return (
-            <label
-              key={item.id}
-              className="group flex cursor-pointer items-center gap-3"
-            >
-              <input
-                type="checkbox"
-                className="filter-checkbox"
-                checked={isSelected}
-                onChange={() => onToggleCategory(String(item.id))}
-              />
-              <span className="text-on-background transition-colors group-hover:text-primary">
-                {item.name}
-              </span>
-              <span className="ml-auto font-label-sm text-sm text-on-surface-variant">
-                ({categoryCounts[item.name] || 0})
-              </span>
-            </label>
-          );
-        })}
-      </div>
+      <select
+        value={selectedCategory}
+        onChange={(event) => onSelectCategory(event.target.value)}
+        aria-label="Filter by category"
+        className="w-full cursor-pointer rounded-lg border border-outline-variant bg-surface px-3 py-2 font-body-md text-sm text-on-surface outline-none transition-colors focus:border-tertiary focus:ring-1 focus:ring-tertiary"
+      >
+        <option value="">All categories</option>
+        {categories.map((item) => (
+          <option key={item.id} value={String(item.id)}>
+            {item.name} ({categoryCounts[item.name] || 0})
+          </option>
+        ))}
+      </select>
     </fieldset>
 
     {/* Price Range */}
@@ -369,13 +358,11 @@ const ShopPage = () => {
   const urlCategory = searchParams.get("category") || "";
   const urlSearch = searchParams.get("search") || "";
 
-  // Multi-select categories, initialized from the URL (?category=id)
-  const [selectedCategories, setSelectedCategories] = useState(
-    () => new Set(urlCategory ? [urlCategory] : []),
-  );
+  // Single category, initialized from the URL (?category=id)
+  const [selectedCategory, setSelectedCategory] = useState(urlCategory);
 
   useEffect(() => {
-    setSelectedCategories(new Set(urlCategory ? [urlCategory] : []));
+    setSelectedCategory(urlCategory);
   }, [urlCategory]);
 
   useEffect(() => {
@@ -394,19 +381,10 @@ const ShopPage = () => {
   // Reset page when filters change
   useEffect(() => {
     setPage(1);
-  }, [selectedCategories, sortBy, priceMin, priceMax, inStock, customOrder, searchQuery]);
-
-  const toggleCategory = (id) => {
-    setSelectedCategories((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
+  }, [selectedCategory, sortBy, priceMin, priceMax, inStock, customOrder, searchQuery]);
 
   const clearAll = () => {
-    setSelectedCategories(new Set());
+    setSelectedCategory("");
     setSearchParams({});
     setSearchQuery("");
     setPriceMin("");
@@ -438,14 +416,15 @@ const ShopPage = () => {
     let items = [...products];
 
     // Category filter — products store category names in `categories`
-    if (selectedCategories.size > 0) {
-      const selectedNames = categories
-        .filter((c) => selectedCategories.has(String(c.id)))
-        .map((c) => c.name.toLowerCase());
-      if (selectedNames.length > 0) {
+    if (selectedCategory) {
+      const category = categories.find(
+        (c) => String(c.id) === String(selectedCategory),
+      );
+      if (category) {
+        const name = String(category.name).toLowerCase();
         items = items.filter((p) =>
-          (p.categories || []).some((name) =>
-            selectedNames.includes(String(name).toLowerCase()),
+          (p.categories || []).some(
+            (value) => String(value).toLowerCase() === name,
           ),
         );
       } else {
@@ -487,7 +466,7 @@ const ShopPage = () => {
   }, [
     products,
     categories,
-    selectedCategories,
+    selectedCategory,
     urlSearch,
     searchQuery,
     priceMin,
@@ -504,8 +483,8 @@ const ShopPage = () => {
   const filterProps = {
     categories,
     categoryCounts,
-    selectedCategories,
-    onToggleCategory: toggleCategory,
+    selectedCategory,
+    onSelectCategory: setSelectedCategory,
     onClearAll: clearAll,
     priceMin,
     priceMax,
@@ -519,11 +498,8 @@ const ShopPage = () => {
 
   const subtitle = urlSearch
     ? `Search results for "${urlSearch}"`
-    : selectedCategories.size > 0
-      ? `Showing results in "${categories
-          .filter((c) => selectedCategories.has(String(c.id)))
-          .map((c) => c.name)
-          .join(", ")}"`
+    : selectedCategory
+      ? `Showing results in "${categories.find((c) => String(c.id) === String(selectedCategory))?.name || ""}"`
       : "Discover bespoke, handcrafted items customized just for you.";
 
   return (
@@ -568,28 +544,24 @@ const ShopPage = () => {
             Filter
           </button>
 
-          {categories.map((c) => {
-            const isSelected = selectedCategories.has(String(c.id));
-            return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => toggleCategory(String(c.id))}
-                className={`shrink-0 touch-manipulation rounded-full px-4 py-2 font-label-sm text-label-sm transition active:scale-95 ${
-                  isSelected
-                    ? "bg-tertiary/10 text-tertiary"
-                    : "bg-surface-container text-on-surface-variant"
-                }`}
-              >
-                {c.name}
-              </button>
-            );
-          })}
+          <select
+            value={selectedCategory}
+            onChange={(event) => setSelectedCategory(event.target.value)}
+            aria-label="Filter by category"
+            className="min-w-0 flex-1 rounded-full border border-outline-variant bg-surface px-3 py-2 font-label-sm text-label-sm text-on-surface outline-none"
+          >
+            <option value="">All categories</option>
+            {categories.map((c) => (
+              <option key={c.id} value={String(c.id)}>
+                {c.name} ({categoryCounts[c.name] || 0})
+              </option>
+            ))}
+          </select>
 
           <select
             value={sortBy}
             onChange={(event) => setSortBy(event.target.value)}
-            className="ml-auto shrink-0 rounded-full border border-outline-variant bg-surface px-3 py-2 font-label-sm text-label-sm text-on-surface outline-none"
+            className="shrink-0 rounded-full border border-outline-variant bg-surface px-3 py-2 font-label-sm text-label-sm text-on-surface outline-none"
           >
             <option>Featured</option>
             <option>Newest Arrivals</option>
