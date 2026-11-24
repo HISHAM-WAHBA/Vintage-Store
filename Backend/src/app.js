@@ -20,6 +20,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const createApp = () => {
   const app = express();
 
+  // API responses are dynamic. An ETag + CDN revalidation produced 304 replies
+  // without CORS headers on serverless, which blocked cross-origin browsers.
+  app.set("etag", false);
+  app.use((req, res, next) => {
+    if (!req.path.startsWith("/api/images/")) {
+      res.setHeader("Cache-Control", "no-store");
+    }
+    next();
+  });
+
   app.use(
     cors({
       origin: config.corsOrigins,
