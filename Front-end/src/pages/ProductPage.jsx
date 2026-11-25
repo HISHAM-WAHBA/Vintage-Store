@@ -5,6 +5,7 @@ import { api } from "../services/api";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { assetUrl } from "../utils/assets";
+import { absoluteImage, absoluteUrl, useSeo } from "../utils/seo";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -13,6 +14,44 @@ const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
+
+  const productCategory = product?.categories?.[0] || product?.category?.name || "";
+  const productTitle = product
+    ? `${product.name}${productCategory ? ` — ${productCategory}` : ""}`
+    : "Vintage Product";
+
+  useSeo({
+    title: productTitle,
+    description:
+      product?.description ||
+      "Discover hand-selected vintage-inspired gifts and one-of-a-kind pieces at Vintage.",
+    keywords: `${product?.name || "vintage"}, ${productCategory}, vintage gifts, handmade, اكسسوارات, هدايا`,
+    path: `/product/${id}`,
+    image: product?.image,
+    type: "product",
+    jsonLd: product
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.name,
+          image: [absoluteImage(product.image)],
+          description: product.description || productTitle,
+          sku: String(product.id),
+          brand: { "@type": "Brand", name: "Vintage" },
+          category: productCategory,
+          offers: {
+            "@type": "Offer",
+            url: absoluteUrl(`/product/${product.id}`),
+            priceCurrency: "USD",
+            price: Number(product.price || 0).toFixed(2),
+            availability:
+              product.quantity == null || Number(product.quantity) > 0
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
+          },
+        }
+      : undefined,
+  });
 
   useEffect(() => {
     const fetchProduct = async () => {

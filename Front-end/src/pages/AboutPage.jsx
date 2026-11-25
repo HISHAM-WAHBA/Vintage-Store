@@ -1,4 +1,6 @@
 import Icon from "../components/Icon";
+import { useSeo } from "../utils/seo";
+import { ROUTE_SEO } from "../data/seoContent";
 
 const PROCESS_STEPS = [
   {
@@ -21,8 +23,11 @@ const PROCESS_STEPS = [
   },
 ];
 
-const AboutPage = () => (
-  <div className="relative w-full overflow-hidden">
+const AboutPage = () => {
+  useSeo({ ...ROUTE_SEO["/about"], path: "/about" });
+
+  return (
+    <div className="relative w-full overflow-hidden">
     {/* Background accents */}
     <div className="pointer-events-none absolute left-0 top-0 -z-10 h-80 w-80 -translate-x-1/3 -translate-y-1/4 rounded-full bg-primary-fixed opacity-25 blur-3xl" />
     <div className="pointer-events-none absolute bottom-0 right-0 -z-10 h-96 w-96 translate-x-1/3 translate-y-1/4 rounded-full bg-secondary-fixed opacity-20 blur-3xl" />
@@ -124,7 +129,8 @@ const AboutPage = () => (
         </div>
       </section>
     </main>
-  </div>
-);
+    </div>
+  );
+};
 
 export default AboutPage;

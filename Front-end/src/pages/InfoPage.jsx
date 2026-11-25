@@ -1,5 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import Icon from "../components/Icon";
+import { useSeo } from "../utils/seo";
+import { ROUTE_SEO } from "../data/seoContent";
 
 /* Content for the storefront's informational pages. */
 const PAGES = {
@@ -176,6 +178,15 @@ const PAGES = {
 const InfoPage = () => {
   const { slug } = useParams();
   const page = PAGES[slug];
+
+  useSeo({
+    ...(ROUTE_SEO[`/info/${slug}`] || {
+      title: page?.title || "Vintage",
+      description: page?.intro,
+    }),
+    path: `/info/${slug}`,
+    noindex: !page,
+  });
 
   if (!page) {
     return (

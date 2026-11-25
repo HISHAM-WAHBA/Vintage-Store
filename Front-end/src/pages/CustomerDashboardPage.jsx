@@ -92,11 +92,6 @@ const CustomerDashboardPage = () => {
     };
   }, [navigate]);
   const lastOrder = orders[0];
-  const totalItems = orders.reduce(
-    (total, order) =>
-      total + order.items.reduce((items, item) => items + item.quantity, 0),
-    0,
-  );
 
   const tabs = [
     { id: "overview", label: "Overview" },

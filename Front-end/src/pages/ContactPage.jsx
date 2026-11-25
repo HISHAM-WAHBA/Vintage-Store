@@ -2,6 +2,8 @@ import { useState } from "react";
 import Icon from "../components/Icon";
 import toast from "react-hot-toast";
 import { api } from "../services/api";
+import { useSeo } from "../utils/seo";
+import { ROUTE_SEO } from "../data/seoContent";
 
 const WHATSAPP_URL = "https://wa.me/201147414322";
 
@@ -42,6 +44,8 @@ const inputClass =
   "w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body-md text-on-surface placeholder:text-on-surface-variant/50 transition-colors focus:border-tertiary focus:outline-none focus:ring-1 focus:ring-tertiary";
 
 const ContactPage = () => {
+  useSeo({ ...ROUTE_SEO["/contact"], path: "/contact" });
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",

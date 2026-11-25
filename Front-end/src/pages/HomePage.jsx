@@ -7,6 +7,8 @@ import HeroSlider from "../components/HeroSlider";
 import { api } from "../services/api";
 import { useWishlist } from "../context/WishlistContext";
 import { assetUrl } from "../utils/assets";
+import { absoluteUrl, useSeo } from "../utils/seo";
+import { DEFAULT_DESCRIPTION, DEFAULT_KEYWORDS } from "../data/seoContent";
 
 /* ─── Shared pieces ─────────────────────────────────────────────────────────── */
 
@@ -292,6 +294,25 @@ const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useSeo({
+    title: "Curated Vintage Gifts, Accessories & Home Decor",
+    description: DEFAULT_DESCRIPTION,
+    keywords: DEFAULT_KEYWORDS,
+    path: "/",
+    image: products.find((item) => item.featured)?.image || "/vintage-logo.png",
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      numberOfItems: products.length,
+      itemListElement: products.slice(0, 12).map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: absoluteUrl(`/product/${item.id}`),
+        name: item.name,
+      })),
+    },
+  });
 
   useEffect(() => {
     Promise.all([api.getProducts(), api.getCategories()])

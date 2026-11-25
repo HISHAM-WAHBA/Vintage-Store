@@ -5,11 +5,18 @@ import { api } from "../services/api";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { assetUrl } from "../utils/assets";
+import { absoluteUrl, useSeo } from "../utils/seo";
+import {
+  DEFAULT_DESCRIPTION,
+  DEFAULT_KEYWORDS,
+  ROUTE_SEO,
+  getCategorySeo,
+} from "../data/seoContent";
 
 const ITEMS_PER_PAGE = 9;
 
 /* ─── Desktop Product Card ──────────────────────────────────────────────────── */
-const ProductCard = ({ product }) => {
+export const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const price = Number(product.price || 0).toFixed(2);
@@ -479,6 +486,32 @@ const ShopPage = () => {
     (page - 1) * ITEMS_PER_PAGE,
     page * ITEMS_PER_PAGE,
   );
+
+  const activeCategory = categories.find(
+    (item) => String(item.id) === String(selectedCategory),
+  );
+  const activeSeo = activeCategory ? getCategorySeo(activeCategory) : null;
+
+  useSeo({
+    title: urlSearch
+      ? `Search results for "${urlSearch}"`
+      : activeSeo?.title || ROUTE_SEO["/shop"].title,
+    description: activeSeo?.description || DEFAULT_DESCRIPTION,
+    keywords: activeSeo?.keywords || DEFAULT_KEYWORDS,
+    path: activeCategory ? `/category/${activeCategory.slug}` : "/shop",
+    image: filtered[0]?.image,
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      numberOfItems: filtered.length,
+      itemListElement: filtered.slice(0, 12).map((product, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: absoluteUrl(`/product/${product.id}`),
+        name: product.name,
+      })),
+    },
+  });
 
   const filterProps = {
     categories,
